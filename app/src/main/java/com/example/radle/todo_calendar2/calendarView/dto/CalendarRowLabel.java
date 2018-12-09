@@ -1,9 +1,9 @@
-package com.example.radle.todo_calendar2;
+package com.example.radle.todo_calendar2.calendarView.dto;
 
 import java.time.LocalTime;
 import java.util.Objects;
 
-class CalendarRowLabel {
+public class CalendarRowLabel {
 
     private final String text;
     private final LocalTime time;

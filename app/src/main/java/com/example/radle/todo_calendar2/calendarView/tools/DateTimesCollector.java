@@ -1,10 +1,12 @@
-package com.example.radle.todo_calendar2;
+package com.example.radle.todo_calendar2.calendarView.tools;
+
+import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-final class DateTimesCollector {
+public final class DateTimesCollector {
 
     public static List<IdWithDataTime> collectForWeekRowView(final LocalDateTime dateTime) {
         final List<IdWithDataTime> idsWithDateTimes = new ArrayList<>();

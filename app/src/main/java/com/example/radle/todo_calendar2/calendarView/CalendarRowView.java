@@ -1,9 +1,16 @@
-package com.example.radle.todo_calendar2;
+package com.example.radle.todo_calendar2.calendarView;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.View;
+
+import com.example.radle.todo_calendar2.calendarView.dto.CalendarField;
+import com.example.radle.todo_calendar2.calendarView.dto.CalendarRowLabel;
+import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
+import com.example.radle.todo_calendar2.calendarView.params.RowParams;
+import com.example.radle.todo_calendar2.calendarView.tools.CalendarRowElementsComposer;
+import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
 
 import java.util.List;
 

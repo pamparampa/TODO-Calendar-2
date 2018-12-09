@@ -1,9 +1,9 @@
-package com.example.radle.todo_calendar2;
+package com.example.radle.todo_calendar2.calendarView.dto;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-class IdWithDataTime {
+public class IdWithDataTime {
     private final int id;
     private final LocalDateTime dateTime;
 

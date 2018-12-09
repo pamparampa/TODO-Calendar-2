@@ -1,12 +1,16 @@
-package com.example.radle.todo_calendar2;
+package com.example.radle.todo_calendar2.calendarView.tools;
 
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 
+import com.example.radle.todo_calendar2.calendarView.dto.CalendarField;
+import com.example.radle.todo_calendar2.calendarView.dto.CalendarRowLabel;
+import com.example.radle.todo_calendar2.calendarView.params.RowParams;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-final class CalendarRowElementsComposer {
+public final class CalendarRowElementsComposer {
 
 
     private static final int ADDITIONAL_LABEL_COLUMN = 1;

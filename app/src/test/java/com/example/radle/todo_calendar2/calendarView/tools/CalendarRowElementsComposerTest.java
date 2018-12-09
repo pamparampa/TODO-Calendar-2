@@ -1,6 +1,10 @@
-package com.example.radle.todo_calendar2;
+package com.example.radle.todo_calendar2.calendarView.tools;
 
 import android.graphics.Rect;
+
+import com.example.radle.todo_calendar2.calendarView.dto.CalendarField;
+import com.example.radle.todo_calendar2.calendarView.dto.CalendarRowLabel;
+import com.example.radle.todo_calendar2.calendarView.params.RowParams;
 
 import org.junit.Test;
 

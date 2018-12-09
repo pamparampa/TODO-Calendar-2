@@ -1,8 +1,8 @@
-package com.example.radle.todo_calendar2;
+package com.example.radle.todo_calendar2.calendarView.params;
 
 import java.time.LocalDateTime;
 
-class RowParams {
+public class RowParams {
     private final int width;
     private final int height;
     private final int numberOfColumns;

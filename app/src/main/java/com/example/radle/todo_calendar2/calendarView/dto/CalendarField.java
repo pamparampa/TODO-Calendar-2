@@ -1,11 +1,11 @@
-package com.example.radle.todo_calendar2;
+package com.example.radle.todo_calendar2.calendarView.dto;
 
 import android.graphics.Rect;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-class CalendarField {
+public class CalendarField {
 
     private final int id;
     private final Rect rect;

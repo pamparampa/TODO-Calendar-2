@@ -17,6 +17,10 @@ public class CalendarField {
         this.localDateTime = localDateTime;
     }
 
+    public Rect getRect() {
+        return this.rect;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;

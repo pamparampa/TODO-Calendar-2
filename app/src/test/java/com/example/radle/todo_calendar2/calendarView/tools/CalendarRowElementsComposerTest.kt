@@ -56,7 +56,7 @@ class CalendarRowElementsComposerTest {
     }
 
     private fun expectedLabel(hourOfDay: Int, textX: Int, textY: Int): CalendarRowLabel {
-        return CalendarRowLabel(hourOfDay.toString() + ":00", textX, textY, LocalTime.of(hourOfDay, 0))
+        return CalendarRowLabel(HourTextFormatter.format(hourOfDay), textX, textY, LocalTime.of(hourOfDay, 0))
     }
 
     private fun expectedCalednarField(

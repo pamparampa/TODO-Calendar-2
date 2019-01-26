@@ -11,9 +11,12 @@ import com.example.radle.todo_calendar2.calendarView.dto.CalendarRowLabel;
 import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
 import com.example.radle.todo_calendar2.calendarView.tools.CalendarRowElementsComposer;
 import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
+import com.example.radle.todo_calendar2.calendarView.tools.HourTextFormatter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static java.util.stream.Collectors.toList;
 
@@ -63,7 +66,12 @@ public class CalendarRowView extends View {
     }
 
     private void prepareLabel() {
-        this.label = CalendarRowElementsComposer.getLabel(this.params);
+        try {
+            this.label = CalendarRowElementsComposer.getLabel(this.params);
+        } catch (final HourTextFormatter.NotRealHourNumberException e) {
+            Logger.getLogger("Exception").log(Level.WARNING, "Not valid calendar element: ");
+            e.printStackTrace();
+        }
         this.labelTextPaint.setTextSize(CalendarRowElementsComposer.getTextSize(this.params));
     }
 

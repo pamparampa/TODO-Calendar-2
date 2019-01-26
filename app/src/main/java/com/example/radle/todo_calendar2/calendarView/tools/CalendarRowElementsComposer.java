@@ -35,15 +35,17 @@ public final class CalendarRowElementsComposer {
         return rowParams.getWidth() / (rowParams.getNumberOfColumns() + ADDITIONAL_LABEL_COLUMN);
     }
 
-    public static CalendarRowLabel getLabel(final CalendarRowView.RowParams rowParams) {
+    public static CalendarRowLabel getLabel(final CalendarRowView.RowParams rowParams) throws
+            HourTextFormatter.NotRealHourNumberException {
 
         return new CalendarRowLabel(generateLabelText(rowParams), getTextX(rowParams),
                 getTextY(rowParams), generateLocalTime(rowParams));
     }
 
     @NonNull
-    private static String generateLabelText(final CalendarRowView.RowParams rowParams) {
-        return rowParams.getId() + ":00";
+    private static String generateLabelText(final CalendarRowView.RowParams rowParams) throws
+            HourTextFormatter.NotRealHourNumberException {
+        return HourTextFormatter.format(rowParams.getId());
     }
 
     private static int getTextX(final CalendarRowView.RowParams rowParams) {

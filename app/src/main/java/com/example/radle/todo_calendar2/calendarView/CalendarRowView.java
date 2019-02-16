@@ -41,8 +41,7 @@ public class CalendarRowView extends View {
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         setMeasuredDimension(resolveSize(this.params.getWidth(), widthMeasureSpec), resolveSize
-                (this.params.getHeight(),
-                        heightMeasureSpec));
+                (this.params.getHeight(), heightMeasureSpec));
     }
 
     @Override

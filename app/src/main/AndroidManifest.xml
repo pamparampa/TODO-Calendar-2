@@ -16,6 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.GuiTestsListActivity" />
+        <activity android:name=".activity.CalendarRowViewActivity" />
     </application>
 
 </manifest>

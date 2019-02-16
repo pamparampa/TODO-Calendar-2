@@ -1,24 +1,39 @@
 package com.example.radle.todo_calendar2.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.radle.todo_calendar2.R;
-import com.example.radle.todo_calendar2.calendarView.CalendarRowView;
 
-import java.time.LocalDateTime;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
+
+    @BindView(R.id.guiTestsButton)
+    Button guiTestButton;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main2);
-        final CalendarRowView rowView = this.findViewById(R.id.calendarRowView2);
-        rowView.setParams(makeParams());
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        manageToggle();
     }
 
-    private CalendarRowView.RowParams makeParams() {
-        return new CalendarRowView.RowParams(10, 100, 7, 0, LocalDateTime.now());
+    private void manageToggle() {
+        if (Toggle.isTestOn()) {
+            this.guiTestButton.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @OnClick(R.id.guiTestsButton)
+    public void clickGuiTests() {
+        final Intent intent = new Intent(getApplicationContext(), GuiTestsListActivity.class);
+        startActivity(intent);
     }
 }

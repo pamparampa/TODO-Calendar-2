@@ -10,8 +10,8 @@ public final class DateTimesCollector {
 
     public static List<IdWithDataTime> collectForWeekRowView(final LocalDateTime dateTime) {
         final List<IdWithDataTime> idsWithDateTimes = new ArrayList<>();
-        for (int hourId = 0; hourId < 24; hourId++) {
-            idsWithDateTimes.add(new IdWithDataTime(hourId, dateTime.withHour(hourId)));
+        for (int columnId = 0; columnId < 7; columnId++) {
+            idsWithDateTimes.add(new IdWithDataTime(columnId, dateTime.plusDays(columnId)));
         }
         return idsWithDateTimes;
     }

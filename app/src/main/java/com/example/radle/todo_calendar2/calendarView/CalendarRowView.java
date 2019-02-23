@@ -76,7 +76,7 @@ public class CalendarRowView extends View {
 
     private void prepareCalendarFields() {
         this.calendarFields = DateTimesCollector
-                .collectForWeekRowView(this.params.getFirstDateTime())
+                .collectForWeekRowView(this.params.getRowFirsDateTime())
                 .stream()
                 .map(this::getCalendarField).collect(toList());
     }
@@ -91,15 +91,15 @@ public class CalendarRowView extends View {
         private int height;
         private final int numberOfColumns;
         private final int id;
-        private final LocalDateTime firstDateTime;
+        private final LocalDateTime rowFirsDateTime;
 
         public RowParams(final int width, final int height, final int numberOfColumns, final int id,
-                         final LocalDateTime firstDateTime) {
+                         final LocalDateTime rowFirsDateTime) {
             this.width = width;
             this.height = height;
             this.numberOfColumns = numberOfColumns;
             this.id = id;
-            this.firstDateTime = firstDateTime;
+            this.rowFirsDateTime = rowFirsDateTime;
         }
 
         public int getWidth() {
@@ -118,8 +118,8 @@ public class CalendarRowView extends View {
             return this.id;
         }
 
-        public LocalDateTime getFirstDateTime() {
-            return this.firstDateTime;
+        public LocalDateTime getRowFirsDateTime() {
+            return this.rowFirsDateTime;
         }
     }
 }

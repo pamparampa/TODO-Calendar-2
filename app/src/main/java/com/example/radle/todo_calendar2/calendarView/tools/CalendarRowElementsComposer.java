@@ -20,16 +20,15 @@ public final class CalendarRowElementsComposer {
     private static final float TEXT_HEIGHT_PROPORTIONS = 0.4F;
 
     public static CalendarField getCalendarField(final CalendarRowView.RowParams rowParams, final
-    int rowId, final
-                                                 LocalDateTime localDateTime) {
+    int columnId, final LocalDateTime localDateTime) {
         final int fieldWidth = fieldWidth(rowParams);
         final int labelWidth = fieldWidth;
         final Rect rect = new Rect();
         rect.top = 0;
-        rect.left = labelWidth + rowId * fieldWidth;
+        rect.left = labelWidth + columnId * fieldWidth;
         rect.right = rect.left + fieldWidth;
         rect.bottom = rowParams.getHeight();
-        return new CalendarField(rowId, rect, localDateTime);
+        return new CalendarField(columnId, rect, localDateTime);
     }
 
     private static int fieldWidth(final CalendarRowView.RowParams rowParams) {

@@ -7,6 +7,7 @@ import com.example.radle.todo_calendar2.R;
 import com.example.radle.todo_calendar2.calendarView.CalendarRowView;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 
 import androidx.annotation.Nullable;
 import butterknife.BindView;
@@ -27,6 +28,7 @@ public class CalendarRowViewActivity extends Activity {
     }
 
     private CalendarRowView.RowParams makeParams() {
-        return new CalendarRowView.RowParams(10, 100, 7, 0, LocalDateTime.now());
+        return new CalendarRowView.RowParams(100, 7, 8, LocalDateTime.of(2019, Month.MARCH, 11, 8
+                , 0));
     }
 }

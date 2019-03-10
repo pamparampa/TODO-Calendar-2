@@ -15,6 +15,7 @@ import com.example.radle.todo_calendar2.calendarView.tools.HourTextFormatter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -75,10 +76,14 @@ public class CalendarRowView extends View {
     }
 
     private void prepareCalendarFields() {
-        this.calendarFields = DateTimesCollector
-                .collectForWeekRowView(this.params.getRowFirsDateTime())
-                .stream()
-                .map(this::getCalendarField).collect(toList());
+        try {
+            this.calendarFields = DateTimesCollector
+                    .collectForWeekRowView(this.params.getRowFirsDateTime())
+                    .stream()
+                    .map(this::getCalendarField).collect(toList());
+        } catch (final TimeNotAlignedException e) {
+            e.printStackTrace();
+        }
     }
 
     private CalendarField getCalendarField(final IdWithDataTime idWithDataTime) {
@@ -87,7 +92,7 @@ public class CalendarRowView extends View {
     }
 
     public static class RowParams {
-        private int width;
+        private int width = 0;
         private int height;
         private final int numberOfColumns;
         private final int id;
@@ -95,7 +100,12 @@ public class CalendarRowView extends View {
 
         public RowParams(final int width, final int height, final int numberOfColumns, final int id,
                          final LocalDateTime rowFirsDateTime) {
+            this(height, numberOfColumns, id, rowFirsDateTime);
             this.width = width;
+        }
+
+        public RowParams(final int height, final int numberOfColumns, final int id,
+                         final LocalDateTime rowFirsDateTime) {
             this.height = height;
             this.numberOfColumns = numberOfColumns;
             this.id = id;
@@ -120,6 +130,35 @@ public class CalendarRowView extends View {
 
         public LocalDateTime getRowFirsDateTime() {
             return this.rowFirsDateTime;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) return true;
+            if (!(o instanceof RowParams)) return false;
+            final RowParams rowParams = (RowParams) o;
+            return this.width == rowParams.width &&
+                    this.height == rowParams.height &&
+                    this.numberOfColumns == rowParams.numberOfColumns &&
+                    this.id == rowParams.id &&
+                    Objects.equals(this.rowFirsDateTime, rowParams.rowFirsDateTime);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(this.width, this.height, this.numberOfColumns, this.id,
+                    this.rowFirsDateTime);
+        }
+
+        @Override
+        public String toString() {
+            return "RowParams{" +
+                    "width=" + this.width +
+                    ", height=" + this.height +
+                    ", numberOfColumns=" + this.numberOfColumns +
+                    ", id=" + this.id +
+                    ", rowFirsDateTime=" + this.rowFirsDateTime +
+                    '}';
         }
     }
 }

@@ -21,15 +21,17 @@ import butterknife.ButterKnife;
 
 public class CalendarRowAdapter extends ArrayAdapter<IdWithDataTime> {
     private final List<IdWithDataTime> rowIdsWithFirstDateTimes;
-    private final BoardListView.BoardParams boardParams;
+    private BoardListView.BoardParams boardParams;
     private final int layoutId;
 
     public CalendarRowAdapter(final Context context, final int layoutId,
-                              final BoardListView.BoardParams params,
                               final List<IdWithDataTime> rowIdsWithFirstDateTimes) {
         super(context, layoutId, rowIdsWithFirstDateTimes);
         this.layoutId = layoutId;
         this.rowIdsWithFirstDateTimes = rowIdsWithFirstDateTimes;
+    }
+
+    public void setParams(final BoardListView.BoardParams params) {
         this.boardParams = params;
     }
 
@@ -37,7 +39,7 @@ public class CalendarRowAdapter extends ArrayAdapter<IdWithDataTime> {
     @Override
     public View getView(final int position, @Nullable View convertView,
                         @NonNull final ViewGroup parent) {
-        final RecyclerView.ViewHolder viewHolder;
+        final ViewHolder viewHolder;
         if (convertView == null) {
             final LayoutInflater inflater =
                     (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -47,12 +49,14 @@ public class CalendarRowAdapter extends ArrayAdapter<IdWithDataTime> {
             viewHolder = initRowView(position, convertView);
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (RecyclerView.ViewHolder) convertView.getTag();
+            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder.refreshWithPosition(position);
         }
+
         return convertView;
     }
 
-    private RecyclerView.ViewHolder initRowView(final int position, final View convertView) {
+    private ViewHolder initRowView(final int position, final View convertView) {
         final ViewHolder viewHolder = new ViewHolder(convertView);
         viewHolder.rowView.setParams(new ParamsBuilder().getRowParamsByBoardParams(this.boardParams, position,
                 this.rowIdsWithFirstDateTimes));
@@ -67,6 +71,11 @@ public class CalendarRowAdapter extends ArrayAdapter<IdWithDataTime> {
         ViewHolder(final View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+
+        void refreshWithPosition(final int position) {
+            this.rowView.setPosition(position);
+            this.rowView.invalidate();
         }
     }
 }

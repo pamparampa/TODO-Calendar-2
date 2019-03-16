@@ -19,21 +19,22 @@ public class GuiTestsListActivity extends Activity {
 
     @BindView(R.id.guiTestsList)
     ListView guiTestsList;
+    final String[] guiTestNames = {"CalendarRowVIew", "BoardListView"};
+    final Class[] guiTestClasses = {CalendarRowViewActivity.class, BoardListViewActivity.class};
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tests_list_activity);
         ButterKnife.bind(this);
-
-        final String[] guiTests = {"CalendarRowView"};
         this.guiTestsList.setAdapter(new ArrayAdapter<>(this, R.layout.text_list_row,
-                Arrays.asList(guiTests)));
+                Arrays.asList(this.guiTestNames)));
     }
 
     @OnItemClick(R.id.guiTestsList)
     public void onItemClick(final long id) {
-        final Intent intent = new Intent(getApplicationContext(), CalendarRowViewActivity.class);
+        final Intent intent = new Intent(getApplicationContext(),
+                this.guiTestClasses[Math.toIntExact(id)]);
         startActivity(intent);
     }
 }

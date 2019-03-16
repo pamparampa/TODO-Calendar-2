@@ -9,23 +9,29 @@ import com.example.radle.todo_calendar2.calendarView.tools.CalendarMeasure;
 import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class BoardListView extends ListView {
+    private final CalendarRowAdapter adapter;
     private BoardParams params;
 
     public BoardListView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
+        setDividerHeight(0);
+        this.adapter = new CalendarRowAdapter(context, R.layout.row_view, new ArrayList<>());
+        setAdapter(this.adapter);
 
-        try {
-            setAdapter(new CalendarRowAdapter(context, R.layout.row_view, this.params,
-                    DateTimesCollector.collectForBoardListView(this.params.firstDateTime)));
-        } catch (final TimeNotAlignedException e) {
-            e.printStackTrace();
-        }
     }
 
     public void setParams(final BoardParams params) {
         this.params = params;
+        this.adapter.setParams(params);
+        try {
+            this.adapter.addAll(
+                    DateTimesCollector.collectForBoardListView(this.params.firstDateTime));
+        } catch (final TimeNotAlignedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -37,22 +43,19 @@ public class BoardListView extends ListView {
     public static class BoardParams {
         private int width;
         private int rowHeight;
-        private final int numberOfRows;
         private final int numberOfColumns;
         private final LocalDateTime firstDateTime;
 
-        public BoardParams(final int width, final int rowHeight, final int numberOfRows,
+        public BoardParams(final int width, final int rowHeight,
                            final int numberOfColumns,
                            final LocalDateTime firstDateTime) {
-            this(numberOfRows, numberOfColumns, firstDateTime);
+            this(numberOfColumns, firstDateTime);
             this.width = width;
             this.rowHeight = rowHeight;
-
         }
 
-        public BoardParams(final int numberOfRows, final int numberOfColumns,
+        public BoardParams(final int numberOfColumns,
                            final LocalDateTime firstDateTime) {
-            this.numberOfRows = numberOfRows;
             this.numberOfColumns = numberOfColumns;
             this.firstDateTime = firstDateTime;
         }

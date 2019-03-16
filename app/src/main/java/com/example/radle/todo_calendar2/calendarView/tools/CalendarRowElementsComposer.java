@@ -17,7 +17,7 @@ public final class CalendarRowElementsComposer {
     private static final int ADDITIONAL_LABEL_COLUMN = 1;
     private static final double TEXT_X_PROPORTIONS = 0.2;
     private static final double TEXT_Y_PROPORTIONS = 0.5;
-    private static final float TEXT_HEIGHT_PROPORTIONS = 0.4F;
+    private static final float TEXT_HEIGHT_PROPORTIONS = 0.25F;
 
     public static CalendarField getCalendarField(final CalendarRowView.RowParams rowParams, final
     int columnId, final LocalDateTime localDateTime) {

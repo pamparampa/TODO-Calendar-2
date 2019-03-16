@@ -91,11 +91,15 @@ public class CalendarRowView extends View {
                 idWithDataTime.getDateTime());
     }
 
+    public void setPosition(final int position) {
+        this.params.setId(position);
+    }
+
     public static class RowParams {
         private int width = 0;
         private int height;
         private final int numberOfColumns;
-        private final int id;
+        private int id;
         private final LocalDateTime rowFirsDateTime;
 
         public RowParams(final int width, final int height, final int numberOfColumns, final int id,
@@ -159,6 +163,10 @@ public class CalendarRowView extends View {
                     ", id=" + this.id +
                     ", rowFirsDateTime=" + this.rowFirsDateTime +
                     '}';
+        }
+
+        public void setId(final int position) {
+            this.id = position;
         }
     }
 }

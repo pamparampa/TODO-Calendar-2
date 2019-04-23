@@ -15,19 +15,19 @@ public class CalendarMeasureTest {
 
     @Test
     public void measureRowHeight_shouldReturnZero_whenBoardWidthIsZero() {
-        assertSame(0, this.subject.measureRowHeight(new BoardListView.BoardParams(1, 1,
+        assertSame(0, this.subject.measureRowHeight(new BoardListView.BoardParams(1,
                 this.DATE_TIME)));
     }
 
     @Test
-    public void mesureRowHeight_shouldReturnWidth_whenNumberOfColumnsIsOne() {
-        assertSame(10, this.subject.measureRowHeight(new BoardListView.BoardParams(10, 2, 24, 1,
+    public void mesureRowHeight_shouldReturnWidth_whenNumberOfColumnsIsZero() {
+        assertSame(10, this.subject.measureRowHeight(new BoardListView.BoardParams(10, 2, 0,
                 this.DATE_TIME)));
     }
 
     @Test
-    public void measureRowHeight_shouldReturnWidthByNumberOfCols_whenNumberOfColumnsIsGreaterThanOne() {
-        assertSame(1, this.subject.measureRowHeight(new BoardListView.BoardParams(7, 2, 24, 7,
+    public void measureRowHeight_shouldReturnWidthByNumberOfColsPlusOne_whenNumberOfColumnsIsGreaterThanZero() {
+        assertSame(1, this.subject.measureRowHeight(new BoardListView.BoardParams(8, 2, 7,
                 this.DATE_TIME)));
     }
 

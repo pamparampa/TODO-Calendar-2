@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import static java.util.stream.Collectors.toList;
 
 public class CalendarRowView extends View {
+    private final CalendarRowElementsComposer composer = new CalendarRowElementsComposer();
     private RowParams params;
     private CalendarRowLabel label;
     private List<CalendarField> calendarFields;
@@ -67,17 +68,17 @@ public class CalendarRowView extends View {
 
     private void prepareLabel() {
         try {
-            this.label = CalendarRowElementsComposer.getLabel(this.params);
+            this.label = this.composer.getLabel(this.params);
         } catch (final HourTextFormatter.NotRealHourNumberException e) {
             Logger.getLogger("Exception").log(Level.WARNING, "Not valid calendar element: ");
             e.printStackTrace();
         }
-        this.labelTextPaint.setTextSize(CalendarRowElementsComposer.getTextSize(this.params));
+        this.labelTextPaint.setTextSize(this.composer.getTextSize(this.params));
     }
 
     private void prepareCalendarFields() {
         try {
-            this.calendarFields = DateTimesCollector
+            this.calendarFields = new DateTimesCollector()
                     .collectForWeekRowView(this.params.getRowFirsDateTime())
                     .stream()
                     .map(this::getCalendarField).collect(toList());
@@ -87,7 +88,7 @@ public class CalendarRowView extends View {
     }
 
     private CalendarField getCalendarField(final IdWithDataTime idWithDataTime) {
-        return CalendarRowElementsComposer.getCalendarField(this.params, idWithDataTime.getId(),
+        return this.composer.getCalendarField(this.params, idWithDataTime.getId(),
                 idWithDataTime.getDateTime());
     }
 

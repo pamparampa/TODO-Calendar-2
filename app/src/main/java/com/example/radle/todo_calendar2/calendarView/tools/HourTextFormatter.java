@@ -1,10 +1,8 @@
 package com.example.radle.todo_calendar2.calendarView.tools;
 
-public final class HourTextFormatter {
-    private HourTextFormatter() {
-    }
+public class HourTextFormatter {
 
-    public static String format(final int hour) throws NotRealHourNumberException {
+    public String format(final int hour) throws NotRealHourNumberException {
         if (hour > 23 || hour < 0) throw new NotRealHourNumberException(hour);
         return String.format("%02d", hour) + ":00";
     }

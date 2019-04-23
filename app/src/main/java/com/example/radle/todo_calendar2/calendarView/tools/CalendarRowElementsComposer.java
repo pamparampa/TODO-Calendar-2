@@ -11,7 +11,7 @@ import java.time.LocalTime;
 
 import androidx.annotation.NonNull;
 
-public final class CalendarRowElementsComposer {
+public class CalendarRowElementsComposer {
 
 
     private static final int ADDITIONAL_LABEL_COLUMN = 1;
@@ -19,7 +19,7 @@ public final class CalendarRowElementsComposer {
     private static final double TEXT_Y_PROPORTIONS = 0.5;
     private static final float TEXT_HEIGHT_PROPORTIONS = 0.25F;
 
-    public static CalendarField getCalendarField(final CalendarRowView.RowParams rowParams, final
+    public CalendarField getCalendarField(final CalendarRowView.RowParams rowParams, final
     int columnId, final LocalDateTime localDateTime) {
         final int fieldWidth = fieldWidth(rowParams);
         final int labelWidth = fieldWidth;
@@ -31,11 +31,11 @@ public final class CalendarRowElementsComposer {
         return new CalendarField(columnId, rect, localDateTime);
     }
 
-    private static int fieldWidth(final CalendarRowView.RowParams rowParams) {
+    private int fieldWidth(final CalendarRowView.RowParams rowParams) {
         return rowParams.getWidth() / (rowParams.getNumberOfColumns() + ADDITIONAL_LABEL_COLUMN);
     }
 
-    public static CalendarRowLabel getLabel(final CalendarRowView.RowParams rowParams) throws
+    public CalendarRowLabel getLabel(final CalendarRowView.RowParams rowParams) throws
             HourTextFormatter.NotRealHourNumberException {
 
         return new CalendarRowLabel(generateLabelText(rowParams), getTextX(rowParams),
@@ -43,24 +43,24 @@ public final class CalendarRowElementsComposer {
     }
 
     @NonNull
-    private static String generateLabelText(final CalendarRowView.RowParams rowParams) throws
+    private String generateLabelText(final CalendarRowView.RowParams rowParams) throws
             HourTextFormatter.NotRealHourNumberException {
-        return HourTextFormatter.format(rowParams.getId());
+        return new HourTextFormatter().format(rowParams.getId());
     }
 
-    private static int getTextX(final CalendarRowView.RowParams rowParams) {
+    private int getTextX(final CalendarRowView.RowParams rowParams) {
         return (int) (fieldWidth(rowParams) * TEXT_X_PROPORTIONS);
     }
 
-    private static int getTextY(final CalendarRowView.RowParams rowParams) {
+    private int getTextY(final CalendarRowView.RowParams rowParams) {
         return (int) (rowParams.getHeight() * TEXT_Y_PROPORTIONS);
     }
 
-    private static LocalTime generateLocalTime(final CalendarRowView.RowParams rowParams) {
+    private LocalTime generateLocalTime(final CalendarRowView.RowParams rowParams) {
         return LocalTime.of(rowParams.getId(), 0);
     }
 
-    public static float getTextSize(final CalendarRowView.RowParams params) {
+    public float getTextSize(final CalendarRowView.RowParams params) {
         return params.getHeight() * TEXT_HEIGHT_PROPORTIONS;
     }
 }

@@ -51,7 +51,7 @@ class ParamsBuilderTest {
     }
 
     private fun someBoardParams(): BoardListView.BoardParams {
-        return BoardListView.BoardParams(1, 2, 24, 7, DATE_TIME)
+        return BoardListView.BoardParams(1, 2, 7, DATE_TIME)
     }
 
     private fun expectedRowParams(id: Int, dateTime: LocalDateTime): CalendarRowView.RowParams {

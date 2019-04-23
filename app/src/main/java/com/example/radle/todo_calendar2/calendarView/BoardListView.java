@@ -28,7 +28,7 @@ public class BoardListView extends ListView {
         this.adapter.setParams(params);
         try {
             this.adapter.addAll(
-                    DateTimesCollector.collectForBoardListView(this.params.firstDateTime));
+                    new DateTimesCollector().collectForBoardListView(this.params.firstDateTime));
         } catch (final TimeNotAlignedException e) {
             e.printStackTrace();
         }

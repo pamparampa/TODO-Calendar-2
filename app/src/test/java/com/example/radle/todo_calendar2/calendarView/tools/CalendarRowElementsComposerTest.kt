@@ -15,7 +15,7 @@ class CalendarRowElementsComposerTest {
     fun getCalendarField_shouldReturnZeroSizeField_whenWidthAndHeightAreZeros() {
         assertEquals(
                 expectedCalednarField(0, 0, 0, 0, 0, DATE_TIME),
-                CalendarRowElementsComposer.getCalendarField(
+                composer.getCalendarField(
                         CalendarRowView.RowParams(0, 0, NUMBER_OF_COLUMNS, 0, DATE_TIME), 0, DATE_TIME))
     }
 
@@ -23,7 +23,7 @@ class CalendarRowElementsComposerTest {
     fun getCalendarField_shouldReturnFirstField_ifZeroIdIsPAssed() {
         assertEquals(
                 expectedCalednarField(0, 10, 20, 10, 0, DATE_TIME),
-                CalendarRowElementsComposer.getCalendarField(
+                composer.getCalendarField(
                         CalendarRowView.RowParams(WIDTH, HEIGHT, NUMBER_OF_COLUMNS, 0, DATE_TIME), 0,
                         DATE_TIME))
     }
@@ -32,7 +32,7 @@ class CalendarRowElementsComposerTest {
     fun getCalendarField_shouldReturnThirdField_ifIdTwoIsPassed() {
         assertEquals(
                 expectedCalednarField(0, 30, 40, 10, 2, DATE_TIME),
-                CalendarRowElementsComposer.getCalendarField(
+                composer.getCalendarField(
                         CalendarRowView.RowParams(WIDTH, HEIGHT, NUMBER_OF_COLUMNS, 0, DATE_TIME), 2,
                         DATE_TIME))
     }
@@ -41,7 +41,7 @@ class CalendarRowElementsComposerTest {
     fun getFirstLabel_shouldReturnCorrectLabel_whenIsCalled() {
         assertEquals(
                 expectedLabel(0, 2, 5),
-                CalendarRowElementsComposer.getLabel(CalendarRowView.RowParams(WIDTH, HEIGHT,
+                composer.getLabel(CalendarRowView.RowParams(WIDTH, HEIGHT,
                         NUMBER_OF_COLUMNS, 0, DATE_TIME))
         )
     }
@@ -50,13 +50,13 @@ class CalendarRowElementsComposerTest {
     fun getSomeLabel_shouldReturnCorrectLabel_whenIsCalled() {
         assertEquals(
                 expectedLabel(13, 4, 10),
-                CalendarRowElementsComposer.getLabel(CalendarRowView.RowParams(WIDTH * 2, HEIGHT * 2, 7, 13,
+                composer.getLabel(CalendarRowView.RowParams(WIDTH * 2, HEIGHT * 2, 7, 13,
                         DATE_TIME))
         )
     }
 
     private fun expectedLabel(hourOfDay: Int, textX: Int, textY: Int): CalendarRowLabel {
-        return CalendarRowLabel(HourTextFormatter.format(hourOfDay), textX, textY, LocalTime.of(hourOfDay, 0))
+        return CalendarRowLabel(HourTextFormatter().format(hourOfDay), textX, textY, LocalTime.of(hourOfDay, 0))
     }
 
     private fun expectedCalednarField(
@@ -75,5 +75,6 @@ class CalendarRowElementsComposerTest {
         private const val WIDTH = 80
         private const val HEIGHT = 10
         private val DATE_TIME = LocalDateTime.now()
+        private val composer = CalendarRowElementsComposer()
     }
 }

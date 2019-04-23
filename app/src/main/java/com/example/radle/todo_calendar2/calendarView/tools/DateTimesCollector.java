@@ -9,9 +9,9 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class DateTimesCollector {
+public class DateTimesCollector {
 
-    public static List<IdWithDataTime> collectForWeekRowView(final LocalDateTime dateTime) throws TimeNotAlignedException {
+    public List<IdWithDataTime> collectForWeekRowView(final LocalDateTime dateTime) throws TimeNotAlignedException {
         if (isTimeNotAlignedForWeekRowView(dateTime)) {
             throw new TimeNotAlignedException(ChronoUnit.HOURS);
         }
@@ -22,11 +22,11 @@ public final class DateTimesCollector {
         return idsWithDateTimes;
     }
 
-    private static boolean isTimeNotAlignedForWeekRowView(final LocalDateTime dateTime) {
+    private boolean isTimeNotAlignedForWeekRowView(final LocalDateTime dateTime) {
         return !dateTime.equals(dateTime.toLocalDate().atTime(dateTime.getHour(), 0));
     }
 
-    public static List<IdWithDataTime> collectForBoardListView(final LocalDateTime dateTime) throws TimeNotAlignedException {
+    public List<IdWithDataTime> collectForBoardListView(final LocalDateTime dateTime) throws TimeNotAlignedException {
         if (isTimeNotAlignedForBoardListView(dateTime)) {
             throw new TimeNotAlignedException(ChronoUnit.WEEKS);
         }
@@ -37,7 +37,7 @@ public final class DateTimesCollector {
         return idsWithDateTimes;
     }
 
-    private static boolean isTimeNotAlignedForBoardListView(final LocalDateTime dateTime) {
+    private boolean isTimeNotAlignedForBoardListView(final LocalDateTime dateTime) {
         return !dateTime.isEqual(dateTime.toLocalDate().atStartOfDay()) || dateTime.getDayOfWeek() != DayOfWeek.MONDAY;
     }
 }

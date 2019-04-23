@@ -13,24 +13,24 @@ class DateTimesCollectorTest {
 
     @Test
     fun collectForWeekRowView_shouldReturnCorrectCollection_whenCorrectDateTimeIsPassed() {
-        val idsWithDataTimes = DateTimesCollector.collectForWeekRowView(DATE_TIME)
+        val idsWithDataTimes = dateTimesCollector.collectForWeekRowView(DATE_TIME)
         Assert.assertThat(idsWithDataTimes, CoreMatchers.hasItems(*EXPECTED_FOR_WEEK_ROW_VIEW))
     }
 
     @Test(expected = TimeNotAlignedException::class)
     fun collectForWeekRowView_shouldThrowTimeNotAlignedException_whenNotCorrectDateTimeIsPassed() {
-        DateTimesCollector.collectForWeekRowView(DATE_TIME.withMinute(1))
+        dateTimesCollector.collectForWeekRowView(DATE_TIME.withMinute(1))
     }
 
     @Test
     fun collectForBoardListView_shouldReturnCorrectCollection_whenCorrectDateTimeIsPassed() {
-        val idsWithDateTimes = DateTimesCollector.collectForBoardListView(DATE_TIME)
+        val idsWithDateTimes = dateTimesCollector.collectForBoardListView(DATE_TIME)
         Assert.assertThat(idsWithDateTimes, CoreMatchers.hasItems(*EXPECTED_FOR_BOARD_LIST_VIEW))
     }
 
     @Test(expected = TimeNotAlignedException::class)
     fun collectForBoardListView_shouldThrowTimeNotAlignedException_whenNotCorrectDateTimeIsPassed() {
-        DateTimesCollector.collectForBoardListView(DATE_TIME.withMinute(1))
+        dateTimesCollector.collectForBoardListView(DATE_TIME.withMinute(1))
     }
 
     companion object {
@@ -69,6 +69,8 @@ class DateTimesCollectorTest {
                 IdWithDataTime(21, DATE_TIME.withHour(21)),
                 IdWithDataTime(22, DATE_TIME.withHour(22)),
                 IdWithDataTime(23, DATE_TIME.withHour(23)))
+
+        private val dateTimesCollector = DateTimesCollector();
     }
 
 }

@@ -12,31 +12,42 @@ import java.time.Month
 class DateTimesCollectorTest {
 
     @Test
-    fun collectForWeekRowView_shouldReturnCorrectCollection_whenCorrectDateTimeIsPassed() {
-        val idsWithDataTimes = dateTimesCollector.collectForWeekRowView(DATE_TIME)
-        Assert.assertThat(idsWithDataTimes, CoreMatchers.hasItems(*EXPECTED_FOR_WEEK_ROW_VIEW))
+    fun collectForWeekRow_shouldReturnCorrectCollection_whenCorrectDateTimeIsPassed() {
+        val idsWithDataTimes = dateTimesCollector.collectForWeekRow(DATE_TIME)
+        Assert.assertThat(idsWithDataTimes, CoreMatchers.hasItems(*EXPECTED_FOR_WEEK_ROW))
     }
 
     @Test(expected = TimeNotAlignedException::class)
-    fun collectForWeekRowView_shouldThrowTimeNotAlignedException_whenNotCorrectDateTimeIsPassed() {
-        dateTimesCollector.collectForWeekRowView(DATE_TIME.withMinute(1))
+    fun collectForWeekRow_shouldThrowTimeNotAlignedException_whenNotCorrectDateTimeIsPassed() {
+        dateTimesCollector.collectForWeekRow(DATE_TIME.withMinute(1))
     }
 
     @Test
-    fun collectForBoardListView_shouldReturnCorrectCollection_whenCorrectDateTimeIsPassed() {
-        val idsWithDateTimes = dateTimesCollector.collectForBoardListView(DATE_TIME)
-        Assert.assertThat(idsWithDateTimes, CoreMatchers.hasItems(*EXPECTED_FOR_BOARD_LIST_VIEW))
+    fun collectForWeekColumn_shouldReturnCorrectCollection_whenCorrectDateTimeIsPassed() {
+        val idsWithDateTimes = dateTimesCollector.collectForWeekColumn(DATE_TIME)
+        Assert.assertThat(idsWithDateTimes, CoreMatchers.hasItems(*EXPECTED_FOR_WEEK_COLUMN))
     }
 
     @Test(expected = TimeNotAlignedException::class)
-    fun collectForBoardListView_shouldThrowTimeNotAlignedException_whenNotCorrectDateTimeIsPassed() {
-        dateTimesCollector.collectForBoardListView(DATE_TIME.withMinute(1))
+    fun collectForWeekColumn_shouldThrowTimeNotAlignedException_whenNotCorrectDateTimeIsPassed() {
+        dateTimesCollector.collectForWeekColumn(DATE_TIME.withMinute(1))
+    }
+
+    @Test
+    fun collectForTopLabelRow_shouldReturnCorrectCollection_whenCorrectDateTimeIsPassed() {
+        val idsWithDataTimes = dateTimesCollector.collectForTopLabelRow(DATE_TIME)
+        Assert.assertThat(idsWithDataTimes, CoreMatchers.hasItems(*EXPECTED_FOR_WEEK_ROW))
+    }
+
+    @Test(expected = TimeNotAlignedException::class)
+    fun collectForTopLabelRow_shouldThrowTimeNotAlignedException_whenNotCorrectDateTimeIsPassed() {
+        dateTimesCollector.collectForTopLabelRow(DATE_TIME.plusDays(1))
     }
 
     companion object {
 
         private val DATE_TIME = LocalDate.of(2019, Month.FEBRUARY, 25).atStartOfDay()
-        private val EXPECTED_FOR_WEEK_ROW_VIEW = arrayOf(
+        private val EXPECTED_FOR_WEEK_ROW = arrayOf(
                 IdWithDataTime(0, DATE_TIME),
                 IdWithDataTime(1, DATE_TIME.plusDays(1)),
                 IdWithDataTime(2, DATE_TIME.plusDays(2)),
@@ -44,7 +55,7 @@ class DateTimesCollectorTest {
                 IdWithDataTime(4, DATE_TIME.plusDays(4)),
                 IdWithDataTime(5, DATE_TIME.plusDays(5)),
                 IdWithDataTime(6, DATE_TIME.plusDays(6)))
-        private val EXPECTED_FOR_BOARD_LIST_VIEW = arrayOf(
+        private val EXPECTED_FOR_WEEK_COLUMN = arrayOf(
                 IdWithDataTime(0, DATE_TIME.withHour(0)),
                 IdWithDataTime(1, DATE_TIME.withHour(1)),
                 IdWithDataTime(2, DATE_TIME.withHour(2)),
@@ -70,7 +81,7 @@ class DateTimesCollectorTest {
                 IdWithDataTime(22, DATE_TIME.withHour(22)),
                 IdWithDataTime(23, DATE_TIME.withHour(23)))
 
-        private val dateTimesCollector = DateTimesCollector();
+        private val dateTimesCollector = DateTimesCollector()
     }
 
 }

@@ -11,33 +11,40 @@ import java.util.List;
 
 public class DateTimesCollector {
 
-    public List<IdWithDataTime> collectForWeekRowView(final LocalDateTime dateTime) throws TimeNotAlignedException {
-        if (isTimeNotAlignedForWeekRowView(dateTime)) {
+    public List<IdWithDataTime> collectForTopLabelRow(final LocalDateTime firstDateTime) throws TimeNotAlignedException {
+        if (isTimeNotAlignedForWeekColumn(firstDateTime)) {
+            throw new TimeNotAlignedException(ChronoUnit.WEEKS);
+        }
+        return collectForWeekRow(firstDateTime);
+    }
+
+    public List<IdWithDataTime> collectForWeekRow(final LocalDateTime firstDateTime) throws TimeNotAlignedException {
+        if (isTimeNotAlignedForWeekRow(firstDateTime)) {
             throw new TimeNotAlignedException(ChronoUnit.HOURS);
         }
         final List<IdWithDataTime> idsWithDateTimes = new ArrayList<>();
         for (int columnId = 0; columnId < 7; columnId++) {
-            idsWithDateTimes.add(new IdWithDataTime(columnId, dateTime.plusDays(columnId)));
+            idsWithDateTimes.add(new IdWithDataTime(columnId, firstDateTime.plusDays(columnId)));
         }
         return idsWithDateTimes;
     }
 
-    private boolean isTimeNotAlignedForWeekRowView(final LocalDateTime dateTime) {
+    private boolean isTimeNotAlignedForWeekRow(final LocalDateTime dateTime) {
         return !dateTime.equals(dateTime.toLocalDate().atTime(dateTime.getHour(), 0));
     }
 
-    public List<IdWithDataTime> collectForBoardListView(final LocalDateTime dateTime) throws TimeNotAlignedException {
-        if (isTimeNotAlignedForBoardListView(dateTime)) {
+    public List<IdWithDataTime> collectForWeekColumn(final LocalDateTime firstDateTime) throws TimeNotAlignedException {
+        if (isTimeNotAlignedForWeekColumn(firstDateTime)) {
             throw new TimeNotAlignedException(ChronoUnit.WEEKS);
         }
         final List<IdWithDataTime> idsWithDateTimes = new ArrayList<>();
         for (int hourId = 0; hourId < 24; hourId++) {
-            idsWithDateTimes.add(new IdWithDataTime(hourId, dateTime.withHour(hourId)));
+            idsWithDateTimes.add(new IdWithDataTime(hourId, firstDateTime.withHour(hourId)));
         }
         return idsWithDateTimes;
     }
 
-    private boolean isTimeNotAlignedForBoardListView(final LocalDateTime dateTime) {
-        return !dateTime.isEqual(dateTime.toLocalDate().atStartOfDay()) || dateTime.getDayOfWeek() != DayOfWeek.MONDAY;
+    private boolean isTimeNotAlignedForWeekColumn(final LocalDateTime firstDateTime) {
+        return !firstDateTime.isEqual(firstDateTime.toLocalDate().atStartOfDay()) || firstDateTime.getDayOfWeek() != DayOfWeek.MONDAY;
     }
 }

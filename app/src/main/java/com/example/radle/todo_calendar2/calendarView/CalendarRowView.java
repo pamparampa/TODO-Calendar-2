@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.example.radle.todo_calendar2.calendarView.dto.CalendarField;
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarRowLabel;
+import com.example.radle.todo_calendar2.calendarView.dto.CalendarLabel;
 import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
 import com.example.radle.todo_calendar2.calendarView.tools.CalendarRowElementsComposer;
 import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
@@ -24,7 +24,7 @@ import static java.util.stream.Collectors.toList;
 public class CalendarRowView extends View {
     private final CalendarRowElementsComposer composer = new CalendarRowElementsComposer();
     private RowParams params;
-    private CalendarRowLabel label;
+    private CalendarLabel label;
     private List<CalendarField> calendarFields;
     private final Paint labelTextPaint = new Paint();
     private final Paint rectPaint = new Paint();
@@ -54,7 +54,7 @@ public class CalendarRowView extends View {
 
     @Override
     protected void onDraw(final Canvas canvas) {
-        compose();      // TODO byc moze do innej metody, np. onSizeChanged
+        compose();
         canvas.drawText(this.label.getText(), this.label.getTextX(), this.label.getTextY(), this
                 .labelTextPaint);
         this.calendarFields.forEach(calendarField -> canvas.drawRect(calendarField.getRect(),
@@ -68,7 +68,7 @@ public class CalendarRowView extends View {
 
     private void prepareLabel() {
         try {
-            this.label = this.composer.getLabel(this.params);
+            this.label = this.composer.getRowLabel(this.params);
         } catch (final HourTextFormatter.NotRealHourNumberException e) {
             Logger.getLogger("Exception").log(Level.WARNING, "Not valid calendar element: ");
             e.printStackTrace();
@@ -79,7 +79,7 @@ public class CalendarRowView extends View {
     private void prepareCalendarFields() {
         try {
             this.calendarFields = new DateTimesCollector()
-                    .collectForWeekRowView(this.params.getRowFirsDateTime())
+                    .collectForWeekRow(this.params.getRowFirsDateTime())
                     .stream()
                     .map(this::getCalendarField).collect(toList());
         } catch (final TimeNotAlignedException e) {
@@ -96,12 +96,8 @@ public class CalendarRowView extends View {
         this.params.setId(position);
     }
 
-    public static class RowParams {
-        private int width = 0;
-        private int height;
-        private final int numberOfColumns;
+    public static class RowParams extends com.example.radle.todo_calendar2.calendarView.RowParams {
         private int id;
-        private final LocalDateTime rowFirsDateTime;
 
         public RowParams(final int width, final int height, final int numberOfColumns, final int id,
                          final LocalDateTime rowFirsDateTime) {
@@ -117,24 +113,12 @@ public class CalendarRowView extends View {
             this.rowFirsDateTime = rowFirsDateTime;
         }
 
-        public int getWidth() {
-            return this.width;
-        }
-
-        public int getHeight() {
-            return this.height;
-        }
-
-        public int getNumberOfColumns() {
-            return this.numberOfColumns;
-        }
-
         public int getId() {
             return this.id;
         }
 
-        public LocalDateTime getRowFirsDateTime() {
-            return this.rowFirsDateTime;
+        public void setId(final int position) {
+            this.id = position;
         }
 
         @Override
@@ -164,10 +148,6 @@ public class CalendarRowView extends View {
                     ", id=" + this.id +
                     ", rowFirsDateTime=" + this.rowFirsDateTime +
                     '}';
-        }
-
-        public void setId(final int position) {
-            this.id = position;
         }
     }
 }

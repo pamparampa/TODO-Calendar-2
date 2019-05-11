@@ -3,11 +3,13 @@ package com.example.radle.todo_calendar2.calendarView.tools;
 import android.graphics.Rect;
 
 import com.example.radle.todo_calendar2.calendarView.CalendarRowView;
+import com.example.radle.todo_calendar2.calendarView.RowParams;
+import com.example.radle.todo_calendar2.calendarView.TopLabelRow;
 import com.example.radle.todo_calendar2.calendarView.dto.CalendarField;
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarRowLabel;
+import com.example.radle.todo_calendar2.calendarView.dto.CalendarLabel;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import androidx.annotation.NonNull;
 
@@ -31,36 +33,37 @@ public class CalendarRowElementsComposer {
         return new CalendarField(columnId, rect, localDateTime);
     }
 
-    private int fieldWidth(final CalendarRowView.RowParams rowParams) {
-        return rowParams.getWidth() / (rowParams.getNumberOfColumns() + ADDITIONAL_LABEL_COLUMN);
-    }
-
-    public CalendarRowLabel getLabel(final CalendarRowView.RowParams rowParams) throws
+    public CalendarLabel getRowLabel(final CalendarRowView.RowParams rowParams) throws
             HourTextFormatter.NotRealHourNumberException {
 
-        return new CalendarRowLabel(generateLabelText(rowParams), getTextX(rowParams),
-                getTextY(rowParams), generateLocalTime(rowParams));
+        return new CalendarLabel(generateRowLabelText(rowParams), getTextX(rowParams),
+                getTextY(rowParams));
+    }
+
+    public CalendarLabel getTopLabel(final TopLabelRow.RowParams rowParams, final LocalDate date) {
+        return new CalendarLabel(new DayTextFormatter().format(date), getTextX(rowParams),
+                getTextY(rowParams));
     }
 
     @NonNull
-    private String generateLabelText(final CalendarRowView.RowParams rowParams) throws
+    private String generateRowLabelText(final CalendarRowView.RowParams rowParams) throws
             HourTextFormatter.NotRealHourNumberException {
         return new HourTextFormatter().format(rowParams.getId());
     }
 
-    private int getTextX(final CalendarRowView.RowParams rowParams) {
+    private int getTextX(final RowParams rowParams) {
         return (int) (fieldWidth(rowParams) * TEXT_X_PROPORTIONS);
     }
 
-    private int getTextY(final CalendarRowView.RowParams rowParams) {
+    private int getTextY(final RowParams rowParams) {
         return (int) (rowParams.getHeight() * TEXT_Y_PROPORTIONS);
     }
 
-    private LocalTime generateLocalTime(final CalendarRowView.RowParams rowParams) {
-        return LocalTime.of(rowParams.getId(), 0);
+    private int fieldWidth(final RowParams rowParams) {
+        return rowParams.getWidth() / (rowParams.getNumberOfColumns() + ADDITIONAL_LABEL_COLUMN);
     }
 
-    public float getTextSize(final CalendarRowView.RowParams params) {
+    public float getTextSize(final RowParams params) {
         return params.getHeight() * TEXT_HEIGHT_PROPORTIONS;
     }
 }

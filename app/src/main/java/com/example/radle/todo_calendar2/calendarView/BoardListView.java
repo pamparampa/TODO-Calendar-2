@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.widget.ListView;
 
 import com.example.radle.todo_calendar2.R;
-import com.example.radle.todo_calendar2.calendarView.tools.CalendarMeasure;
 import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
+import com.example.radle.todo_calendar2.calendarView.tools.RowsMeasures;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class BoardListView extends ListView {
         this.adapter.setParams(params);
         try {
             this.adapter.addAll(
-                    new DateTimesCollector().collectForBoardListView(this.params.firstDateTime));
+                    new DateTimesCollector().collectForWeekColumn(this.params.firstDateTime));
         } catch (final TimeNotAlignedException e) {
             e.printStackTrace();
         }
@@ -37,7 +37,7 @@ public class BoardListView extends ListView {
     @Override
     protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
         this.params.width = w;
-        this.params.rowHeight = new CalendarMeasure().measureRowHeight(this.params);
+        this.params.rowHeight = new RowsMeasures().measureRowHeight(this.params);
     }
 
     public static class BoardParams {
@@ -70,10 +70,6 @@ public class BoardListView extends ListView {
 
         public int getNumberOfColumns() {
             return this.numberOfColumns;
-        }
-
-        public LocalDateTime getFirstDateTime() {
-            return this.firstDateTime;
         }
     }
 }

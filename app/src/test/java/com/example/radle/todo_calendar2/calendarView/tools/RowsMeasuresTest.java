@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 
 import static org.junit.Assert.assertSame;
 
-public class CalendarMeasureTest {
+public class RowsMeasuresTest {
 
-    private final CalendarMeasure subject = new CalendarMeasure();
+    private final RowsMeasures subject = new RowsMeasures();
     private final LocalDateTime DATE_TIME = LocalDateTime.now();
 
     @Test

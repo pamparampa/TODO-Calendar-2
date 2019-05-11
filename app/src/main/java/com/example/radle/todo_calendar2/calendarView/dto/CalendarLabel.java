@@ -1,45 +1,39 @@
 package com.example.radle.todo_calendar2.calendarView.dto;
 
-import java.time.LocalTime;
 import java.util.Objects;
 
-public class CalendarRowLabel {
+public class CalendarLabel {
 
     private final String text;
-    private final LocalTime time;
     private final float textX;
     private final float textY;
 
-    public CalendarRowLabel(final String text, final int textX, final int textY, final LocalTime
-            time) {
+    public CalendarLabel(final String text, final int textX, final int textY) {
         this.text = text;
         this.textX = textX;
         this.textY = textY;
-        this.time = time;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(this.text, this.textX, this.textY, this.time);
+        return Objects.hash(this.text, this.textX, this.textY);
     }
 
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (!(o instanceof CalendarRowLabel)) return false;
-        final CalendarRowLabel that = (CalendarRowLabel) o;
+        if (!(o instanceof CalendarLabel)) return false;
+        final CalendarLabel that = (CalendarLabel) o;
         return Float.compare(that.textX, this.textX) == 0 &&
                 Float.compare(that.textY, this.textY) == 0 &&
-                Objects.equals(this.text, that.text) &&
-                Objects.equals(this.time, that.time);
+                Objects.equals(this.text, that.text);
     }
 
     @Override
     public String toString() {
-        return "CalendarRowLabel{" +
+        return "CalendarLabel{" +
                 "text='" + this.text + '\'' +
-                ", time=" + this.time +
                 ", textX=" + this.textX +
                 ", textY=" + this.textY +
                 '}';

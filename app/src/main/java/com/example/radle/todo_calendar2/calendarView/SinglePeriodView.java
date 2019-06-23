@@ -10,12 +10,13 @@ import androidx.annotation.Nullable;
 
 public abstract class SinglePeriodView extends LinearLayout {
 
-    private static final float BOARD_WEIGHT = 0.9f;
-    private static final float TOP_LABEL_WEIGHT = 0.1f;
+    private static final float BOARD_WEIGHT = 0.1f;
+    private static final float TOP_LABEL_WEIGHT = 0.9f;
     protected PeriodParams params;
 
     public SinglePeriodView(final Context context, @Nullable final AttributeSet attrs) {
         super(context, attrs);
+        setOrientation(VERTICAL);
     }
 
     protected float getBoardWeight() {
@@ -27,6 +28,10 @@ public abstract class SinglePeriodView extends LinearLayout {
     }
 
     public static class PeriodParams {
-        protected LocalDateTime firstDateTime;
+        LocalDateTime firstDateTime;
+
+        public PeriodParams(final LocalDateTime firstDateTime) {
+            this.firstDateTime = firstDateTime;
+        }
     }
 }

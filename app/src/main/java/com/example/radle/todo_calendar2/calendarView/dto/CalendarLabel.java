@@ -7,11 +7,14 @@ public class CalendarLabel {
     private final String text;
     private final float textX;
     private final float textY;
+    private final int fieldWidth;
 
-    public CalendarLabel(final String text, final int textX, final int textY) {
+    public CalendarLabel(final String text, final int textX, final int textY,
+                         final int fieldWidth) {
         this.text = text;
         this.textX = textX;
         this.textY = textY;
+        this.fieldWidth = fieldWidth;
     }
 
     @Override
@@ -30,6 +33,7 @@ public class CalendarLabel {
                 Objects.equals(this.text, that.text);
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString() {
         return "CalendarLabel{" +
@@ -51,4 +55,7 @@ public class CalendarLabel {
         return this.textY;
     }
 
+    public int getFieldWidth() {
+        return this.fieldWidth;
+    }
 }

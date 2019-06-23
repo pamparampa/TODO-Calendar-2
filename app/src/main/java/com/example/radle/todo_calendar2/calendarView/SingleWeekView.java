@@ -12,15 +12,10 @@ public class SingleWeekView extends SinglePeriodView {
 
     public SingleWeekView(final Context context, @Nullable final AttributeSet attrs) {
         super(context, attrs);
-
     }
 
     public void setParams(final PeriodParams params) {
         this.params = params;
-    }
-
-    @Override
-    protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
         compose();
     }
 
@@ -54,5 +49,6 @@ public class SingleWeekView extends SinglePeriodView {
     private TopLabelRow.RowParams buildTopLabelParms() {
         return new TopLabelRow.RowParams(NUMBER_OF_COLUMNS, this.params.firstDateTime);
     }
+
 
 }

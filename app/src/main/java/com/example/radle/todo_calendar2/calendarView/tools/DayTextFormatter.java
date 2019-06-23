@@ -7,7 +7,7 @@ import java.util.Locale;
 public class DayTextFormatter {
 
     public String format(final LocalDate date) {
-        return date.getDayOfWeek().getDisplayName(TextStyle.NARROW, Locale.getDefault())
+        return date.getDayOfWeek().getDisplayName(TextStyle.NARROW, Locale.getDefault()).toUpperCase()
                 + "\n"
                 + date.getDayOfMonth();
     }

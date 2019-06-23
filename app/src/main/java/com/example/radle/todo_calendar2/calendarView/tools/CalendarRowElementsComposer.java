@@ -7,8 +7,8 @@ import com.example.radle.todo_calendar2.calendarView.RowParams;
 import com.example.radle.todo_calendar2.calendarView.TopLabelRow;
 import com.example.radle.todo_calendar2.calendarView.dto.CalendarField;
 import com.example.radle.todo_calendar2.calendarView.dto.CalendarLabel;
+import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import androidx.annotation.NonNull;
@@ -18,13 +18,13 @@ public class CalendarRowElementsComposer {
 
     private static final int ADDITIONAL_LABEL_COLUMN = 1;
     private static final double TEXT_X_PROPORTIONS = 0.2;
-    private static final double TEXT_Y_PROPORTIONS = 0.5;
+    private static final double TEXT_Y_PROPORTIONS = 0.2;
     private static final float TEXT_HEIGHT_PROPORTIONS = 0.25F;
 
     public CalendarField getCalendarField(final CalendarRowView.RowParams rowParams, final
     int columnId, final LocalDateTime localDateTime) {
         final int fieldWidth = fieldWidth(rowParams);
-        final int labelWidth = fieldWidth;
+        @SuppressWarnings("UnnecessaryLocalVariable") final int labelWidth = fieldWidth;
         final Rect rect = new Rect();
         rect.top = 0;
         rect.left = labelWidth + columnId * fieldWidth;
@@ -37,12 +37,18 @@ public class CalendarRowElementsComposer {
             HourTextFormatter.NotRealHourNumberException {
 
         return new CalendarLabel(generateRowLabelText(rowParams), getTextX(rowParams),
-                getTextY(rowParams));
+                getTextY(rowParams), fieldWidth(rowParams));
     }
 
-    public CalendarLabel getTopLabel(final TopLabelRow.RowParams rowParams, final LocalDate date) {
-        return new CalendarLabel(new DayTextFormatter().format(date), getTextX(rowParams),
-                getTextY(rowParams));
+    public CalendarLabel getTopLabel(final TopLabelRow.RowParams rowParams,
+                                     final IdWithDataTime idWithDataTime) {
+        return new CalendarLabel(new DayTextFormatter().format(idWithDataTime.getDateTime().toLocalDate()),
+                getColumnX(rowParams, idWithDataTime.getId()),
+                getTextY(rowParams), fieldWidth(rowParams));
+    }
+
+    private int getColumnX(final TopLabelRow.RowParams rowParams, final int id) {
+        return (id + 1) * fieldWidth(rowParams);
     }
 
     @NonNull
@@ -56,7 +62,8 @@ public class CalendarRowElementsComposer {
     }
 
     private int getTextY(final RowParams rowParams) {
-        return (int) (rowParams.getHeight() * TEXT_Y_PROPORTIONS);
+        return (int) (rowParams.getHeight() * TEXT_Y_PROPORTIONS); // TODO nie do konca sie
+        // zgadza dla rowLabel
     }
 
     private int fieldWidth(final RowParams rowParams) {

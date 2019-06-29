@@ -41,25 +41,18 @@ public class TopLabelRow extends View {
     }
 
     @Override
-    protected void onDraw(final Canvas canvas) {
-
-        compose();
+    protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
+        this.params.height = h;
+        this.params.width = w;
         this.labelTextPaint.setTextSize(this.calendarRowElementsComposer.getTextSize(this.params));
-        this.topLabelFields.forEach(
-                label -> drawText(canvas, label));
-        canvas.drawLine(0, this.params.height, this.params.width, this.params.height,
-                this.linePaint);
     }
 
-    private void drawText(final Canvas canvas, final CalendarLabel label) {
-        final StaticLayout textLayout = new StaticLayout(label.getText(), this.labelTextPaint,
-                label.getFieldWidth(), Layout.Alignment.ALIGN_CENTER, 1.0f,
-                0.0f,
-                false);
-        canvas.save();
-        canvas.translate(label.getTextX(), label.getTextY());
-        textLayout.draw(canvas);
-        canvas.restore();
+    @Override
+    protected void onDraw(final Canvas canvas) {
+        compose();
+        this.topLabelFields.forEach(
+                label -> drawText(canvas, label));
+        drawBottomLine(canvas);
     }
 
     private void compose() {
@@ -75,14 +68,24 @@ public class TopLabelRow extends View {
         }
     }
 
-    @Override
-    protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
-        this.params.height = h;
-        this.params.width = w;
-    }
-
     private CalendarLabel getTopLabelField(final IdWithDataTime idWithDataTime) {
         return this.calendarRowElementsComposer.getTopLabel(this.params, idWithDataTime);
+    }
+
+    private void drawText(final Canvas canvas, final CalendarLabel label) {
+        final StaticLayout textLayout = new StaticLayout(label.getText(), this.labelTextPaint,
+                label.getFieldWidth(), Layout.Alignment.ALIGN_CENTER, 1.0f,
+                0.0f,
+                false);
+        canvas.save();
+        canvas.translate(label.getTextX(), label.getTextY());
+        textLayout.draw(canvas);
+        canvas.restore();
+    }
+
+    private void drawBottomLine(final Canvas canvas) {
+        canvas.drawLine(0, this.params.height, this.params.width, this.params.height,
+                this.linePaint);
     }
 
     public static class RowParams extends com.example.radle.todo_calendar2.calendarView.RowParams {

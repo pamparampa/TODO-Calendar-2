@@ -42,7 +42,7 @@ class CalendarRowElementsComposerTest {
     @Test
     fun getRowLabel_shouldReturnFirstLabel_whenZeroIdPassed() {
         assertEquals(
-                expectedRowLabel(0, 2, 2),
+                expectedRowLabel(0, 2, 3),
                 composer.getRowLabel(CalendarRowView.RowParams(WIDTH, HEIGHT,
                         NUMBER_OF_COLUMNS, 0, DATE_TIME))
         )
@@ -51,7 +51,7 @@ class CalendarRowElementsComposerTest {
     @Test
     fun getRowLabel_shouldReturnCorrectLabel_whenNotZeroIdPassed() {
         assertEquals(
-                expectedRowLabel(13, 4, 4),
+                expectedRowLabel(13, 4, 6),
                 composer.getRowLabel(CalendarRowView.RowParams(WIDTH * 2, HEIGHT * 2, 7, 13,
                         DATE_TIME))
         )
@@ -60,7 +60,7 @@ class CalendarRowElementsComposerTest {
     @Test
     fun getTopLabel_shouldReturnFirstLabel_whenMondayDateIsPassed() {
         assertEquals(
-                CalendarLabel("P\n29", 10, 2, 10),
+                CalendarLabel("P\n29", 10, 3, 10),
                 composer.getTopLabel(TopLabelRow.RowParams(WIDTH, HEIGHT, NUMBER_OF_COLUMNS, DATE_TIME), IdWithDataTime(0, DATE_TIME)))
     }
 
@@ -68,7 +68,7 @@ class CalendarRowElementsComposerTest {
     fun getTopLabel_shouldReturnCorrectLabel_whenNoMondayDateIsPassed() {
         val dateTime = LocalDateTime.of(2019, Month.JUNE, 23, 0, 0, 0)
         assertEquals(
-                CalendarLabel("N\n23", 70, 2, 10),
+                CalendarLabel("N\n23", 70, 3, 10),
                 composer.getTopLabel(TopLabelRow.RowParams(WIDTH, HEIGHT, NUMBER_OF_COLUMNS, dateTime), IdWithDataTime(6, dateTime))
         )
     }

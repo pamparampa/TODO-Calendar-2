@@ -18,7 +18,7 @@ public class CalendarRowElementsComposer {
 
     private static final int ADDITIONAL_LABEL_COLUMN = 1;
     private static final double TEXT_X_PROPORTIONS = 0.2;
-    private static final double TEXT_Y_PROPORTIONS = 0.2;
+    private static final double TEXT_Y_PROPORTIONS = 0.3;
     private static final float TEXT_HEIGHT_PROPORTIONS = 0.25F;
 
     public CalendarField getCalendarField(final CalendarRowView.RowParams rowParams, final
@@ -62,8 +62,7 @@ public class CalendarRowElementsComposer {
     }
 
     private int getTextY(final RowParams rowParams) {
-        return (int) (rowParams.getHeight() * TEXT_Y_PROPORTIONS); // TODO nie do konca sie
-        // zgadza dla rowLabel
+        return (int) (rowParams.getHeight() * TEXT_Y_PROPORTIONS);
     }
 
     private int fieldWidth(final RowParams rowParams) {

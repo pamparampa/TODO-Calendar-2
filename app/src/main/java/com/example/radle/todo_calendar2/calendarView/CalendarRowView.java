@@ -67,6 +67,7 @@ public class CalendarRowView extends View {
         prepareCalendarFields();
     }
 
+
     private void prepareLabel() {
         try {
             this.label = this.composer.getRowLabel(this.params);

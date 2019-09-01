@@ -6,10 +6,12 @@ import java.util.Objects;
 
 public class ScrollVelocity {
     private static InitialPoint initialPoint;
-    private Duration duration;
-    private int distance;
+    private final Duration duration;
+    private final int distance;
 
-    private ScrollVelocity() {
+    public ScrollVelocity(final int distance, final Duration duration) {
+        this.distance = distance;
+        this.duration = duration;
     }
 
     public static void startMeasurement(final int x, final LocalTime time) {
@@ -28,12 +30,16 @@ public class ScrollVelocity {
                     "started yet");
         }
         final ScrollVelocity scrollVelocity =
-                new Builder()
-                        .withDistance(x - initialPoint.x)
-                        .withDuration(Duration.between(initialPoint.time, time))
-                        .build();
+                new ScrollVelocity(x - initialPoint.x, countDuration(time));
         invalidate();
         return scrollVelocity;
+    }
+
+    private static Duration countDuration(final LocalTime time) {
+        final Duration duration = Duration.between(initialPoint.time, time);
+        if (duration.isNegative()) {
+            return Duration.ofDays(1).minus(duration.abs());
+        } else return duration;
     }
 
     public static void invalidate() {
@@ -54,23 +60,12 @@ public class ScrollVelocity {
         return Objects.hash(this.duration, this.distance);
     }
 
-    public static class Builder {
+    public int getDistance() {
+        return this.distance;
+    }
 
-        private final ScrollVelocity scrollVelocity = new ScrollVelocity();
-
-        public Builder withDuration(final Duration duration) {
-            this.scrollVelocity.duration = duration;
-            return this;
-        }
-
-        public Builder withDistance(final int distance) {
-            this.scrollVelocity.distance = distance;
-            return this;
-        }
-
-        public ScrollVelocity build() {
-            return this.scrollVelocity;
-        }
+    public Duration getDuration() {
+        return this.duration;
     }
 
     private static class InitialPoint {

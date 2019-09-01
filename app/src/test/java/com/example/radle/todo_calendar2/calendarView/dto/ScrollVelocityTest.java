@@ -22,7 +22,7 @@ public class ScrollVelocityTest {
     @Test
     public void startMeasurement_shouldReturnZeroVelocity_whenPositionOfScrollDidNotChanged() {
         final ScrollVelocity expectedVelocity =
-                new ScrollVelocity.Builder().withDuration(Duration.ofMinutes(2)).withDistance(0).build();
+                new ScrollVelocity(0, Duration.ofMinutes(2));
         ScrollVelocity.startMeasurement(0, LocalTime.of(0, 0));
         Assert.assertEquals(expectedVelocity, ScrollVelocity.finishMeasurement(0, LocalTime.of(0,
                 2)));
@@ -30,9 +30,9 @@ public class ScrollVelocityTest {
     }
 
     @Test
-    public void startMeasurement_shouldReturnValidVelocity_whenPositionChanged() {
+    public void startMeasurement_shouldReturnValidVelocity_whenPositionOfScrollChanged() {
         final ScrollVelocity expectedVelocity =
-                new ScrollVelocity.Builder().withDuration(Duration.ofMinutes(2)).withDistance(1).build();
+                new ScrollVelocity(1, Duration.ofMinutes(2));
         ScrollVelocity.startMeasurement(3, LocalTime.of(0, 0));
         Assert.assertEquals(expectedVelocity, ScrollVelocity.finishMeasurement(4, LocalTime.of(0,
                 2)));
@@ -51,4 +51,12 @@ public class ScrollVelocityTest {
         ScrollVelocity.finishMeasurement(0, LocalTime.of(0, 2));
     }
 
+    @Test
+    public void finishMeasurement_shouldReturnValidValocity_whenItWasMeasuredBetweenDays() {
+        final ScrollVelocity expectedVelocity =
+                new ScrollVelocity(1, Duration.ofMinutes(2));
+        ScrollVelocity.startMeasurement(3, LocalTime.of(23, 59));
+        Assert.assertEquals(expectedVelocity, ScrollVelocity.finishMeasurement(4, LocalTime.of(0,
+                1)));
+    }
 }

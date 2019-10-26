@@ -42,15 +42,19 @@ public class CalendarView extends HorizontalScrollView {
                         ViewGroup.LayoutParams.MATCH_PARENT));
 
         this.linearLayout.addView(newSingleWeekView(previousWeekBeginning()));
-        //this.linearLayout.addView(newSingleWeekView(currentWeekBeginning()));
-        //this.linearLayout.addView(newSingleWeekView(nextWeekBeginning()));
+        this.linearLayout.addView(newSingleWeekView(currentWeekBeginning()));
+        this.linearLayout.addView(newSingleWeekView(nextWeekBeginning()));
 
-        ((Activity) getContext()).getWindowManager().getDefaultDisplay()
-                .getSize(this.outSize); // TODO zrobic to jakos bardziej elegancko
-        this.width = this.outSize.x;
+        this.width = getScreenWidth();
         createSideToPositionMap();
 
         addView(this.linearLayout);
+    }
+
+    private int getScreenWidth() {
+        ((Activity) getContext()).getWindowManager().getDefaultDisplay()
+                .getSize(this.outSize);
+        return this.outSize.x;
     }
 
     private void createSideToPositionMap() {    // TODO - call when width is known
@@ -112,6 +116,7 @@ public class CalendarView extends HorizontalScrollView {
         singleWeekView
                 .setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.MATCH_PARENT));
+
         return singleWeekView;
     }
 

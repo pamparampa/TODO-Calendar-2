@@ -48,8 +48,9 @@ public class CalendarRowView extends View {
 
     @Override
     protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
-        this.params.height = h;
-        this.params.width = w;
+        if (this.params.width == 0) {
+            this.params.width = w;
+        }
     }
 
     @Override

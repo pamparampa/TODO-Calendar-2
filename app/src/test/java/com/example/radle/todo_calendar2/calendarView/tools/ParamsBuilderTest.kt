@@ -55,7 +55,7 @@ class ParamsBuilderTest {
     }
 
     private fun expectedRowParams(id: Int, dateTime: LocalDateTime): CalendarRowView.RowParams {
-        return CalendarRowView.RowParams(2, 7, id, dateTime)
+        return CalendarRowView.RowParams(1, 2, 7, id, dateTime)
     }
 
 }

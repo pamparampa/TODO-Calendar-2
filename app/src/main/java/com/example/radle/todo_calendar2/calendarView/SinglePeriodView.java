@@ -30,14 +30,6 @@ public abstract class SinglePeriodView extends LinearLayout {
         setOrientation(VERTICAL);
     }
 
-    @Override
-    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
-        // TODO zrobic to bardziej elegancko
-        //((Activity) getContext()).getWindowManager().getDefaultDisplay().getSize(this.outSize);
-
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-    }
-
     protected float getBoardWeight() {
         return BOARD_WEIGHT;
     }
@@ -75,8 +67,9 @@ public abstract class SinglePeriodView extends LinearLayout {
     }
 
     private BoardListView.BoardParams buildBoardParams() {
-        return new BoardListView.BoardParams(getSmallerScreenDimension(),
-                new RowsMeasures().measureRowHeight(7),
+        final int smallerScreenDimension = getSmallerScreenDimension();
+        return new BoardListView.BoardParams(smallerScreenDimension,
+                new RowsMeasures().measureRowHeight(smallerScreenDimension, 7),
                 NUMBER_OF_COLUMNS, this.params.firstDateTime);
     }
 

@@ -33,7 +33,7 @@ public class BoardListViewActivity extends Activity {
     private BoardListView.BoardParams makeParams() {
         final int smallerDimension = getSmallerScreenDimension();
         return new BoardListView.BoardParams(getSmallerScreenDimension(),
-                new RowsMeasures().measureRowHeight(7), 7,
+                new RowsMeasures().measureRowHeight(smallerDimension, 7), 7,
                 LocalDateTime.of(2019, Month.MARCH, 18, 0, 0));
     }
 

@@ -1,6 +1,4 @@
-package com.example.radle.todo_calendar2.calendarView.tools;
-
-import com.example.radle.todo_calendar2.calendarView.dto.ScrollVelocity;
+package com.example.radle.todo_calendar2.calendarView.scrolling;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.min;

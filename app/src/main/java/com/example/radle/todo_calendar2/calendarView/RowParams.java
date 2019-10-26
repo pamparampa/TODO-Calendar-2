@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public abstract class RowParams {
-    int width = 0;
+    int width;
     int height;
     int numberOfColumns;
     LocalDateTime rowFirsDateTime;

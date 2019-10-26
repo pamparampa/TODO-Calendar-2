@@ -1,6 +1,6 @@
-package com.example.radle.todo_calendar2.calendarView.tools;
+package com.example.radle.todo_calendar2.calendarView.scrolling;
 
-import com.example.radle.todo_calendar2.calendarView.dto.ScrollEffectParameters;
+import com.example.radle.todo_calendar2.calendarView.tools.WeekBeginningDateTimeProvider;
 
 import java.time.LocalDateTime;
 

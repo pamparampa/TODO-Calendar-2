@@ -1,7 +1,4 @@
-package com.example.radle.todo_calendar2.calendarView.tools;
-
-import com.example.radle.todo_calendar2.calendarView.dto.ScrollEffectParameters;
-import com.example.radle.todo_calendar2.calendarView.dto.ScrollVelocity;
+package com.example.radle.todo_calendar2.calendarView.scrolling;
 
 import java.time.LocalDateTime;
 
@@ -19,11 +16,11 @@ public class ScrollingHandler {
     }
 
     public ScrollEffectParameters handleScroll(final ScrollVelocity scrollVelocity,
-                                               final LocalDateTime dateTime) {
+                                               final LocalDateTime currentlyVisibleDateTime) {
         final int durationOfAnimation = this.animationDurationCounter.count(scrollVelocity,
                 this.screenWidth);
         final ScrollEffectParametersFactory scrollEffectParametersFactory =
-                new ScrollEffectParametersFactory(durationOfAnimation, dateTime);
+                new ScrollEffectParametersFactory(durationOfAnimation, currentlyVisibleDateTime);
         if (scrollMoveWasTooSmallandTooSlow(scrollVelocity, durationOfAnimation)) {
             return scrollEffectParametersFactory.scrollBackToSamePositionParameters();
         } else return scrollEffectParametersFactory.scrollParameters(scrollVelocity.getDistance());

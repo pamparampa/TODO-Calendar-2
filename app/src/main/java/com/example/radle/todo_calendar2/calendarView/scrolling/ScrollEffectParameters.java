@@ -1,7 +1,8 @@
-package com.example.radle.todo_calendar2.calendarView.dto;
+package com.example.radle.todo_calendar2.calendarView.scrolling;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 
 public class ScrollEffectParameters {
 
@@ -19,6 +20,20 @@ public class ScrollEffectParameters {
                                   final ElementsToChangeAfterScroll elementsToChangeAfterScroll) {
         this(animationDuration, side);
         this.elementsToChangeAfterScroll = elementsToChangeAfterScroll;
+    }
+
+    public Side getSide() {
+        return this.side;
+    }
+
+    public int getAnimationDuration() {
+        return this.animationDuration;
+    }
+
+    public Optional<ElementsToChangeAfterScroll> getElementsToChangeAfrerScroll() {
+        if (this.elementsToChangeAfterScroll == null) {
+            return Optional.empty();
+        } else return Optional.of(this.elementsToChangeAfterScroll);
     }
 
     public enum Side {
@@ -54,6 +69,20 @@ public class ScrollEffectParameters {
         LocalDateTime newElementDateTime;
         int elementToRemoveId;
 
+        public ElementsToChangeAfterScroll(final LocalDateTime newElementDateTime,
+                                           final int elementToRemoveId) {
+            this.newElementDateTime = newElementDateTime;
+            this.elementToRemoveId = elementToRemoveId;
+        }
+
+        public LocalDateTime getNewElementDateTime() {
+            return this.newElementDateTime;
+        }
+
+        public int getElementToRemoveId() {
+            return this.elementToRemoveId;
+        }
+
         @Override
         public boolean equals(final Object o) {
             if (this == o) return true;
@@ -66,12 +95,6 @@ public class ScrollEffectParameters {
         @Override
         public int hashCode() {
             return Objects.hash(this.newElementDateTime, this.elementToRemoveId);
-        }
-
-        public ElementsToChangeAfterScroll(final LocalDateTime newElementDateTime,
-                                           final int elementToRemoveId) {
-            this.newElementDateTime = newElementDateTime;
-            this.elementToRemoveId = elementToRemoveId;
         }
 
         @Override

@@ -17,4 +17,11 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.example.radle.todo_calendar2.calendarView.CalendarView
+        android:layout_width="395dp"
+        android:layout_height="651dp"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="72dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

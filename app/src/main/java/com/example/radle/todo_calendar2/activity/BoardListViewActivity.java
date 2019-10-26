@@ -1,15 +1,19 @@
 package com.example.radle.todo_calendar2.activity;
 
 import android.app.Activity;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
+
+import androidx.annotation.Nullable;
 
 import com.example.radle.todo_calendar2.R;
 import com.example.radle.todo_calendar2.calendarView.BoardListView;
+import com.example.radle.todo_calendar2.calendarView.tools.RowsMeasures;
 
 import java.time.LocalDateTime;
 import java.time.Month;
 
-import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -27,7 +31,17 @@ public class BoardListViewActivity extends Activity {
     }
 
     private BoardListView.BoardParams makeParams() {
-        return new BoardListView.BoardParams(7, LocalDateTime.of(2019, Month.MARCH, 18, 0, 0));
+        final int smallerDimension = getSmallerScreenDimension();
+        return new BoardListView.BoardParams(getSmallerScreenDimension(),
+                new RowsMeasures().measureRowHeight(7), 7,
+                LocalDateTime.of(2019, Month.MARCH, 18, 0, 0));
+    }
+
+    private int getSmallerScreenDimension() {
+        final Display display = getWindowManager().getDefaultDisplay();
+        final Point size = new Point();
+        display.getSize(size);
+        return Math.min(size.x, size.y);
     }
 
 

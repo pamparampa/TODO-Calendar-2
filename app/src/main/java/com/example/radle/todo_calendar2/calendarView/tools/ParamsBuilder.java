@@ -11,7 +11,7 @@ import java.util.List;
 public class ParamsBuilder {
 
     public CalendarRowView.RowParams getRowParamsByBoardParams(@NotNull final BoardListView.BoardParams boardParams, final int id, final List<IdWithDataTime> idsWithDateTimes) {
-        return new CalendarRowView.RowParams(boardParams.getRowHeight(),
+        return new CalendarRowView.RowParams(boardParams.getWidth(), boardParams.getRowHeight(),
                 boardParams.getNumberOfColumns(), id, idsWithDateTimes.get(id).getDateTime());
     }
 }

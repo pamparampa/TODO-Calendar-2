@@ -1,4 +1,4 @@
-package com.example.radle.todo_calendar2.calendarView.dto;
+package com.example.radle.todo_calendar2.calendarView.scrolling;
 
 import java.time.Duration;
 import java.time.LocalTime;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.radle.todo_calendar2.calendarView.dto.CalendarField;
@@ -28,6 +29,7 @@ public class CalendarRowView extends View {
     private List<CalendarField> calendarFields;
     private final Paint labelTextPaint = new Paint();
     private final Paint rectPaint = new Paint();
+    private OnHorizontalScrollListener onHorizontalScrollListener;
 
     public CalendarRowView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -153,5 +155,18 @@ public class CalendarRowView extends View {
                     ", rowFirsDateTime=" + this.rowFirsDateTime +
                     '}';
         }
+    }
+
+    public void setOnHorizontalScrollListener(final OnHorizontalScrollListener onHorizontalScrollListener) {
+        this.onHorizontalScrollListener = onHorizontalScrollListener;
+    }
+
+    @Override
+    public boolean onTouchEvent(final MotionEvent event) {
+        if (event
+                .getAction() == MotionEvent.ACTION_DOWN && this.onHorizontalScrollListener != null) {
+            this.onHorizontalScrollListener.startScrolling(event.getX());
+        }
+        return true;
     }
 }

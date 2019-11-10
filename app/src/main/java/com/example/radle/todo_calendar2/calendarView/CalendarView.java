@@ -23,32 +23,43 @@ import java.util.Map;
 import java.util.Optional;
 
 
-public class CalendarView extends HorizontalScrollView {
+public class CalendarView extends HorizontalScrollView implements OnHorizontalScrollListener {
     private static final int CURRENTLY_VISBLE_VIEW_INDEX = 1;
     private final LinearLayout linearLayout;
     private final WeekBeginningDateTimeProvider weekBeginningDateTimeProvider =
             new WeekBeginningDateTimeProvider();
     private final Point outSize = new Point();
-    private final int width;
+    private int width;
     private Map<ScrollEffectParameters.Side, Integer> sideToPosition;
+    private int lastScrollPosition;
+    private float lastTouchX;
 
     public CalendarView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
 
-        this.linearLayout = new LinearLayout(context, attrs);
+        this.linearLayout = new LinearLayout(context, attrs) {
+            @Override
+            protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
+                super.onSizeChanged(w, h, oldw, oldh);
+                CalendarView.this.width = w / 100;
+            }
+        };
         this.linearLayout.setOrientation(LinearLayout.HORIZONTAL);
         this.linearLayout.setLayoutParams(
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.MATCH_PARENT));
 
-        this.linearLayout.addView(newSingleWeekView(previousWeekBeginning()));
-        this.linearLayout.addView(newSingleWeekView(currentWeekBeginning()));
-        this.linearLayout.addView(newSingleWeekView(nextWeekBeginning()));
+        this.linearLayout.setDividerPadding(0);
+        for (int i = -50; i < 50; i++) {
+            this.linearLayout.addView(newSingleWeekView(
+                    this.weekBeginningDateTimeProvider.getWeekBeginning(LocalDateTime.now(), i)));
+        }
 
         this.width = getScreenWidth();
         createSideToPositionMap();
 
         addView(this.linearLayout);
+
     }
 
     private int getScreenWidth() {
@@ -57,7 +68,7 @@ public class CalendarView extends HorizontalScrollView {
         return this.outSize.x;
     }
 
-    private void createSideToPositionMap() {    // TODO - call when width is known
+    private void createSideToPositionMap() {
         this.sideToPosition = new HashMap<ScrollEffectParameters.Side, Integer>() {{
             put(ScrollEffectParameters.Side.LEFT, 0);
             put(ScrollEffectParameters.Side.SAME, CalendarView.this.width);
@@ -69,15 +80,14 @@ public class CalendarView extends HorizontalScrollView {
     protected void onLayout(final boolean changed, final int l, final int t, final int r,
                             final int b) {
         super.onLayout(changed, l, t, r, b);
-        //this.setScrollX(this.width);
+        System.out.println("On Layout");
+        //scrollTo(this.width * 10, 0);
+        this.lastScrollPosition = getScrollX();
     }
 
     @Override
     public boolean onTouchEvent(final MotionEvent ev) {
         switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                ScrollVelocity.startMeasurement(getScrollX(), LocalTime.now());
-                break;
             case MotionEvent.ACTION_UP:
                 final ScrollVelocity scrollVelocity =
                         ScrollVelocity.finishMeasurement(getScrollX(), LocalTime.now());
@@ -85,10 +95,13 @@ public class CalendarView extends HorizontalScrollView {
                         new ScrollingHandler(this.width).handleScroll(scrollVelocity,
                                 getCurrentlyVisibleDateTime());
                 scroll(scrollEffectParameters);
-                break;
-
+                return true;
+            /*case MotionEvent.ACTION_MOVE:
+                scrollBy((int) (this.lastTouchX - ev.getX()), 0);
+                this.lastTouchX = ev.getX();
+                return true;*/
         }
-        return true;
+        return super.onTouchEvent(ev);
     }
 
     private LocalDateTime getCurrentlyVisibleDateTime() {
@@ -116,15 +129,26 @@ public class CalendarView extends HorizontalScrollView {
         singleWeekView
                 .setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.MATCH_PARENT));
+        singleWeekView.setOnHorizontalScrollListener(this);
 
         return singleWeekView;
     }
 
     private void scroll(final ScrollEffectParameters parameters) {
-        final int scrollPosition = this.sideToPosition.get(parameters.getSide());
+
+        System.out.println(parameters.getSide());
+        final int scrollPosition = this.lastScrollPosition + (parameters
+                .getSide() == ScrollEffectParameters.Side.LEFT ? -this.width : this.width);
         final ObjectAnimator animator = ObjectAnimator.ofInt(this, "scrollX", scrollPosition);
-        animator.addListener(new AnimationWithPostActionListener(parameters));
-        animator.setDuration(parameters.getAnimationDuration()).start();
+        //animator.addListener(new AnimationWithPostActionListener(parameters));
+        animator.setDuration(500).start();
+        this.lastScrollPosition = scrollPosition;
+    }
+
+    @Override
+    public void startScrolling(final float x) {
+        this.lastTouchX = x;
+        ScrollVelocity.startMeasurement(getScrollX(), LocalTime.now());
     }
 
     private class AnimationWithPostActionListener implements Animator.AnimatorListener {
@@ -146,11 +170,13 @@ public class CalendarView extends HorizontalScrollView {
                     elementsToChange = this.parameters.getElementsToChangeAfrerScroll();
             if (elementsToChange.isPresent()) {
                 CalendarView.this.linearLayout.addView(
-                        newSingleWeekView(elementsToChange.get().getNewElementDateTime()));
+                        newSingleWeekView(elementsToChange.get().getNewElementDateTime()),
+                        this.parameters.getSide() == ScrollEffectParameters.Side.LEFT ? 0 :
+                                CalendarView.this.linearLayout.getChildCount());
                 CalendarView.this.linearLayout
                         .removeViewAt(elementsToChange.get().getElementToRemoveId());
-                scrollTo(CalendarView.this.width, 0);
 
+                refreshScrollPosition();
             }
         }
 
@@ -163,5 +189,10 @@ public class CalendarView extends HorizontalScrollView {
         public void onAnimationRepeat(final Animator animator) {
 
         }
+
+    }
+
+    private void refreshScrollPosition() {
+        scrollTo(this.width, 0);
     }
 }

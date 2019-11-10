@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.MotionEvent;
 
 import androidx.annotation.Nullable;
 
@@ -35,6 +36,11 @@ public class BoardListViewActivity extends Activity {
         return new BoardListView.BoardParams(getSmallerScreenDimension(),
                 new RowsMeasures().measureRowHeight(smallerDimension, 7), 7,
                 LocalDateTime.of(2019, Month.MARCH, 18, 0, 0));
+    }
+
+    @Override
+    public boolean onTouchEvent(final MotionEvent ev) {
+        return true;
     }
 
     private int getSmallerScreenDimension() {

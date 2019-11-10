@@ -19,7 +19,15 @@ public class BoardListView extends ListView {
         setDividerHeight(0);
         this.adapter = new CalendarRowAdapter(context, R.layout.row_view, new ArrayList<>());
         setAdapter(this.adapter);
+    }
 
+    @Override
+    protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
+        super.onSizeChanged(1080, h, oldw, oldh);
+    }
+
+    public void setOnHorizontalScrollListener(final OnHorizontalScrollListener onHorizontalScrollListener) {
+        this.adapter.setOnHorizontalScrollListener(onHorizontalScrollListener);
     }
 
     public void setParams(final BoardParams params) {

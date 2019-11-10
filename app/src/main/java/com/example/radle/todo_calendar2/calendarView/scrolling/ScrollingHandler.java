@@ -21,12 +21,12 @@ public class ScrollingHandler {
                 this.screenWidth);
         final ScrollEffectParametersFactory scrollEffectParametersFactory =
                 new ScrollEffectParametersFactory(durationOfAnimation, currentlyVisibleDateTime);
-        if (scrollMoveWasTooSmallandTooSlow(scrollVelocity, durationOfAnimation)) {
+        if (scrollMoveWasTooSmallAndTooSlow(scrollVelocity, durationOfAnimation)) {
             return scrollEffectParametersFactory.scrollBackToSamePositionParameters();
         } else return scrollEffectParametersFactory.scrollParameters(scrollVelocity.getDistance());
     }
 
-    private boolean scrollMoveWasTooSmallandTooSlow(final ScrollVelocity scrollVelocity,
+    private boolean scrollMoveWasTooSmallAndTooSlow(final ScrollVelocity scrollVelocity,
                                                     final int durationOfAnimation) {
         return scrollMoveWasToSmall(scrollVelocity)
                 && !this.animationDurationCounter.fastScroll(durationOfAnimation);

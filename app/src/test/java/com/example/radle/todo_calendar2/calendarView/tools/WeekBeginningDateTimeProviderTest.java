@@ -31,10 +31,26 @@ public class WeekBeginningDateTimeProviderTest {
     }
 
     @Test
+    public void getNextNextWeekBeginning_shouldReturnNextWeekBeginningDateTime_whenSomeDateTimePassed() {
+        final LocalDateTime expectedDateTime = LocalDateTime.of(2019, Month.SEPTEMBER, 9, 0, 0);
+        Assert.assertEquals(expectedDateTime,
+                this.subject
+                        .getNextNextWeekBeginning(LocalDateTime.of(2019, Month.AUGUST, 27, 12, 3)));
+    }
+
+    @Test
     public void getPrevWeekBeginning_shouldReturnPrevWeekBeginningDateTime_whenSomeDateTimePassed() {
         final LocalDateTime expectedDateTime = LocalDateTime.of(2019, Month.AUGUST, 19, 0, 0);
         Assert.assertEquals(expectedDateTime,
                 this.subject.getPrevWeekBeginning(LocalDateTime.of(2019, Month.AUGUST, 28, 0, 0)));
+    }
+
+    @Test
+    public void getPrevPrevWeekBeginning_shouldReturnPrevPrevWeekBeginningDateTime_whenSomeDateTimePassed() {
+        final LocalDateTime expectedDateTime = LocalDateTime.of(2019, Month.AUGUST, 12, 0, 0);
+        Assert.assertEquals(expectedDateTime,
+                this.subject
+                        .getPrevPrevWeekBeginning(LocalDateTime.of(2019, Month.AUGUST, 28, 0, 0)));
     }
 
 }

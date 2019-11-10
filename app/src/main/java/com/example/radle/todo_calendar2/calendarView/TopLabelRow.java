@@ -9,6 +9,8 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+
 import com.example.radle.todo_calendar2.calendarView.dto.CalendarLabel;
 import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
 import com.example.radle.todo_calendar2.calendarView.tools.CalendarRowElementsComposer;
@@ -16,8 +18,6 @@ import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import androidx.annotation.Nullable;
 
 import static java.util.stream.Collectors.toList;
 
@@ -38,12 +38,6 @@ public class TopLabelRow extends View {
 
     public void setParams(final RowParams rowParams) {
         this.params = rowParams;
-    }
-
-    @Override
-    protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
-        this.params.height = h;
-        this.params.width = w;
         this.labelTextPaint.setTextSize(this.calendarRowElementsComposer.getTextSize(this.params));
     }
 

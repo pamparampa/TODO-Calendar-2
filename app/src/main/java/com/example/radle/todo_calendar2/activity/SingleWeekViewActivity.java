@@ -3,6 +3,8 @@ package com.example.radle.todo_calendar2.activity;
 import android.app.Activity;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+
 import com.example.radle.todo_calendar2.R;
 import com.example.radle.todo_calendar2.calendarView.SinglePeriodView;
 import com.example.radle.todo_calendar2.calendarView.SingleWeekView;
@@ -10,7 +12,6 @@ import com.example.radle.todo_calendar2.calendarView.SingleWeekView;
 import java.time.LocalDateTime;
 import java.time.Month;
 
-import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

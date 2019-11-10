@@ -7,15 +7,16 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.radle.todo_calendar2.R;
 import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
 import com.example.radle.todo_calendar2.calendarView.tools.ParamsBuilder;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -23,12 +24,17 @@ public class CalendarRowAdapter extends ArrayAdapter<IdWithDataTime> {
     private final List<IdWithDataTime> rowIdsWithFirstDateTimes;
     private BoardListView.BoardParams boardParams;
     private final int layoutId;
+    private OnHorizontalScrollListener onHorizontalScrollListener;
 
     public CalendarRowAdapter(final Context context, final int layoutId,
                               final List<IdWithDataTime> rowIdsWithFirstDateTimes) {
         super(context, layoutId, rowIdsWithFirstDateTimes);
         this.layoutId = layoutId;
         this.rowIdsWithFirstDateTimes = rowIdsWithFirstDateTimes;
+    }
+
+    public void setOnHorizontalScrollListener(final OnHorizontalScrollListener onHorizontalScrollListener) {
+        this.onHorizontalScrollListener = onHorizontalScrollListener;
     }
 
     public void setParams(final BoardListView.BoardParams params) {
@@ -45,12 +51,15 @@ public class CalendarRowAdapter extends ArrayAdapter<IdWithDataTime> {
                     (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             assert inflater != null;
             convertView = inflater.inflate(this.layoutId, parent, false);
-            convertView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, this.boardParams.getRowHeight()));
+            convertView.setLayoutParams(
+                    new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                            this.boardParams.getRowHeight()));
             viewHolder = initRowView(position, convertView);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
             viewHolder.refreshWithPosition(position);
+            viewHolder.rowView.setOnHorizontalScrollListener(this.onHorizontalScrollListener);
         }
 
         return convertView;
@@ -58,8 +67,10 @@ public class CalendarRowAdapter extends ArrayAdapter<IdWithDataTime> {
 
     private ViewHolder initRowView(final int position, final View convertView) {
         final ViewHolder viewHolder = new ViewHolder(convertView);
-        viewHolder.rowView.setParams(new ParamsBuilder().getRowParamsByBoardParams(this.boardParams, position,
-                this.rowIdsWithFirstDateTimes));
+        viewHolder.rowView
+                .setParams(new ParamsBuilder().getRowParamsByBoardParams(this.boardParams, position,
+                        this.rowIdsWithFirstDateTimes));
+        viewHolder.rowView.setOnHorizontalScrollListener(this.onHorizontalScrollListener);
 
         return viewHolder;
     }

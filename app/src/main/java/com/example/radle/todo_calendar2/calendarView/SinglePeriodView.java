@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -24,6 +25,8 @@ public abstract class SinglePeriodView extends LinearLayout {
     protected PeriodParams params;
     private final Paint rectPaint = new Paint();
     private final Paint textPaint = new Paint();
+    private BoardListView boardListView;
+    private OnHorizontalScrollListener onHorizontalScrollListener;
 
     public SinglePeriodView(final Context context, @Nullable final AttributeSet attrs) {
         super(context, attrs);
@@ -43,10 +46,17 @@ public abstract class SinglePeriodView extends LinearLayout {
         compose();
     }
 
+    public void setOnHorizontalScrollListener(final OnHorizontalScrollListener listener) {
+        this.onHorizontalScrollListener = listener;
+        if (this.boardListView != null) {
+            this.boardListView.setOnHorizontalScrollListener(this.onHorizontalScrollListener);
+        }
+    }
+
     private void compose() {
         removeAllViews();
         addTopLabelRow();
-        addBoardListView();
+        this.boardListView = addBoardListView();
     }
 
     private void addTopLabelRow() {
@@ -57,13 +67,15 @@ public abstract class SinglePeriodView extends LinearLayout {
         addView(topLabelRow);
     }
 
-    private void addBoardListView() {
+    private BoardListView addBoardListView() {
         final BoardListView boardListView = new BoardListView(getContext(), null);
         boardListView.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT, getBoardWeight()));
         boardListView.setParams(buildBoardParams());
+        boardListView.setOnHorizontalScrollListener(this.onHorizontalScrollListener);
 
         addView(boardListView);
+        return boardListView;
     }
 
     private BoardListView.BoardParams buildBoardParams() {
@@ -74,7 +86,11 @@ public abstract class SinglePeriodView extends LinearLayout {
     }
 
     private TopLabelRow.RowParams buildTopLabelParms() {
-        return new TopLabelRow.RowParams(NUMBER_OF_COLUMNS, this.params.firstDateTime);
+        final int smallerScreenDimension = getSmallerScreenDimension();
+        return new TopLabelRow.RowParams(smallerScreenDimension,
+                new RowsMeasures().measureRowHeight(smallerScreenDimension, 7),
+                NUMBER_OF_COLUMNS,
+                this.params.firstDateTime);   // TODO uporzadkowac (duplikat)
     }
 
     public LocalDateTime getDateTime() {
@@ -93,7 +109,13 @@ public abstract class SinglePeriodView extends LinearLayout {
         final Activity activity = (Activity) getContext();
         final Display display = activity.getWindowManager().getDefaultDisplay();
         final Point size = new Point();
-        display.getSize(size);
+        display.getRealSize(size);
         return Math.min(size.x, size.y);
+    }
+
+    @Override
+    public boolean onTouchEvent(final MotionEvent event) {
+        System.out.println("RN event:" + event);
+        return super.onTouchEvent(event);
     }
 }

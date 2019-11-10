@@ -28,25 +28,25 @@ public class ScrollEffectParametersFactory {
     }
 
     private ScrollEffectParameters scrollRightParameters() {
-        final LocalDateTime newWeeDateTime =
+        final LocalDateTime newWeekDateTime =
                 new WeekBeginningDateTimeProvider().getNextWeekBeginning(this.dateTime);
-        return getScrollEffectParameters(newWeeDateTime, ScrollEffectParameters.Side.RIGHT,
+        return getScrollEffectParameters(newWeekDateTime, ScrollEffectParameters.Side.RIGHT,
                 FIRST_ELEMENT_ID);
     }
 
     private ScrollEffectParameters scrollLeftParameters() {
         final LocalDateTime newWeekDateTime =
-                new WeekBeginningDateTimeProvider().getPrevWeekBeginning(this.dateTime);
+                new WeekBeginningDateTimeProvider().getPrevPrevWeekBeginning(this.dateTime);
         return getScrollEffectParameters(newWeekDateTime, ScrollEffectParameters.Side.LEFT,
                 LAST_ELEMENT_ID);
     }
 
     private ScrollEffectParameters getScrollEffectParameters(
-            final LocalDateTime newWeeDateTime, final ScrollEffectParameters.Side right,
+            final LocalDateTime newWeekDateTime, final ScrollEffectParameters.Side side,
             final int firstElementId) {
-        return new ScrollEffectParameters(this.durationOfAnimation, right,
+        return new ScrollEffectParameters(this.durationOfAnimation, side,
                 new ScrollEffectParameters.ElementsToChangeAfterScroll(
-                        newWeeDateTime, firstElementId
+                        newWeekDateTime, firstElementId
                 ));
     }
 }

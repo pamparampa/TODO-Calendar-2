@@ -31,8 +31,6 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
     private final Point outSize = new Point();
     private int width;
     private Map<ScrollEffectParameters.Side, Integer> sideToPosition;
-    private int lastScrollPosition;
-    private float lastTouchX;
 
     public CalendarView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -41,7 +39,7 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
             @Override
             protected void onSizeChanged(final int w, final int h, final int oldw, final int oldh) {
                 super.onSizeChanged(w, h, oldw, oldh);
-                CalendarView.this.width = w / 100;
+                CalendarView.this.width = w / 3;
             }
         };
         this.linearLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -49,17 +47,14 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.MATCH_PARENT));
 
-        this.linearLayout.setDividerPadding(0);
-        for (int i = -50; i < 50; i++) {
-            this.linearLayout.addView(newSingleWeekView(
-                    this.weekBeginningDateTimeProvider.getWeekBeginning(LocalDateTime.now(), i)));
-        }
+        this.linearLayout.addView(newSingleWeekView(previousWeekBeginning()));
+        this.linearLayout.addView(newSingleWeekView(currentWeekBeginning()));
+        this.linearLayout.addView(newSingleWeekView(nextWeekBeginning()));
 
         this.width = getScreenWidth();
         createSideToPositionMap();
 
         addView(this.linearLayout);
-
     }
 
     private int getScreenWidth() {
@@ -80,26 +75,20 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
     protected void onLayout(final boolean changed, final int l, final int t, final int r,
                             final int b) {
         super.onLayout(changed, l, t, r, b);
-        System.out.println("On Layout");
-        //scrollTo(this.width * 10, 0);
-        this.lastScrollPosition = getScrollX();
+        scrollTo(this.width, 0);
     }
 
     @Override
-    public boolean onTouchEvent(final MotionEvent ev) {
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_UP:
-                final ScrollVelocity scrollVelocity =
-                        ScrollVelocity.finishMeasurement(getScrollX(), LocalTime.now());
-                final ScrollEffectParameters scrollEffectParameters =
-                        new ScrollingHandler(this.width).handleScroll(scrollVelocity,
-                                getCurrentlyVisibleDateTime());
-                scroll(scrollEffectParameters);
-                return true;
-            /*case MotionEvent.ACTION_MOVE:
-                scrollBy((int) (this.lastTouchX - ev.getX()), 0);
-                this.lastTouchX = ev.getX();
-                return true;*/
+    public boolean onTouchEvent(final MotionEvent ev) { // TODO dowiedziec sie o co chodzi w tym
+        // warningu
+        if (ev.getAction() == MotionEvent.ACTION_UP) {
+            final ScrollVelocity scrollVelocity =
+                    ScrollVelocity.finishMeasurement(getScrollX(), LocalTime.now());
+            final ScrollEffectParameters scrollEffectParameters =
+                    new ScrollingHandler(this.width).handleScroll(scrollVelocity,
+                            getCurrentlyVisibleDateTime());
+            scroll(scrollEffectParameters);
+            return true;
         }
         return super.onTouchEvent(ev);
     }
@@ -135,19 +124,14 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
     }
 
     private void scroll(final ScrollEffectParameters parameters) {
-
-        System.out.println(parameters.getSide());
-        final int scrollPosition = this.lastScrollPosition + (parameters
-                .getSide() == ScrollEffectParameters.Side.LEFT ? -this.width : this.width);
+        final int scrollPosition = this.sideToPosition.get(parameters.getSide());
         final ObjectAnimator animator = ObjectAnimator.ofInt(this, "scrollX", scrollPosition);
-        //animator.addListener(new AnimationWithPostActionListener(parameters));
-        animator.setDuration(500).start();
-        this.lastScrollPosition = scrollPosition;
+        animator.addListener(new AnimationWithPostActionListener(parameters));
+        animator.setDuration(parameters.getAnimationDuration()).start();
     }
 
     @Override
     public void startScrolling(final float x) {
-        this.lastTouchX = x;
         ScrollVelocity.startMeasurement(getScrollX(), LocalTime.now());
     }
 
@@ -175,8 +159,7 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
                                 CalendarView.this.linearLayout.getChildCount());
                 CalendarView.this.linearLayout
                         .removeViewAt(elementsToChange.get().getElementToRemoveId());
-
-                refreshScrollPosition();
+                scrollTo(CalendarView.this.width, 0);
             }
         }
 
@@ -189,10 +172,5 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         public void onAnimationRepeat(final Animator animator) {
 
         }
-
-    }
-
-    private void refreshScrollPosition() {
-        scrollTo(this.width, 0);
     }
 }

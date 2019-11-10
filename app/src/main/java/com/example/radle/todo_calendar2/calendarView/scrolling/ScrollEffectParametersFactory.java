@@ -29,7 +29,7 @@ public class ScrollEffectParametersFactory {
 
     private ScrollEffectParameters scrollRightParameters() {
         final LocalDateTime newWeekDateTime =
-                new WeekBeginningDateTimeProvider().getNextWeekBeginning(this.dateTime);
+                new WeekBeginningDateTimeProvider().getNextNextWeekBeginning(this.dateTime);
         return getScrollEffectParameters(newWeekDateTime, ScrollEffectParameters.Side.RIGHT,
                 FIRST_ELEMENT_ID);
     }

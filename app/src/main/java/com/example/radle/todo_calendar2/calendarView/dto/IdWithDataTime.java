@@ -6,10 +6,16 @@ import java.util.Objects;
 public class IdWithDataTime {
     private final int id;
     private final LocalDateTime dateTime;
+    private final boolean isToday;
 
     public IdWithDataTime(final int id, final LocalDateTime dateTime) {
+        this(id, dateTime, false);
+    }
+
+    public IdWithDataTime(final int id, final LocalDateTime dateTime, final boolean isToday) {
         this.id = id;
         this.dateTime = dateTime;
+        this.isToday = isToday;
     }
 
     public int getId() {
@@ -41,5 +47,9 @@ public class IdWithDataTime {
                 "id=" + this.id +
                 ", dateTime=" + this.dateTime +
                 '}';
+    }
+
+    public boolean isToday() {
+        return this.isToday;
     }
 }

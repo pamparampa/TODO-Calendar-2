@@ -2,6 +2,7 @@ package com.example.radle.todo_calendar2.calendarView;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.Layout;
 import android.text.StaticLayout;
@@ -27,18 +28,15 @@ public class TopLabelRow extends View {
             new CalendarRowElementsComposer();
     private RowParams params;
     private List<CalendarLabel> topLabelFields;
-    private final TextPaint labelTextPaint = new TextPaint();
     private final Paint linePaint = new Paint();
 
     public TopLabelRow(final Context context, @Nullable final AttributeSet attrs) {
         super(context, attrs);
-        this.labelTextPaint.setAntiAlias(true);
         this.linePaint.setStrokeWidth(5);
     }
 
     public void setParams(final RowParams rowParams) {
         this.params = rowParams;
-        this.labelTextPaint.setTextSize(this.calendarRowElementsComposer.getTextSize(this.params));
     }
 
     @Override
@@ -67,7 +65,13 @@ public class TopLabelRow extends View {
     }
 
     private void drawText(final Canvas canvas, final CalendarLabel label) {
-        final StaticLayout textLayout = new StaticLayout(label.getText(), this.labelTextPaint,
+        final TextPaint labelTextPaint;
+        if (label.isHiglighted()) {
+            labelTextPaint = getHighlightedLabelTextPaint();
+        } else {
+            labelTextPaint = getLabelTextPaint();
+        }
+        final StaticLayout textLayout = new StaticLayout(label.getText(), labelTextPaint,
                 label.getFieldWidth(), Layout.Alignment.ALIGN_CENTER, 1.0f,
                 0.0f,
                 false);
@@ -83,6 +87,7 @@ public class TopLabelRow extends View {
     }
 
     public static class RowParams extends com.example.radle.todo_calendar2.calendarView.RowParams {
+
         RowParams(final int numberOfColumns,
                   final LocalDateTime firstDateTime) {
             this.numberOfColumns = numberOfColumns;
@@ -95,5 +100,20 @@ public class TopLabelRow extends View {
             this.width = width;
             this.height = height;
         }
+
+    }
+
+    private TextPaint getHighlightedLabelTextPaint() {
+        final TextPaint paint = getLabelTextPaint();
+        paint.setFakeBoldText(true);
+        paint.setColor(Color.BLUE);
+        return paint;
+    }
+
+    private TextPaint getLabelTextPaint() {
+        final TextPaint paint = new TextPaint();
+        paint.setAntiAlias(true);
+        paint.setTextSize(this.calendarRowElementsComposer.getTextSize(this.params));
+        return paint;
     }
 }

@@ -8,13 +8,20 @@ public class CalendarLabel {
     private final float textX;
     private final float textY;
     private final int fieldWidth;
+    private final boolean isHiglighted;
 
     public CalendarLabel(final String text, final int textX, final int textY,
                          final int fieldWidth) {
+        this(text, textX, textY, fieldWidth, false);
+    }
+
+    public CalendarLabel(final String text, final float textX, final float textY,
+                         final int fieldWidth, final boolean isHiglighted) {
         this.text = text;
         this.textX = textX;
         this.textY = textY;
         this.fieldWidth = fieldWidth;
+        this.isHiglighted = isHiglighted;
     }
 
     @Override
@@ -57,5 +64,9 @@ public class CalendarLabel {
 
     public int getFieldWidth() {
         return this.fieldWidth;
+    }
+
+    public boolean isHiglighted() {
+        return this.isHiglighted;
     }
 }

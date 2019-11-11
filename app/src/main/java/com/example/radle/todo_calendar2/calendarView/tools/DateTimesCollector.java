@@ -4,6 +4,7 @@ import com.example.radle.todo_calendar2.calendarView.TimeNotAlignedException;
 import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -24,7 +25,9 @@ public class DateTimesCollector {
         }
         final List<IdWithDataTime> idsWithDateTimes = new ArrayList<>();
         for (int columnId = 0; columnId < 7; columnId++) {
-            idsWithDateTimes.add(new IdWithDataTime(columnId, firstDateTime.plusDays(columnId)));
+            final LocalDateTime currentDateTime = firstDateTime.plusDays(columnId);
+            idsWithDateTimes.add(new IdWithDataTime(columnId, currentDateTime,
+                    LocalDate.now().isEqual(currentDateTime.toLocalDate())));
         }
         return idsWithDateTimes;
     }
@@ -45,6 +48,7 @@ public class DateTimesCollector {
     }
 
     private boolean isTimeNotAlignedForWeekColumn(final LocalDateTime firstDateTime) {
-        return !firstDateTime.isEqual(firstDateTime.toLocalDate().atStartOfDay()) || firstDateTime.getDayOfWeek() != DayOfWeek.MONDAY;
+        return !firstDateTime.isEqual(firstDateTime.toLocalDate().atStartOfDay()) || firstDateTime
+                .getDayOfWeek() != DayOfWeek.MONDAY;
     }
 }

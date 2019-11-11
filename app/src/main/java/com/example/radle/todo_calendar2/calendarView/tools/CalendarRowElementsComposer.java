@@ -2,6 +2,8 @@ package com.example.radle.todo_calendar2.calendarView.tools;
 
 import android.graphics.Rect;
 
+import androidx.annotation.NonNull;
+
 import com.example.radle.todo_calendar2.calendarView.CalendarRowView;
 import com.example.radle.todo_calendar2.calendarView.RowParams;
 import com.example.radle.todo_calendar2.calendarView.TopLabelRow;
@@ -10,8 +12,6 @@ import com.example.radle.todo_calendar2.calendarView.dto.CalendarLabel;
 import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
 
 import java.time.LocalDateTime;
-
-import androidx.annotation.NonNull;
 
 public class CalendarRowElementsComposer {
 
@@ -42,9 +42,10 @@ public class CalendarRowElementsComposer {
 
     public CalendarLabel getTopLabel(final TopLabelRow.RowParams rowParams,
                                      final IdWithDataTime idWithDataTime) {
-        return new CalendarLabel(new DayTextFormatter().format(idWithDataTime.getDateTime().toLocalDate()),
+        return new CalendarLabel(
+                new DayTextFormatter().format(idWithDataTime.getDateTime().toLocalDate()),
                 getColumnX(rowParams, idWithDataTime.getId()),
-                getTextY(rowParams), fieldWidth(rowParams));
+                getTextY(rowParams), fieldWidth(rowParams), idWithDataTime.isToday());
     }
 
     private int getColumnX(final TopLabelRow.RowParams rowParams, final int id) {

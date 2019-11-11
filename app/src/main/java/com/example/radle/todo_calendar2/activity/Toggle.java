@@ -2,7 +2,7 @@ package com.example.radle.todo_calendar2.activity;
 
 class Toggle {
 
-    private static final boolean TOGGLE = true;
+    private static final boolean TOGGLE = false;
 
     private Toggle() {
     }

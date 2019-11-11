@@ -2,6 +2,7 @@ package com.example.radle.todo_calendar2.calendarView;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.widget.ListView;
 
 import com.example.radle.todo_calendar2.R;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 public class BoardListView extends ListView {
     private final CalendarRowAdapter adapter;
     private BoardParams params;
+    private OnHorizontalScrollListener onHorizontalScrollListener;
 
     public BoardListView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -27,6 +29,7 @@ public class BoardListView extends ListView {
     }
 
     public void setOnHorizontalScrollListener(final OnHorizontalScrollListener onHorizontalScrollListener) {
+        this.onHorizontalScrollListener = onHorizontalScrollListener;
         this.adapter.setOnHorizontalScrollListener(onHorizontalScrollListener);
     }
 
@@ -67,5 +70,15 @@ public class BoardListView extends ListView {
         public int getWidth() {
             return this.width;
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(final MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            this.onHorizontalScrollListener.startScrolling(ev.getX());
+        } else if (ev.getAction() == MotionEvent.ACTION_UP) {
+            this.onHorizontalScrollListener.finishScrollingVertically();
+        }
+        return super.onTouchEvent(ev);
     }
 }

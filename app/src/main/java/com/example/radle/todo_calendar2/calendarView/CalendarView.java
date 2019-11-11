@@ -135,6 +135,11 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         ScrollVelocity.startMeasurement(getScrollX(), LocalTime.now());
     }
 
+    @Override
+    public void finishScrollingVertically() {
+        ScrollVelocity.finishMeasurement(getScrollX(), LocalTime.now());
+    }
+
     private class AnimationWithPostActionListener implements Animator.AnimatorListener {
 
         private final ScrollEffectParameters parameters;

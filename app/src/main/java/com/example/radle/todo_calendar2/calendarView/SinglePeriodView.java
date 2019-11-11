@@ -2,11 +2,9 @@ package com.example.radle.todo_calendar2.calendarView;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.Display;
-import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -23,8 +21,6 @@ public abstract class SinglePeriodView extends LinearLayout {
     private static final float BOARD_WEIGHT = 0.08f;
     private static final float TOP_LABEL_WEIGHT = 0.92f;
     protected PeriodParams params;
-    private final Paint rectPaint = new Paint();
-    private final Paint textPaint = new Paint();
     private BoardListView boardListView;
     private OnHorizontalScrollListener onHorizontalScrollListener;
 
@@ -89,12 +85,19 @@ public abstract class SinglePeriodView extends LinearLayout {
         final int smallerScreenDimension = getSmallerScreenDimension();
         return new TopLabelRow.RowParams(smallerScreenDimension,
                 new RowsMeasures().measureRowHeight(smallerScreenDimension, 7),
-                NUMBER_OF_COLUMNS,
-                this.params.firstDateTime);   // TODO uporzadkowac (duplikat)
+                NUMBER_OF_COLUMNS, this.params.firstDateTime);   // TODO uporzadkowac (duplikat)
     }
 
     public LocalDateTime getDateTime() {
         return this.params.firstDateTime;
+    }
+
+    public int getCurrentVisiblePosition() {
+        return this.boardListView.getFirstVisiblePosition();
+    }
+
+    public void scrollTo(final int position) {
+        this.boardListView.setSelection(position);
     }
 
     public static class PeriodParams {
@@ -113,9 +116,5 @@ public abstract class SinglePeriodView extends LinearLayout {
         return Math.min(size.x, size.y);
     }
 
-    @Override
-    public boolean onTouchEvent(final MotionEvent event) {
-        System.out.println("RN event:" + event);
-        return super.onTouchEvent(event);
-    }
+
 }

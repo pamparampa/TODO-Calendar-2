@@ -126,8 +126,28 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
     private void scroll(final ScrollEffectParameters parameters) {
         final int scrollPosition = this.sideToPosition.get(parameters.getSide());
         final ObjectAnimator animator = ObjectAnimator.ofInt(this, "scrollX", scrollPosition);
+        prepareVerticalPosition(parameters);
         animator.addListener(new AnimationWithPostActionListener(parameters));
         animator.setDuration(parameters.getAnimationDuration()).start();
+    }
+
+    private void prepareVerticalPosition(final ScrollEffectParameters parameters) {
+        if (parameters.getSide() == ScrollEffectParameters.Side.LEFT) {
+            prepareVerticalPositionOfChild(0);
+        } else if (parameters.getSide() == ScrollEffectParameters.Side.RIGHT) {
+            prepareVerticalPositionOfChild(2);
+        }
+    }
+
+    private void prepareVerticalPositionOfChild(final int i) {
+        final SinglePeriodView nextVisibleWeekView =
+                (SinglePeriodView) this.linearLayout.getChildAt(i);
+        nextVisibleWeekView.scrollTo(getCurrentVisiblePosition());
+    }
+
+    private int getCurrentVisiblePosition() {
+        final SinglePeriodView currentWeekView = (SinglePeriodView) this.linearLayout.getChildAt(1);
+        return currentWeekView.getCurrentVisiblePosition();
     }
 
     @Override

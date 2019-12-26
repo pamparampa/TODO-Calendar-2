@@ -13,27 +13,29 @@ import java.util.List;
 public class DateTimesCollector {
 
     public List<IdWithDataTime> collectForTopLabelRow(final LocalDateTime firstDateTime) throws TimeNotAlignedException {
-        if (isTimeNotAlignedForWeekColumn(firstDateTime)) {
+        if (isTimeNotAlignedForWeekColumn(firstDateTime))
             throw new TimeNotAlignedException(ChronoUnit.WEEKS);
-        }
         return collectForWeekRow(firstDateTime);
     }
 
     public List<IdWithDataTime> collectForWeekRow(final LocalDateTime firstDateTime) throws TimeNotAlignedException {
-        if (isTimeNotAlignedForWeekRow(firstDateTime)) {
+        if (isTimeNotAlignedForWeekRow(firstDateTime))
             throw new TimeNotAlignedException(ChronoUnit.HOURS);
-        }
         final List<IdWithDataTime> idsWithDateTimes = new ArrayList<>();
-        for (int columnId = 0; columnId < 7; columnId++) {
-            final LocalDateTime currentDateTime = firstDateTime.plusDays(columnId);
-            idsWithDateTimes.add(new IdWithDataTime(columnId, currentDateTime,
-                    LocalDate.now().isEqual(currentDateTime.toLocalDate())));
-        }
+        for (int columnId = 0; columnId < 7; columnId++)
+            idsWithDateTimes.add(createIdWithDateTime(columnId, firstDateTime));
         return idsWithDateTimes;
     }
 
     private boolean isTimeNotAlignedForWeekRow(final LocalDateTime dateTime) {
         return !dateTime.equals(dateTime.toLocalDate().atTime(dateTime.getHour(), 0));
+    }
+
+    private IdWithDataTime createIdWithDateTime(final int columnId,
+                                                final LocalDateTime firstDateTime) {
+        final LocalDateTime currentDateTime = firstDateTime.plusDays(columnId);
+        return new IdWithDataTime(columnId, currentDateTime,
+                LocalDate.now().isEqual(currentDateTime.toLocalDate()));
     }
 
     public List<IdWithDataTime> collectForWeekColumn(final LocalDateTime firstDateTime) throws TimeNotAlignedException {

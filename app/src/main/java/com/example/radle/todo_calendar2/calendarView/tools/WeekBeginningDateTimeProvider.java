@@ -8,10 +8,6 @@ public class WeekBeginningDateTimeProvider {
                 .atStartOfDay();
     }
 
-    public LocalDateTime getWeekBeginning(final LocalDateTime dateTime, final int offset) {
-        return getWeekBeginning(dateTime.plusWeeks(offset));
-    }
-
     public LocalDateTime getNextWeekBeginning(final LocalDateTime dateTime) {
         return getWeekBeginning(dateTime.plusWeeks(1));
     }

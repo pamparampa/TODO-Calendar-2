@@ -74,10 +74,11 @@ public class BoardListView extends ListView {
 
     @Override
     public boolean onTouchEvent(final MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-            this.onHorizontalScrollListener.startScrolling(ev.getX());
-        } else if (ev.getAction() == MotionEvent.ACTION_UP) {
-            this.onHorizontalScrollListener.finishScrollingVertically();
+        if (this.onHorizontalScrollListener != null) {
+            if (ev.getAction() == MotionEvent.ACTION_DOWN)
+                this.onHorizontalScrollListener.startScrolling(ev.getX());
+            else if (ev.getAction() == MotionEvent.ACTION_UP)
+                this.onHorizontalScrollListener.finishScrollingVertically();
         }
         return super.onTouchEvent(ev);
     }

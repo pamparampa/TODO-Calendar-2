@@ -22,12 +22,12 @@ public class ScrollingHandlerTest {
     }
 
     @Test
-    public void handleScroll_shouldReturnScrollingRightData_whenScrollMovedRightByOneThirdOfScreen() {
+    public void handleScroll_shouldReturnScrollingRightData_whenScrollMovedRightByOneSecondOfScreen() {
         final ScrollEffectParameters expectedParameters = new ScrollEffectParameters(500,
                 ScrollEffectParameters.Side.RIGHT,
                 elementsToChangeAfterScrollRight());
         Assert.assertEquals(expectedParameters,
-                this.subject.handleScroll(new ScrollVelocity(4, LONG_SCROLL_DURATION),
+                this.subject.handleScroll(new ScrollVelocity(6, LONG_SCROLL_DURATION),
                         this.dateTime));
     }
 
@@ -40,28 +40,28 @@ public class ScrollingHandlerTest {
 
     @Test
     public void handleScroll_shouldReturnScrollingRightData_whenScrolledRightFast() {
-        final ScrollEffectParameters expectedParameters = new ScrollEffectParameters(400,
+        final ScrollEffectParameters expectedParameters = new ScrollEffectParameters(240,
                 ScrollEffectParameters.Side.RIGHT,
                 elementsToChangeAfterScrollRight());
-        Assert.assertEquals(expectedParameters, this.subject.handleScroll(new ScrollVelocity(3,
+        Assert.assertEquals(expectedParameters, this.subject.handleScroll(new ScrollVelocity(5,
                 Duration.ofMillis(600)), this.dateTime));
     }
 
     @Test
-    public void handleScroll_shouldReturnScrollingLeftData_whenScrollMovedLeftByOneThirdOfScreen() {
+    public void handleScroll_shouldReturnScrollingLeftData_whenScrollMovedLeftByOneSecondOfScreen() {
         final ScrollEffectParameters expectedParameters = new ScrollEffectParameters(500,
                 ScrollEffectParameters.Side.LEFT, elementsToChangeAfterScrollLeft());
 
-        Assert.assertEquals(expectedParameters, this.subject.handleScroll(new ScrollVelocity(-4,
+        Assert.assertEquals(expectedParameters, this.subject.handleScroll(new ScrollVelocity(-6,
                 LONG_SCROLL_DURATION), this.dateTime));
     }
 
     @Test
     public void handleScroll_shouldReturnScrollingLeftData_whenScrolledLeftFast() {
-        final ScrollEffectParameters expectedParameters = new ScrollEffectParameters(400,
+        final ScrollEffectParameters expectedParameters = new ScrollEffectParameters(240,
                 ScrollEffectParameters.Side.LEFT,
                 elementsToChangeAfterScrollLeft());
-        Assert.assertEquals(expectedParameters, this.subject.handleScroll(new ScrollVelocity(-3,
+        Assert.assertEquals(expectedParameters, this.subject.handleScroll(new ScrollVelocity(-5,
                 Duration.ofMillis(600)), this.dateTime));
     }
 
@@ -72,11 +72,11 @@ public class ScrollingHandlerTest {
 
     private ScrollEffectParameters.ElementsToChangeAfterScroll elementsToChangeAfterScrollRight() {
         return new ScrollEffectParameters.ElementsToChangeAfterScroll(LocalDate.of(2019,
-                Month.SEPTEMBER, 2).atStartOfDay(), 0);
+                Month.SEPTEMBER, 9).atStartOfDay(), 0);
     }
 
     private ScrollEffectParameters.ElementsToChangeAfterScroll elementsToChangeAfterScrollLeft() {
         return new ScrollEffectParameters.ElementsToChangeAfterScroll(LocalDate.of(2019,
-                Month.AUGUST, 19).atStartOfDay(), 3);
+                Month.AUGUST, 12).atStartOfDay(), 3);
     }
 }

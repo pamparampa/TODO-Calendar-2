@@ -9,7 +9,6 @@ public class ScrollingHandler {
     private final int screenWidth;
     private final AnimationDurationCounter animationDurationCounter =
             new AnimationDurationCounter();
-    long s = 3L;
 
     public ScrollingHandler(final int screenWidth) {
         this.screenWidth = screenWidth;
@@ -33,6 +32,6 @@ public class ScrollingHandler {
     }
 
     private boolean scrollMoveWasToSmall(final ScrollVelocity scrollVelocity) {
-        return abs(scrollVelocity.getDistance()) < this.screenWidth / 3;
+        return abs(scrollVelocity.getDistance()) < this.screenWidth / 2;
     }
 }

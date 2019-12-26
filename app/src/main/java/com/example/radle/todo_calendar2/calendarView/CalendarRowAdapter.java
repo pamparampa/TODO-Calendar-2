@@ -43,25 +43,34 @@ public class CalendarRowAdapter extends ArrayAdapter<IdWithDataTime> {
 
     @NonNull
     @Override
-    public View getView(final int position, @Nullable View convertView,
+    public View getView(final int position, @Nullable final View convertView,
                         @NonNull final ViewGroup parent) {
-        final ViewHolder viewHolder;
-        if (convertView == null) {
-            final LayoutInflater inflater =
-                    (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            assert inflater != null;
-            convertView = inflater.inflate(this.layoutId, parent, false);
-            convertView.setLayoutParams(
-                    new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                            this.boardParams.getRowHeight()));
-            viewHolder = initRowView(position, convertView);
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-            viewHolder.refreshWithPosition(position);
-            viewHolder.rowView.setOnHorizontalScrollListener(this.onHorizontalScrollListener);
-        }
+        if (convertView == null)
+            return prepareNewConvertView(position, parent);
+        else
+            return reuseExistingConvertView(position, convertView);
+    }
 
+    private View prepareNewConvertView(final int position, @NonNull final ViewGroup parent) {
+        final View convertView;
+        final ViewHolder viewHolder;
+        final LayoutInflater inflater =
+                (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        assert inflater != null;
+        convertView = inflater.inflate(this.layoutId, parent, false);
+        convertView.setLayoutParams(
+                new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        this.boardParams.getRowHeight()));
+        viewHolder = initRowView(position, convertView);
+        convertView.setTag(viewHolder);
+        return convertView;
+    }
+
+    private View reuseExistingConvertView(final int position, final View convertView) {
+        final ViewHolder viewHolder;
+        viewHolder = (ViewHolder) convertView.getTag();
+        viewHolder.refreshWithPosition(position);
+        viewHolder.rowView.setOnHorizontalScrollListener(this.onHorizontalScrollListener);
         return convertView;
     }
 

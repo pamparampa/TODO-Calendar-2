@@ -30,6 +30,7 @@ public class TopLabelRow extends View {
     private List<CalendarLabel> topLabelFields;
     private final Paint linePaint = new Paint();
 
+
     public TopLabelRow(final Context context, @Nullable final AttributeSet attrs) {
         super(context, attrs);
         this.linePaint.setStrokeWidth(5);
@@ -65,13 +66,7 @@ public class TopLabelRow extends View {
     }
 
     private void drawText(final Canvas canvas, final CalendarLabel label) {
-        final TextPaint labelTextPaint;
-        if (label.isHiglighted()) {
-            labelTextPaint = getHighlightedLabelTextPaint();
-        } else {
-            labelTextPaint = getLabelTextPaint();
-        }
-        final StaticLayout textLayout = new StaticLayout(label.getText(), labelTextPaint,
+        final StaticLayout textLayout = new StaticLayout(label.getText(), getTextPaint(label),
                 label.getFieldWidth(), Layout.Alignment.ALIGN_CENTER, 1.0f,
                 0.0f,
                 false);
@@ -79,6 +74,13 @@ public class TopLabelRow extends View {
         canvas.translate(label.getTextX(), label.getTextY());
         textLayout.draw(canvas);
         canvas.restore();
+    }
+
+    private TextPaint getTextPaint(final CalendarLabel label) {
+        if (label.isHiglighted())
+            return getHighlightedLabelTextPaint();
+        else
+            return getLabelTextPaint();
     }
 
     private void drawBottomLine(final Canvas canvas) {

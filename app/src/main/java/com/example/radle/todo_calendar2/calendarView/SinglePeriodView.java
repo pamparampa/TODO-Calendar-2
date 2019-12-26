@@ -44,9 +44,8 @@ public abstract class SinglePeriodView extends LinearLayout {
 
     public void setOnHorizontalScrollListener(final OnHorizontalScrollListener listener) {
         this.onHorizontalScrollListener = listener;
-        if (this.boardListView != null) {
+        if (this.boardListView != null)
             this.boardListView.setOnHorizontalScrollListener(this.onHorizontalScrollListener);
-        }
     }
 
     private void compose() {
@@ -85,7 +84,7 @@ public abstract class SinglePeriodView extends LinearLayout {
         final int smallerScreenDimension = getSmallerScreenDimension();
         return new TopLabelRow.RowParams(smallerScreenDimension,
                 new RowsMeasures().measureRowHeight(smallerScreenDimension, 7),
-                NUMBER_OF_COLUMNS, this.params.firstDateTime);   // TODO uporzadkowac (duplikat)
+                NUMBER_OF_COLUMNS, this.params.firstDateTime);
     }
 
     public LocalDateTime getDateTime() {

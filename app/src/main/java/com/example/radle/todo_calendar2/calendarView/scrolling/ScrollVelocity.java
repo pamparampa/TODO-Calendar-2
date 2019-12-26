@@ -25,10 +25,9 @@ public class ScrollVelocity {
     }
 
     public static ScrollVelocity finishMeasurement(final int x, final LocalTime time) {
-        if (initialPoint == null) {
+        if (initialPoint == null)
             throw new IllegalStateException("measurement cannot be ended cause it has not been " +
                     "started yet");
-        }
         final ScrollVelocity scrollVelocity =
                 new ScrollVelocity(x - initialPoint.x, countDuration(time));
         invalidate();
@@ -37,9 +36,9 @@ public class ScrollVelocity {
 
     private static Duration countDuration(final LocalTime time) {
         final Duration duration = Duration.between(initialPoint.time, time);
-        if (duration.isNegative()) {
+        if (duration.isNegative())
             return Duration.ofDays(1).minus(duration.abs());
-        } else return duration;
+        else return duration;
     }
 
     public static void invalidate() {

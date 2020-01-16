@@ -39,4 +39,9 @@ public class CalendarEventPart extends CalendarEvent {
     public CalendarEvent getCalendarEvent() {
         return this.calendarEvent;
     }
+
+    public boolean hasConflictWith(final CalendarEventPart calendarEventPart) {
+        return (getStartTime().isBefore(calendarEventPart.getEndTime()) && getEndTime()
+                .isAfter(calendarEventPart.getStartTime()));
+    }
 }

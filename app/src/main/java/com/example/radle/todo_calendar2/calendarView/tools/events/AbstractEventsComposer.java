@@ -1,4 +1,4 @@
-package com.example.radle.todo_calendar2.calendarView.tools;
+package com.example.radle.todo_calendar2.calendarView.tools.events;
 
 import com.example.radle.todo_calendar2.calendarView.dto.CalendarEvent;
 import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventPart;

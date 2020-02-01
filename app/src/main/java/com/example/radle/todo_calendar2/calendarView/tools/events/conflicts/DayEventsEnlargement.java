@@ -64,28 +64,29 @@ class DayEventsEnlargement {
                     countChainProcessingParameters(currentEventPart);
             return new ChainedCalendarEventPart(
                     currentEventPart,
+                    parameters.getFrom(), parameters.getTo(),
                     new Helper(
                             subList(parameters.getEventsFromRightColumns(),
                                     parameters.getColumnOfNextConflict()),
                             this.processedEventParts,
                             countAbsoluteIndexOfColumn(parameters.getColumnOfNextConflict()))
-                            .createChains(),
-                    parameters.getResizeParameters());
+                            .createChains());
         }
 
         private ChainedCalendarEventPartProcessingParameters countChainProcessingParameters(
                 final CalendarEventPart currentEventPart) {
             List<List<CalendarEventPart>> eventsFromRightColumns = new ArrayList<>();
-            ChainedCalendarEventPart.ResizeParameters resizeParameters = null;
+            final float from = this.columnShift;
+            float to = this.columnShift + 1;
             int columnOfNextConflict = 0;
             if (this.eventsSplitIntoColumns.size() > 1) {
                 eventsFromRightColumns =
                         getEventsFromRightColumnsWithConflicts(currentEventPart);
                 columnOfNextConflict = getColumnOfNextConflict(eventsFromRightColumns);
-                resizeParameters = countResizeParameters(columnOfNextConflict);
+                to = countAbsoluteIndexOfColumn(columnOfNextConflict);
             }
             return new ChainedCalendarEventPartProcessingParameters(eventsFromRightColumns,
-                    columnOfNextConflict, resizeParameters);
+                    columnOfNextConflict, from, to);
         }
 
         private List<List<CalendarEventPart>> getEventsFromRightColumnsWithConflicts(
@@ -123,12 +124,6 @@ class DayEventsEnlargement {
             return eventsFromRightColumns.size();
         }
 
-        private ChainedCalendarEventPart.ResizeParameters countResizeParameters(final int columnOfNextConflict) {
-            if (columnOfNextConflict == 0) return null;
-            return new ChainedCalendarEventPart.ResizeParameters(this.columnShift,
-                    countAbsoluteIndexOfColumn(columnOfNextConflict));
-        }
-
         private int countAbsoluteIndexOfColumn(final int columnOfNextConflict) {
             return this.columnShift + columnOfNextConflict + 1;
         }
@@ -140,15 +135,16 @@ class DayEventsEnlargement {
 
         private final List<List<CalendarEventPart>> eventsFromRightColumns;
         private final int columnOfNextConflict;
-        private final ChainedCalendarEventPart.ResizeParameters resizeParameters;
+        private final float from;
+        private final float to;
 
         ChainedCalendarEventPartProcessingParameters(
                 final List<List<CalendarEventPart>> eventsFromRightColumns,
-                final int columnOfNextConflict,
-                final ChainedCalendarEventPart.ResizeParameters resizeParameters) {
+                final int columnOfNextConflict, final float from, final float to) {
             this.eventsFromRightColumns = eventsFromRightColumns;
             this.columnOfNextConflict = columnOfNextConflict;
-            this.resizeParameters = resizeParameters;
+            this.from = from;
+            this.to = to;
         }
 
         List<List<CalendarEventPart>> getEventsFromRightColumns() {
@@ -159,8 +155,13 @@ class DayEventsEnlargement {
             return this.columnOfNextConflict;
         }
 
-        ChainedCalendarEventPart.ResizeParameters getResizeParameters() {
-            return this.resizeParameters;
+
+        float getFrom() {
+            return this.from;
+        }
+
+        float getTo() {
+            return this.to;
         }
     }
 }

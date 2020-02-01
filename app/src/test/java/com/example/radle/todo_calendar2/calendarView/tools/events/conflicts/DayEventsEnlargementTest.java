@@ -31,9 +31,9 @@ public class DayEventsEnlargementTest {
         final CalendarEventPart event3 = newEvent("event3", 8, 9);
 
         Assert.assertEquals(Collections.singletonList(
-                new ChainedCalendarEventPart(event1, Collections.singletonList(
-                        new ChainedCalendarEventPart(event2, Collections.singletonList(
-                                new ChainedCalendarEventPart(event3, Collections.emptyList())
+                new ChainedCalendarEventPart(event1, 0, 1, Collections.singletonList(
+                        new ChainedCalendarEventPart(event2, 1, 2, Collections.singletonList(
+                                new ChainedCalendarEventPart(event3, 2, 3, Collections.emptyList())
                         ))))),
                 this.subject.enlarge(Arrays.asList(
                         Collections.singletonList(event1),
@@ -55,13 +55,14 @@ public class DayEventsEnlargementTest {
         final CalendarEventPart event3 = newEvent("event3", 8, 11);
 
         final ChainedCalendarEventPart chainedEventPart3 =
-                new ChainedCalendarEventPart(event3, Collections.emptyList());
+                new ChainedCalendarEventPart(event3, 1, 2, Collections.emptyList());
         Assert.assertEquals(Arrays.asList(
-                new ChainedCalendarEventPart(event1, Collections.singletonList(chainedEventPart3)),
-                new ChainedCalendarEventPart(event2, Collections.singletonList(chainedEventPart3))),
+                new ChainedCalendarEventPart(event1, 0, 1,
+                        Collections.singletonList(chainedEventPart3)),
+                new ChainedCalendarEventPart(event2, 0, 1,
+                        Collections.singletonList(chainedEventPart3))),
                 this.subject.enlarge(Arrays.asList(
-                        Arrays.asList(event1, event2),
-                        Collections.singletonList(event3))));
+                        Arrays.asList(event1, event2), Collections.singletonList(event3))));
 
     }
 
@@ -79,10 +80,9 @@ public class DayEventsEnlargementTest {
         final CalendarEventPart event3 = newEvent("event3", 10, 11);
 
         Assert.assertEquals(Arrays.asList(
-                new ChainedCalendarEventPart(event1, Collections.emptyList(),
-                        new ChainedCalendarEventPart.ResizeParameters(0, 2)),
-                new ChainedCalendarEventPart(event2, Collections.singletonList(
-                        new ChainedCalendarEventPart(event3, Collections.emptyList())))),
+                new ChainedCalendarEventPart(event1, 0, 2, Collections.emptyList()),
+                new ChainedCalendarEventPart(event2, 0, 1, Collections.singletonList(
+                        new ChainedCalendarEventPart(event3, 1, 2, Collections.emptyList())))),
                 this.subject.enlarge(Arrays.asList(
                         Arrays.asList(event1, event2),
                         Collections.singletonList(event3))));
@@ -103,12 +103,12 @@ public class DayEventsEnlargementTest {
         final CalendarEventPart event4 = newEvent("event4", 8, 11);
 
         final ChainedCalendarEventPart chainedEventPart4 =
-                new ChainedCalendarEventPart(event4, Collections.emptyList());
+                new ChainedCalendarEventPart(event4, 2, 3, Collections.emptyList());
         Assert.assertEquals(Arrays.asList(
-                new ChainedCalendarEventPart(event1, Collections.singletonList(chainedEventPart4),
-                        new ChainedCalendarEventPart.ResizeParameters(0, 2)),
-                new ChainedCalendarEventPart(event2, Collections.singletonList(
-                        new ChainedCalendarEventPart(event3, Collections.singletonList(
+                new ChainedCalendarEventPart(event1, 0, 2,
+                        Collections.singletonList(chainedEventPart4)),
+                new ChainedCalendarEventPart(event2, 0, 1, Collections.singletonList(
+                        new ChainedCalendarEventPart(event3, 1, 2, Collections.singletonList(
                                 chainedEventPart4))))),
                 this.subject.enlarge(Arrays.asList(
                         Arrays.asList(event1, event2),
@@ -132,14 +132,15 @@ public class DayEventsEnlargementTest {
         final CalendarEventPart event5 = newEvent("event5", 8, 11);
 
         final ChainedCalendarEventPart chainedEventPart5 =
-                new ChainedCalendarEventPart(event5, Collections.emptyList());
+                new ChainedCalendarEventPart(event5, 3, 4, Collections.emptyList());
         Assert.assertEquals(Arrays.asList(
-                new ChainedCalendarEventPart(event1, Collections.singletonList(chainedEventPart5),
-                        new ChainedCalendarEventPart.ResizeParameters(0, 3)),
-                new ChainedCalendarEventPart(event2, Collections.singletonList(
-                        new ChainedCalendarEventPart(event3, Collections.singletonList(
-                                new ChainedCalendarEventPart(event4, Collections.singletonList(
-                                        chainedEventPart5))))))),
+                new ChainedCalendarEventPart(event1, 0, 3, Collections.singletonList(
+                        chainedEventPart5)),
+                new ChainedCalendarEventPart(event2, 0, 1, Collections.singletonList(
+                        new ChainedCalendarEventPart(event3, 1, 2,
+                                Collections.singletonList(
+                                        new ChainedCalendarEventPart(event4, 2, 3,
+                                                Collections.singletonList(chainedEventPart5))))))),
                 this.subject.enlarge(Arrays.asList(
                         Arrays.asList(event1, event2),
                         Collections.singletonList(event3),
@@ -172,25 +173,24 @@ public class DayEventsEnlargementTest {
         final CalendarEventPart event8 = newEvent("event8", 12, 13);
 
         final ChainedCalendarEventPart chainedEventPart6 =
-                new ChainedCalendarEventPart(event6, Collections.emptyList(),
-                        new ChainedCalendarEventPart.ResizeParameters(2, 4));
+                new ChainedCalendarEventPart(event6, 2, 4, Collections.emptyList());
 
         Assert.assertEquals(Arrays.asList(
-                new ChainedCalendarEventPart(event1, Collections.singletonList(chainedEventPart6),
-                        new ChainedCalendarEventPart.ResizeParameters(0, 2)),
-                new ChainedCalendarEventPart(event2, Arrays.asList(
-                        new ChainedCalendarEventPart(event4, Collections.singletonList(
+                new ChainedCalendarEventPart(event1, 0, 2, Collections.singletonList(
+                        chainedEventPart6)),
+                new ChainedCalendarEventPart(event2, 0, 1, Arrays.asList(
+                        new ChainedCalendarEventPart(event4, 1, 2, Collections.singletonList(
                                 chainedEventPart6
                         )),
-                        new ChainedCalendarEventPart(event5, Collections.singletonList(
-                                new ChainedCalendarEventPart(event7, Collections.singletonList(
-                                        new ChainedCalendarEventPart(event8,
-                                                Collections.emptyList())
-                                ))
+                        new ChainedCalendarEventPart(event5, 1, 2, Collections.singletonList(
+                                new ChainedCalendarEventPart(event7, 2, 3,
+                                        Collections.singletonList(
+                                                new ChainedCalendarEventPart(event8, 3, 4,
+                                                        Collections.emptyList())
+                                        ))
                         ))
                 )),
-                new ChainedCalendarEventPart(event3, Collections.emptyList(),
-                        new ChainedCalendarEventPart.ResizeParameters(0, 4))),
+                new ChainedCalendarEventPart(event3, 0, 4, Collections.emptyList())),
                 this.subject.enlarge(
                         Arrays.asList(Arrays.asList(event1, event2, event3),
                                 Arrays.asList(event4, event5),

@@ -1,18 +1,23 @@
 package com.example.radle.todo_calendar2.calendarView.dto;
 
-import java.util.Objects;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
-public class CalendarEventPartWithWidth {
+public class CalendarEventPartWithWidth extends CalendarEventPart {
 
-    protected final CalendarEventPart eventPart;
-    protected float from;
-    protected float to;
+    private float left;
+    private float right;
+    private final int divider;
 
-    public CalendarEventPartWithWidth(final CalendarEventPart eventPart, final float from,
-                                      final float to) {
-        this.eventPart = eventPart;
-        this.from = from;
-        this.to = to;
+    public CalendarEventPartWithWidth(final CalendarEvent calendarEvent, final String title,
+                                      final LocalDateTime startTime, final LocalDateTime endTime,
+                                      final float left, final float right, final int divider) {
+        super(title, startTime, endTime, calendarEvent);
+        this.left = left;
+        this.right = right;
+        this.divider = divider;
     }
 
     @Override
@@ -20,40 +25,66 @@ public class CalendarEventPartWithWidth {
         if (this == o) return true;
         if (!(o instanceof CalendarEventPartWithWidth)) return false;
         final CalendarEventPartWithWidth that = (CalendarEventPartWithWidth) o;
-        return Float.compare(that.from, this.from) == 0 &&
-                Float.compare(that.to, this.to) == 0 &&
-                Objects.equals(this.eventPart, that.eventPart);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.eventPart, this.from, this.to);
+        return super.equals(o) &&
+                Float.compare(that.left, this.left) == 0 &&
+                Float.compare(that.right, this.right) == 0 &&
+                that.divider == this.divider;
     }
 
     @Override
     public String toString() {
         return "CalendarEventPartWithWidth{" +
-                "calendarEventPart=" + this.eventPart.getTitle() +
-                ", from=" + this.from +
-                ", to=" + this.to +
+                "event=" + getTitle() +
+                ", start=" + getStartTime()
+                .format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)) +
+                ", end=" + getEndTime()
+                .format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)) +
+                ", left=" + this.left +
+                ", right=" + this.right +
+                ", divider=" + this.divider +
                 '}';
     }
 
     public float averageSize(final float widthOfOtherEvent) {
         final float delta = ((widthOfOtherEvent - getWidth()) / 2);
-        this.to += delta;
+        this.right += delta;
         return delta;
     }
 
     public void trimLeft(final float delta) {
-        this.from += delta;
+        this.left += delta;
     }
 
     public float getWidth() {
-        return this.to - this.from;
+        return this.right - this.left;
     }
 
-    public CalendarEventPart getEventPart() {
-        return this.eventPart;
+    public CalendarEventPart withoutWidth() {
+        return new CalendarEventPart(getTitle(), getStartTime(), getEndTime(), getCalendarEvent());
+    }
+
+    public CalendarEventPartWithWidth copy() {
+        return new CalendarEventPartWithWidth(getCalendarEvent(), getTitle(), getStartTime(),
+                getEndTime(), this.left, this.right, this.divider);
+    }
+
+    public float getLeft() {
+        return this.left;
+    }
+
+    public float getRight() {
+        return this.right;
+    }
+
+    public int getDivider() {
+        return this.divider;
+    }
+
+    public CalendarEventPartWithWidth withNewTime(final LocalTime startTime,
+                                                  final LocalTime endTime) {
+        return new CalendarEventPartWithWidth(getCalendarEvent(), getTitle(),
+                this.startTime.toLocalDate().atTime(startTime),
+                this.endTime.toLocalDate().atTime(endTime),
+                this.left, this.right, this.divider);
     }
 }

@@ -30,7 +30,7 @@ public class DayEventsAveraging {
         for (final CalendarEventPartWithWidth newEvent : newEvents) {
             final Iterator<CalendarEventPartWithWidth> oldEventsIterator = oldEvents.iterator();
             while (oldEventsIterator.hasNext()) {
-                if (oldEventsIterator.next().getEventPart().equals(newEvent.getEventPart())) {
+                if (oldEventsIterator.next().withoutWidth().equals(newEvent.withoutWidth())) {
                     oldEventsIterator.remove();
                 }
             }

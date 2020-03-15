@@ -11,7 +11,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
-import static com.example.radle.todo_calendar2.calendarView.tools.events.conflicts.CalendarEventsCreateUtil.newEvent;
+import static com.example.radle.todo_calendar2.calendarView.tools.events.CalendarEventsCreateUtil.newEvent;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
@@ -40,19 +40,20 @@ public class DayEventsAveragingTest {
         final CalendarEventPart event4 = newEvent("event4", 8, 9);
 
         final ChainedCalendarEventPart chainedEvent3 =
-                new ChainedCalendarEventPart(event3, 1, 2,
-                        singletonList(new ChainedCalendarEventPart(event4, 2, 3,
+                new ChainedCalendarEventPart(event3.withWidth(1, 2, 3),
+                        singletonList(new ChainedCalendarEventPart(event4.withWidth(2, 3,
+                                3),
                                 emptyList())));
         Assert.assertEquals(
-                Sets.newSet(new CalendarEventPartWithWidth(event1, 0, 1),
-                        new CalendarEventPartWithWidth(event2, 0, 1),
-                        new CalendarEventPartWithWidth(event3, 1, 2),
-                        new CalendarEventPartWithWidth(event4, 2, 3)),
+                Sets.newSet(event1.withWidth(0, 1, 3),
+                        event2.withWidth(0, 1, 3),
+                        event3.withWidth(1, 2, 3),
+                        event4.withWidth(2, 3, 3)),
                 this.subject.average(
                         Arrays.asList(
-                                new ChainedCalendarEventPart(event1, 0, 1,
+                                new ChainedCalendarEventPart(event1.withWidth(0, 1, 3),
                                         singletonList(chainedEvent3)),
-                                new ChainedCalendarEventPart(event2, 0, 1,
+                                new ChainedCalendarEventPart(event2.withWidth(0, 1, 3),
                                         singletonList(chainedEvent3)))));
     }
 
@@ -73,19 +74,23 @@ public class DayEventsAveragingTest {
 
         Assert.assertEquals(
                 Sets.newSet(
-                        new CalendarEventPartWithWidth(event1, 0, 1.5f),
-                        new CalendarEventPartWithWidth(event2, 0, 1),
-                        new CalendarEventPartWithWidth(event3, 1.5f, 3),
-                        new CalendarEventPartWithWidth(event4, 1, 2),
-                        new CalendarEventPartWithWidth(event5, 2, 3)),
+                        event1.withWidth(0, 1.5f, 3),
+                        event2.withWidth(0, 1, 3),
+                        event3.withWidth(1.5f, 3, 3),
+                        event4.withWidth(1, 2, 3),
+                        event5.withWidth(2, 3, 3)),
                 this.subject.average(Arrays.asList(
-                        new ChainedCalendarEventPart(event1, 0, 1, singletonList(
-                                new ChainedCalendarEventPart(event3, 1, 3,
-                                        emptyList()))),
-                        new ChainedCalendarEventPart(event2, 0, 1, singletonList(
-                                new ChainedCalendarEventPart(event4, 1, 2,
-                                        singletonList(
-                                                new ChainedCalendarEventPart(event5, 2, 3,
+                        new ChainedCalendarEventPart(event1.withWidth(0, 1, 3),
+                                singletonList(
+                                        new ChainedCalendarEventPart(event3.withWidth(1, 3,
+                                                3),
+                                                emptyList()))),
+                        new ChainedCalendarEventPart(event2.withWidth(0, 1, 3),
+                                singletonList(
+                                        new ChainedCalendarEventPart(event4.withWidth(1, 2,
+                                                3), singletonList(
+                                                new ChainedCalendarEventPart(
+                                                        event5.withWidth(2, 3, 3),
                                                         emptyList()))))))));
     }
 
@@ -105,17 +110,20 @@ public class DayEventsAveragingTest {
 
         Assert.assertEquals(
                 Sets.newSet(
-                        new CalendarEventPartWithWidth(event1, 0, 1),
-                        new CalendarEventPartWithWidth(event2, 1, 3),
-                        new CalendarEventPartWithWidth(event3, 1, 2),
-                        new CalendarEventPartWithWidth(event4, 2, 3)),
+                        event1.withWidth(0, 1, 3),
+                        event2.withWidth(1, 3, 3),
+                        event3.withWidth(1, 2, 3),
+                        event4.withWidth(2, 3, 3)),
                 this.subject.average(singletonList(
-                        new ChainedCalendarEventPart(event1, 0, 1, Arrays.asList(
-                                new ChainedCalendarEventPart(event2, 1, 3, emptyList()),
-                                new ChainedCalendarEventPart(event3, 1, 2,
-                                        singletonList(
-                                                new ChainedCalendarEventPart(event4, 2, 3,
-                                                        emptyList()))))))));
+                        new ChainedCalendarEventPart(event1.withWidth(0, 1, 3),
+                                Arrays.asList(
+                                        new ChainedCalendarEventPart(event2.withWidth(1, 3, 3),
+                                                emptyList()),
+                                        new ChainedCalendarEventPart(event3.withWidth(1, 2, 3),
+                                                singletonList(
+                                                        new ChainedCalendarEventPart(
+                                                                event4.withWidth(2, 3, 3),
+                                                                emptyList()))))))));
     }
 
     @Test
@@ -141,33 +149,45 @@ public class DayEventsAveragingTest {
         final CalendarEventPart event9 = newEvent("event9", 12, 13);
         final CalendarEventPart event10 = newEvent("event10", 12, 13);
 
-        final ChainedCalendarEventPart chainedEvent8 = new ChainedCalendarEventPart(event8, 3, 5,
-                emptyList());
+        final ChainedCalendarEventPart chainedEvent8 =
+                new ChainedCalendarEventPart(event8.withWidth(3, 5, 5),
+                        emptyList());
 
         final Set<CalendarEventPartWithWidth> result = this.subject.average(Arrays.asList(
-                new ChainedCalendarEventPart(event1, 0, 3, singletonList(chainedEvent8)),
-                new ChainedCalendarEventPart(event2, 0, 1, singletonList(
-                        new ChainedCalendarEventPart(event4, 1, 2, singletonList(
-                                new ChainedCalendarEventPart(event6, 2, 3, singletonList(
-                                        chainedEvent8)))))),
-                new ChainedCalendarEventPart(event3, 0, 1, singletonList(
-                        new ChainedCalendarEventPart(event5, 1, 2, singletonList(
-                                new ChainedCalendarEventPart(event7, 2, 3, singletonList(
-                                        new ChainedCalendarEventPart(event9, 3, 4, singletonList(
-                                                new ChainedCalendarEventPart(event10, 4, 5,
-                                                        emptyList())))))))))));
+                new ChainedCalendarEventPart(event1.withWidth(0, 3, 5),
+                        singletonList(chainedEvent8)),
+                new ChainedCalendarEventPart(event2.withWidth(0, 1, 5),
+                        singletonList(
+                                new ChainedCalendarEventPart(
+                                        event4.withWidth(1, 2, 5), singletonList(
+                                        new ChainedCalendarEventPart(event6.withWidth(2, 3,
+                                                5), singletonList(
+                                                chainedEvent8)))))),
+                new ChainedCalendarEventPart(event3.withWidth(0, 1, 5),
+                        singletonList(
+                                new ChainedCalendarEventPart(
+                                        event5.withWidth(1, 2, 5), singletonList(
+                                        new ChainedCalendarEventPart(event7.withWidth(2, 3,
+                                                5), singletonList(
+                                                new ChainedCalendarEventPart(event9.withWidth(3, 4,
+                                                        5),
+                                                        singletonList(
+                                                                new ChainedCalendarEventPart(
+                                                                        event10.withWidth(4, 5,
+                                                                                5),
+                                                                        emptyList())))))))))));
         Assert.assertEquals(
                 Sets.newSet(
-                        new CalendarEventPartWithWidth(event1, 0, 3),
-                        new CalendarEventPartWithWidth(event2, 0, 1),
-                        new CalendarEventPartWithWidth(event3, 0, 1),
-                        new CalendarEventPartWithWidth(event4, 1, 2),
-                        new CalendarEventPartWithWidth(event5, 1, 2),
-                        new CalendarEventPartWithWidth(event6, 2, 3.5f),
-                        new CalendarEventPartWithWidth(event7, 2, 3),
-                        new CalendarEventPartWithWidth(event8, 3.5f, 5),
-                        new CalendarEventPartWithWidth(event9, 3, 4),
-                        new CalendarEventPartWithWidth(event10, 4, 5)),
+                        event1.withWidth(0, 3, 5),
+                        event2.withWidth(0, 1, 5),
+                        event3.withWidth(0, 1, 5),
+                        event4.withWidth(1, 2, 5),
+                        event5.withWidth(1, 2, 5),
+                        event6.withWidth(2, 3.5f, 5),
+                        event7.withWidth(2, 3, 5),
+                        event8.withWidth(3.5f, 5, 5),
+                        event9.withWidth(3, 4, 5),
+                        event10.withWidth(4, 5, 5)),
                 result);
 
     }
@@ -199,28 +219,39 @@ public class DayEventsAveragingTest {
 
         Assert.assertEquals(
                 Sets.newSet(
-                        new CalendarEventPartWithWidth(event1, 0, 1.5f),
-                        new CalendarEventPartWithWidth(event2, 0, 1),
-                        new CalendarEventPartWithWidth(event3, 1.5f, 4),
-                        new CalendarEventPartWithWidth(event4, 1.5f, 3),
-                        new CalendarEventPartWithWidth(event5, 1.5f, 4),
-                        new CalendarEventPartWithWidth(event6, 1, 2),
-                        new CalendarEventPartWithWidth(event7, 2, 3),
-                        new CalendarEventPartWithWidth(event8, 3, 4),
-                        new CalendarEventPartWithWidth(event9, 3, 4)),
+                        event1.withWidth(0, 1.5f, 4),
+                        event2.withWidth(0, 1, 4),
+                        event3.withWidth(1.5f, 4, 4),
+                        event4.withWidth(1.5f, 3, 4),
+                        event5.withWidth(1.5f, 4, 4),
+                        event6.withWidth(1, 2, 4),
+                        event7.withWidth(2, 3, 4),
+                        event8.withWidth(3, 4, 4),
+                        event9.withWidth(3, 4, 4)),
                 this.subject.average(Arrays.asList(
-                        new ChainedCalendarEventPart(event1, 0, 1, Arrays.asList(
-                                new ChainedCalendarEventPart(event3, 1, 4, emptyList()),
-                                new ChainedCalendarEventPart(event4, 1, 3, singletonList(
-                                        new ChainedCalendarEventPart(event8, 3, 4,
-                                                emptyList()))),
-                                new ChainedCalendarEventPart(event5, 1, 4, emptyList())
-                        )),
-                        new ChainedCalendarEventPart(event2, 0, 1, singletonList(
-                                new ChainedCalendarEventPart(event6, 1, 2, singletonList(
-                                        new ChainedCalendarEventPart(event7, 2, 3, singletonList(
-                                                new ChainedCalendarEventPart(event9, 3, 4,
-                                                        emptyList()))))))))));
+                        new ChainedCalendarEventPart(event1.withWidth(0, 1, 4),
+                                Arrays.asList(
+                                        new ChainedCalendarEventPart(event3.withWidth(1, 4,
+                                                4), emptyList()),
+                                        new ChainedCalendarEventPart(event4.withWidth(1, 3,
+                                                4), singletonList(
+                                                new ChainedCalendarEventPart(event8.withWidth(3, 4,
+                                                        4),
+                                                        emptyList()))),
+                                        new ChainedCalendarEventPart(event5.withWidth(1, 4,
+                                                4), emptyList())
+                                )),
+                        new ChainedCalendarEventPart(event2.withWidth(0, 1, 4),
+                                singletonList(
+                                        new ChainedCalendarEventPart(event6.withWidth(1, 2,
+                                                4), singletonList(
+                                                new ChainedCalendarEventPart(event7.withWidth(2, 3,
+                                                        4),
+                                                        singletonList(
+                                                                new ChainedCalendarEventPart(
+                                                                        event9.withWidth(3, 4,
+                                                                                4),
+                                                                        emptyList()))))))))));
     }
 
     /*
@@ -247,36 +278,46 @@ public class DayEventsAveragingTest {
         final CalendarEventPart event10 = newEvent("event10", 12, 13);
 
         final ChainedCalendarEventPart chainedEventPart8 =
-                new ChainedCalendarEventPart(event8, 3, 5, emptyList());
+                new ChainedCalendarEventPart(event8.withWidth(3, 5, 5),
+                        emptyList());
         final ChainedCalendarEventPart chainedEventPart7 =
-                new ChainedCalendarEventPart(event7, 2, 3, Arrays.asList(
-                        chainedEventPart8,
-                        new ChainedCalendarEventPart(event9, 3, 4, singletonList(
-                                new ChainedCalendarEventPart(event10, 4, 5,
-                                        emptyList())))));
+                new ChainedCalendarEventPart(event7.withWidth(2, 3, 5),
+                        Arrays.asList(
+                                chainedEventPart8,
+                                new ChainedCalendarEventPart(
+                                        event9.withWidth(3, 4, 5), singletonList(
+                                        new ChainedCalendarEventPart(event10.withWidth(4, 5,
+                                                5),
+                                                emptyList())))));
         final Set<CalendarEventPartWithWidth> result = this.subject.average(Arrays.asList(
-                new ChainedCalendarEventPart(event1, 0, 1, singletonList(
-                        new ChainedCalendarEventPart(event4, 1, 3, singletonList(
-                                chainedEventPart8)))),
-                new ChainedCalendarEventPart(event2, 0, 1, singletonList(
-                        new ChainedCalendarEventPart(event5, 1, 2, singletonList(
-                                chainedEventPart7)))),
-                new ChainedCalendarEventPart(event3, 0, 1, singletonList(
-                        new ChainedCalendarEventPart(event6, 1, 2, singletonList(
-                                chainedEventPart7))))));
+                new ChainedCalendarEventPart(event1.withWidth(0, 1, 5),
+                        singletonList(
+                                new ChainedCalendarEventPart(
+                                        event4.withWidth(1, 3, 5), singletonList(
+                                        chainedEventPart8)))),
+                new ChainedCalendarEventPart(event2.withWidth(0, 1, 5),
+                        singletonList(
+                                new ChainedCalendarEventPart(
+                                        event5.withWidth(1, 2, 5), singletonList(
+                                        chainedEventPart7)))),
+                new ChainedCalendarEventPart(event3.withWidth(0, 1, 5),
+                        singletonList(
+                                new ChainedCalendarEventPart(
+                                        event6.withWidth(1, 2, 5), singletonList(
+                                        chainedEventPart7))))));
 
         Assert.assertEquals(
                 Sets.newSet(
-                        new CalendarEventPartWithWidth(event1, 0, 1.5f),
-                        new CalendarEventPartWithWidth(event2, 0, 1),
-                        new CalendarEventPartWithWidth(event3, 0, 1),
-                        new CalendarEventPartWithWidth(event4, 1.5f, 3),
-                        new CalendarEventPartWithWidth(event5, 1, 2),
-                        new CalendarEventPartWithWidth(event6, 1, 2),
-                        new CalendarEventPartWithWidth(event7, 2, 3),
-                        new CalendarEventPartWithWidth(event8, 3, 5),
-                        new CalendarEventPartWithWidth(event9, 3, 4),
-                        new CalendarEventPartWithWidth(event10, 4, 5)),
+                        event1.withWidth(0, 1.5f, 5),
+                        event2.withWidth(0, 1, 5),
+                        event3.withWidth(0, 1, 5),
+                        event4.withWidth(1.5f, 3, 5),
+                        event5.withWidth(1, 2, 5),
+                        event6.withWidth(1, 2, 5),
+                        event7.withWidth(2, 3, 5),
+                        event8.withWidth(3, 5, 5),
+                        event9.withWidth(3, 4, 5),
+                        event10.withWidth(4, 5, 5)),
                 result);
     }
 }

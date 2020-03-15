@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static com.example.radle.todo_calendar2.calendarView.tools.events.conflicts.CalendarEventsCreateUtil.newEvent;
+import static com.example.radle.todo_calendar2.calendarView.tools.events.CalendarEventsCreateUtil.newEvent;
 import static org.junit.Assert.assertEquals;
 
 public class DayEventsArrangementTest {

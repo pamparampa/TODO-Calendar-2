@@ -13,7 +13,8 @@ class DayEventsEnlargement {
     List<ChainedCalendarEventPart> enlarge(final List<List<CalendarEventPart>> eventsSplitIntoColumns) {
         final Map<CalendarEventPart, ChainedCalendarEventPart> processedEventParts =
                 new HashMap<>();
-        return new Helper(eventsSplitIntoColumns, processedEventParts, 0).createChains();
+        return new Helper(eventsSplitIntoColumns, processedEventParts, 0,
+                eventsSplitIntoColumns.size()).createChains();
     }
 
     private class Helper {
@@ -21,13 +22,15 @@ class DayEventsEnlargement {
         private final List<List<CalendarEventPart>> eventsSplitIntoColumns;
         private final Map<CalendarEventPart, ChainedCalendarEventPart> processedEventParts;
         private final int columnShift;
+        private final int numberOfColumns;
 
         Helper(final List<List<CalendarEventPart>> eventsSplitIntoColumns,
                final Map<CalendarEventPart, ChainedCalendarEventPart> processedEventParts,
-               final int columnShift) {
+               final int columnShift, final int numberOfColumns) {
             this.eventsSplitIntoColumns = eventsSplitIntoColumns;
             this.processedEventParts = processedEventParts;
             this.columnShift = columnShift;
+            this.numberOfColumns = numberOfColumns;
         }
 
         List<ChainedCalendarEventPart> createChains() {
@@ -63,13 +66,14 @@ class DayEventsEnlargement {
             final ChainedCalendarEventPartProcessingParameters parameters =
                     countChainProcessingParameters(currentEventPart);
             return new ChainedCalendarEventPart(
-                    currentEventPart,
-                    parameters.getFrom(), parameters.getTo(),
+                    currentEventPart.withWidth(parameters.getFrom(), parameters.getTo(),
+                            this.numberOfColumns),
                     new Helper(
                             subList(parameters.getEventsFromRightColumns(),
                                     parameters.getColumnOfNextConflict()),
                             this.processedEventParts,
-                            countAbsoluteIndexOfColumn(parameters.getColumnOfNextConflict()))
+                            countAbsoluteIndexOfColumn(parameters.getColumnOfNextConflict()),
+                            this.numberOfColumns)
                             .createChains());
         }
 

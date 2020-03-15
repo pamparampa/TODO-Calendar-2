@@ -5,8 +5,8 @@ import java.util.Objects;
 
 public class CalendarEvent {
     private final String title;
-    private final LocalDateTime startTime;
-    private final LocalDateTime endTime;
+    final LocalDateTime startTime;
+    final LocalDateTime endTime;
 
 
     public CalendarEvent(final String title, final LocalDateTime startTime,

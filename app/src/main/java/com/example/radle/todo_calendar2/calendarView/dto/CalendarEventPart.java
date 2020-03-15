@@ -36,6 +36,12 @@ public class CalendarEventPart extends CalendarEvent {
                 '}';
     }
 
+    public CalendarEventPartWithWidth withWidth(final float left, final float right,
+                                                final int divider) {
+        return new CalendarEventPartWithWidth(this.calendarEvent, getTitle(), getStartTime(),
+                getEndTime(), left, right, divider);
+    }
+
     public CalendarEvent getCalendarEvent() {
         return this.calendarEvent;
     }

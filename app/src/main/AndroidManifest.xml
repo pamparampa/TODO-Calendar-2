@@ -18,7 +18,7 @@
         </activity>
         <activity android:name=".activity.GuiTestsListActivity" />
         <activity android:name=".activity.CalendarRowViewActivity" />
-        <activity android:name=".activity.BoardListViewActivity" />
+        <activity android:name=".activity.BoardScrollViewActivity" />
         <activity android:name=".activity.SingleWeekViewActivity" />
     </application>
 

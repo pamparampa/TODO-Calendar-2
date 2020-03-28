@@ -1,6 +1,6 @@
 package com.example.radle.todo_calendar2.calendarView.tools
 
-import com.example.radle.todo_calendar2.calendarView.BoardListView
+import com.example.radle.todo_calendar2.calendarView.BoardScrollView
 import com.example.radle.todo_calendar2.calendarView.CalendarRowView
 import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime
 import junit.framework.Assert.assertEquals
@@ -50,8 +50,8 @@ class ParamsBuilderTest {
         assertEquals(expectedRowParams(2, DATE_TIME.withHour(2)), rowParams)
     }
 
-    private fun someBoardParams(): BoardListView.BoardParams {
-        return BoardListView.BoardParams(1, 2, 7, DATE_TIME)
+    private fun someBoardParams(): BoardScrollView.BoardParams {
+        return BoardScrollView.BoardParams(1, 2, 7, DATE_TIME)
     }
 
     private fun expectedRowParams(id: Int, dateTime: LocalDateTime): CalendarRowView.RowParams {

@@ -74,9 +74,9 @@ public abstract class SinglePeriodView extends LinearLayout {
         return boardListView;
     }
 
-    private BoardListView.BoardParams buildBoardParams() {
+    private BoardScrollView.BoardParams buildBoardParams() {
         final int smallerScreenDimension = getSmallerScreenDimension();
-        return new BoardListView.BoardParams(smallerScreenDimension,
+        return new BoardScrollView.BoardParams(smallerScreenDimension,
                 new RowsMeasures().measureRowHeight(smallerScreenDimension, 7),
                 NUMBER_OF_COLUMNS, this.params.firstDateTime);
     }

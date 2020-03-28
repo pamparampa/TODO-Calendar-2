@@ -9,7 +9,6 @@ import android.view.MotionEvent;
 import androidx.annotation.Nullable;
 
 import com.example.radle.todo_calendar2.R;
-import com.example.radle.todo_calendar2.calendarView.BoardListView;
 import com.example.radle.todo_calendar2.calendarView.BoardScrollView;
 import com.example.radle.todo_calendar2.calendarView.tools.RowsMeasures;
 
@@ -19,7 +18,7 @@ import java.time.Month;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BoardListViewActivity extends Activity {
+public class BoardScrollViewActivity extends Activity {
     @BindView(R.id.boardListView)
     BoardScrollView boardListView;
 
@@ -32,9 +31,9 @@ public class BoardListViewActivity extends Activity {
         this.boardListView.setParams(makeParams());
     }
 
-    private BoardListView.BoardParams makeParams() {
+    private BoardScrollView.BoardParams makeParams() {
         final int smallerDimension = getSmallerScreenDimension();
-        return new BoardListView.BoardParams(getSmallerScreenDimension(),
+        return new BoardScrollView.BoardParams(getSmallerScreenDimension(),
                 new RowsMeasures().measureRowHeight(smallerDimension, 7), 7,
                 LocalDateTime.of(2019, Month.MARCH, 18, 0, 0));
     }

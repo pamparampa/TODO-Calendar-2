@@ -11,21 +11,20 @@ import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
 import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
 import com.example.radle.todo_calendar2.calendarView.tools.ParamsBuilder;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BoardScrollView extends ScrollView {
 
     private final LinearLayout linearLayout;
-    private BoardListView.BoardParams params;
+    private BoardParams params;
     private OnHorizontalScrollListener onHorizontalScrollListener;
     private List<CalendarRowView> rowViews = new ArrayList<>(24);
 
     public BoardScrollView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         this.linearLayout = new LinearLayout(context, null);
-
-
     }
 
     public void setOnHorizontalScrollListener(final OnHorizontalScrollListener onHorizontalScrollListener) {
@@ -35,24 +34,11 @@ public class BoardScrollView extends ScrollView {
         }
     }
 
-    public void setParams(final BoardListView.BoardParams params) {
+    public void setParams(final BoardParams params) {
         this.params = params;
         try {
-            final List<IdWithDataTime> idWithDataTimes =
-                    new DateTimesCollector().collectRowsForWeek(
-                            this.params.getFirstDateTime());
-            this.linearLayout.removeAllViews();
-            this.rowViews = new ArrayList<>(24);
-            for (final IdWithDataTime idWithDataTime : idWithDataTimes) {
-                final CalendarRowView rowView = initRowView(idWithDataTime);
-                this.linearLayout.addView(rowView);
-                this.rowViews.add(rowView);
-            }
-            this.linearLayout
-                    .setLayoutParams(
-                            new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                                    ViewGroup.LayoutParams.WRAP_CONTENT));
-            this.linearLayout.setOrientation(LinearLayout.VERTICAL);
+            createRowViews();
+            initLinearLayout();
             addView(this.linearLayout);
 
         } catch (final TimeNotAlignedException e) {
@@ -60,11 +46,26 @@ public class BoardScrollView extends ScrollView {
         }
     }
 
+    private void initLinearLayout() {
+        this.linearLayout.removeAllViews();
+        for (final CalendarRowView rowView : this.rowViews) {
+            this.linearLayout.addView(rowView);
+        }
+        this.linearLayout
+                .setLayoutParams(
+                        new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.WRAP_CONTENT));
+        this.linearLayout.setOrientation(LinearLayout.VERTICAL);
+    }
 
-    @Override
-    protected void onLayout(final boolean changed, final int l, final int t, final int r,
-                            final int b) {
-        super.onLayout(changed, l, t, r, b);
+    private void createRowViews() throws TimeNotAlignedException {
+        final List<IdWithDataTime> idWithDataTimes =
+                new DateTimesCollector().collectRowsForWeek(this.params.getFirstDateTime());
+        this.rowViews = new ArrayList<>(24);
+        for (final IdWithDataTime idWithDataTime : idWithDataTimes) {
+            final CalendarRowView rowView = initRowView(idWithDataTime);
+            this.rowViews.add(rowView);
+        }
     }
 
     private CalendarRowView initRowView(final IdWithDataTime rowIdWithFirstDateTime) {
@@ -84,5 +85,37 @@ public class BoardScrollView extends ScrollView {
                 this.onHorizontalScrollListener.finishScrollingVertically();
         }
         return super.onTouchEvent(ev);
+    }
+
+    public static class BoardParams {
+        private final int numberOfColumns;
+        private final LocalDateTime firstDateTime;
+        private final int rowHeight;
+        private final int width;
+
+        public BoardParams(final int width, final int rowHeight,
+                           final int numberOfColumns,
+                           final LocalDateTime firstDateTime) {
+            this.width = width;
+            this.numberOfColumns = numberOfColumns;
+            this.firstDateTime = firstDateTime;
+            this.rowHeight = rowHeight;
+        }
+
+        public int getNumberOfColumns() {
+            return this.numberOfColumns;
+        }
+
+        public int getRowHeight() {
+            return this.rowHeight;
+        }
+
+        public int getWidth() {
+            return this.width;
+        }
+
+        LocalDateTime getFirstDateTime() {
+            return this.firstDateTime;
+        }
     }
 }

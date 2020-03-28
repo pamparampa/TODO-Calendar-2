@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.Nullable;
+
 import com.example.radle.todo_calendar2.R;
 
 import java.util.Arrays;
 
-import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnItemClick;
@@ -19,8 +20,8 @@ public class GuiTestsListActivity extends Activity {
 
     @BindView(R.id.guiTestsList)
     ListView guiTestsList;
-    final String[] guiTestNames = {"CalendarRowVIew", "BoardListView", "SingleWeekView"};
-    final Class[] guiTestClasses = {CalendarRowViewActivity.class, BoardListViewActivity.class,
+    final String[] guiTestNames = {"CalendarRowVIew", "BoardScrollView", "SingleWeekView"};
+    final Class[] guiTestClasses = {CalendarRowViewActivity.class, BoardScrollViewActivity.class,
             SingleWeekViewActivity.class};
 
     @Override

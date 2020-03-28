@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.example.radle.todo_calendar2.calendarView.BoardListView
+    <com.example.radle.todo_calendar2.calendarView.BoardScrollView
         android:id="@+id/boardListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -3,7 +3,7 @@ package com.example.radle.todo_calendar2.calendarView.tools
 import com.example.radle.todo_calendar2.calendarView.BoardListView
 import com.example.radle.todo_calendar2.calendarView.CalendarRowView
 import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime
-import org.junit.Assert.assertEquals
+import junit.framework.Assert.assertEquals
 import org.junit.Test
 import java.time.LocalDateTime
 import java.util.*
@@ -40,13 +40,13 @@ class ParamsBuilderTest {
 
     @Test
     fun getRowParamsByBoardParams_shouldReturnFirstRowParams_whenIdZeroPassed() {
-        val rowParams = subject.getRowParamsByBoardParams(someBoardParams(), 0, idsWithDateTimes)
+        val rowParams = subject.getRowParamsByBoardParams(someBoardParams(), idsWithDateTimes.get(0))
         assertEquals(expectedRowParams(0, DATE_TIME), rowParams)
     }
 
     @Test
     fun getRowParamsByBoardParams_shouldReturnThirdRowParams_WhenIdTwoPassed() {
-        val rowParams = subject.getRowParamsByBoardParams(someBoardParams(), 2, idsWithDateTimes)
+        val rowParams = subject.getRowParamsByBoardParams(someBoardParams(), idsWithDateTimes.get(2))
         assertEquals(expectedRowParams(2, DATE_TIME.withHour(2)), rowParams)
     }
 

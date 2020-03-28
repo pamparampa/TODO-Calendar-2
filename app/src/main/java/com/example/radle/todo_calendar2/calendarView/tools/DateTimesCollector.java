@@ -38,7 +38,7 @@ public class DateTimesCollector {
                 LocalDate.now().isEqual(currentDateTime.toLocalDate()));
     }
 
-    public List<IdWithDataTime> collectForWeekColumn(final LocalDateTime firstDateTime) throws TimeNotAlignedException {
+    public List<IdWithDataTime> collectRowsForWeek(final LocalDateTime firstDateTime) throws TimeNotAlignedException {
         if (isTimeNotAlignedForWeekColumn(firstDateTime)) {
             throw new TimeNotAlignedException(ChronoUnit.WEEKS);
         }

@@ -24,13 +24,13 @@ class DateTimesCollectorTest {
 
     @Test
     fun collectForWeekColumn_shouldReturnCorrectCollection_whenCorrectDateTimeIsPassed() {
-        val idsWithDateTimes = dateTimesCollector.collectForWeekColumn(DATE_TIME)
+        val idsWithDateTimes = dateTimesCollector.collectRowsForWeek(DATE_TIME)
         Assert.assertThat(idsWithDateTimes, CoreMatchers.hasItems(*EXPECTED_FOR_WEEK_COLUMN))
     }
 
     @Test(expected = TimeNotAlignedException::class)
     fun collectForWeekColumn_shouldThrowTimeNotAlignedException_whenNotCorrectDateTimeIsPassed() {
-        dateTimesCollector.collectForWeekColumn(DATE_TIME.withMinute(1))
+        dateTimesCollector.collectRowsForWeek(DATE_TIME.withMinute(1))
     }
 
     @Test

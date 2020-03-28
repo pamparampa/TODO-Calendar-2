@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 import com.example.radle.todo_calendar2.R;
 import com.example.radle.todo_calendar2.calendarView.BoardListView;
+import com.example.radle.todo_calendar2.calendarView.BoardScrollView;
 import com.example.radle.todo_calendar2.calendarView.tools.RowsMeasures;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ import butterknife.ButterKnife;
 
 public class BoardListViewActivity extends Activity {
     @BindView(R.id.boardListView)
-    BoardListView boardListView;
+    BoardScrollView boardListView;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {

@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.radle.todo_calendar2.R;
 import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
-import com.example.radle.todo_calendar2.calendarView.tools.ParamsBuilder;
 
 import java.util.List;
 
@@ -76,9 +75,9 @@ public class CalendarRowAdapter extends ArrayAdapter<IdWithDataTime> {
 
     private ViewHolder initRowView(final int position, final View convertView) {
         final ViewHolder viewHolder = new ViewHolder(convertView);
-        viewHolder.rowView
+        /*viewHolder.rowView
                 .setParams(new ParamsBuilder().getRowParamsByBoardParams(this.boardParams, position,
-                        this.rowIdsWithFirstDateTimes));
+                        this.rowIdsWithFirstDateTimes));*/
         viewHolder.rowView.setOnHorizontalScrollListener(this.onHorizontalScrollListener);
 
         return viewHolder;

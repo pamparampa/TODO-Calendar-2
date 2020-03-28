@@ -11,6 +11,7 @@ import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+@Deprecated
 public class BoardListView extends ListView {
     private final CalendarRowAdapter adapter;
     private BoardParams params;
@@ -38,7 +39,7 @@ public class BoardListView extends ListView {
         this.adapter.setParams(params);
         try {
             this.adapter.addAll(
-                    new DateTimesCollector().collectForWeekColumn(this.params.firstDateTime));
+                    new DateTimesCollector().collectRowsForWeek(this.params.firstDateTime));
         } catch (final TimeNotAlignedException e) {
             e.printStackTrace();
         }
@@ -69,6 +70,10 @@ public class BoardListView extends ListView {
 
         public int getWidth() {
             return this.width;
+        }
+
+        public LocalDateTime getFirstDateTime() {
+            return this.firstDateTime;
         }
     }
 

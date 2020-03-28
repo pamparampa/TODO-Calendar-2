@@ -58,7 +58,6 @@ public class CalendarRowView extends View {
     @Override
     protected void onDraw(final Canvas canvas) {
         compose();
-        // TODO przerobic na ten StaticView
         canvas.drawText(this.label.getText(), this.label.getTextX(), this.label.getTextY(), this
                 .labelTextPaint);
         this.calendarFields.forEach(calendarField -> canvas.drawRect(calendarField.getRect(),

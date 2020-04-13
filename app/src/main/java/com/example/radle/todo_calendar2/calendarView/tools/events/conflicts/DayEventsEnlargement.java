@@ -9,8 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-class DayEventsEnlargement {
-    List<ChainedCalendarEventPart> enlarge(final List<List<CalendarEventPart>> eventsSplitIntoColumns) {
+public class DayEventsEnlargement {
+    public List<ChainedCalendarEventPart> enlarge(final List<List<CalendarEventPart>> eventsSplitIntoColumns) {
         final Map<CalendarEventPart, ChainedCalendarEventPart> processedEventParts =
                 new HashMap<>();
         return new Helper(eventsSplitIntoColumns, processedEventParts, 0,

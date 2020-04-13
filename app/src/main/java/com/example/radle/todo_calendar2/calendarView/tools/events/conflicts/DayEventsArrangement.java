@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-class DayEventsArrangement {
-    List<List<CalendarEventPart>> arrange(final List<CalendarEventPart> eventPartsInDay) {
+public class DayEventsArrangement {
+    public List<List<CalendarEventPart>> arrange(final List<CalendarEventPart> eventPartsInDay) {
         final List<List<CalendarEventPart>> eventsSplitIntoColumns = new LinkedList<>();
         final List<CalendarEventPart> restOfEventPartsInDay = new LinkedList<>(eventPartsInDay);
         if (restOfEventPartsInDay.size() > 0) {

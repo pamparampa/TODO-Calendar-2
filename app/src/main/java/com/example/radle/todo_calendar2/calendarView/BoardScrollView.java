@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import com.example.radle.todo_calendar2.calendarView.dto.CalendarEvent;
 import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
 import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
 import com.example.radle.todo_calendar2.calendarView.tools.ParamsBuilder;
+import com.example.radle.todo_calendar2.calendarView.tools.events.EventsComposer;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ public class BoardScrollView extends ScrollView {
     private BoardParams params;
     private OnHorizontalScrollListener onHorizontalScrollListener;
     private List<CalendarRowView> rowViews = new ArrayList<>(24);
+    private EventsDao eventsDao;
 
     public BoardScrollView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -40,10 +43,21 @@ public class BoardScrollView extends ScrollView {
             createRowViews();
             initLinearLayout();
             addView(this.linearLayout);
+            addEvents();
 
         } catch (final TimeNotAlignedException e) {
             e.printStackTrace();
         }
+    }
+
+    private void addEvents() {
+        final List<CalendarEvent> events = this.eventsDao.getEvents();
+        try {
+            final EventsComposer eventsComposer = new EventsComposer(this.params.firstDateTime);
+        } catch (final TimeNotAlignedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void initLinearLayout() {

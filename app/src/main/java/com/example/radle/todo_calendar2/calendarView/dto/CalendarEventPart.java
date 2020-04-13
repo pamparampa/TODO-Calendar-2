@@ -42,6 +42,7 @@ public class CalendarEventPart extends CalendarEvent {
                 getEndTime(), left, right, divider);
     }
 
+    @Override
     public CalendarEvent getCalendarEvent() {
         return this.calendarEvent;
     }

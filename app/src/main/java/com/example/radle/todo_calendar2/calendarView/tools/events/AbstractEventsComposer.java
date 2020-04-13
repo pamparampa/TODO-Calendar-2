@@ -19,7 +19,7 @@ abstract class AbstractEventsComposer {
 
     abstract LocalDateTime evaluateEndTime(LocalDateTime startTime);
 
-    public List<CalendarEventPart> getEventsParts(final List<CalendarEvent> calendarEvents) {
+    public List<CalendarEventPart> getEventsParts(final List<? extends CalendarEvent> calendarEvents) {
         final List<CalendarEventPart> eventsParts = new ArrayList<>();
         for (final CalendarEvent calendarEvent : calendarEvents) {
             final Optional<CalendarEventPart> eventPart =
@@ -34,7 +34,7 @@ abstract class AbstractEventsComposer {
         final Optional<LocalDateTime> endTime = getEndTime(calendarEvent);
         if (startTime.isPresent() && endTime.isPresent())
             return Optional.of(new CalendarEventPart(calendarEvent.getTitle(), startTime.get(),
-                    endTime.get(), calendarEvent));
+                    endTime.get(), calendarEvent.getCalendarEvent()));
         return Optional.empty();
     }
 

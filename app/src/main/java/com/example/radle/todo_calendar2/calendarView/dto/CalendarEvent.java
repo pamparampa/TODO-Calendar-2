@@ -51,4 +51,8 @@ public class CalendarEvent {
     public LocalDateTime getEndTime() {
         return this.endTime;
     }
+
+    public CalendarEvent getCalendarEvent() {
+        return this;
+    }
 }

@@ -36,9 +36,9 @@ public class CalendarEventPartWithWidth extends CalendarEventPart {
         return "CalendarEventPartWithWidth{" +
                 "event=" + getTitle() +
                 ", start=" + getStartTime()
-                .format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)) +
+                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)) +
                 ", end=" + getEndTime()
-                .format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM)) +
+                .format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)) +
                 ", left=" + this.left +
                 ", right=" + this.right +
                 ", divider=" + this.divider +

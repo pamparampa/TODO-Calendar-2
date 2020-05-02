@@ -1,6 +1,13 @@
 package com.example.radle.todo_calendar2.calendarView;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -8,26 +15,40 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.example.radle.todo_calendar2.calendarView.dto.CalendarEvent;
+import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventPartWithWidth;
 import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
+import com.example.radle.todo_calendar2.calendarView.tools.CalendarEventElementsComposer;
 import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
 import com.example.radle.todo_calendar2.calendarView.tools.ParamsBuilder;
+import com.example.radle.todo_calendar2.calendarView.tools.events.EventPartBoundsResolver;
 import com.example.radle.todo_calendar2.calendarView.tools.events.EventsComposer;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class BoardScrollView extends ScrollView {
 
     private final LinearLayout linearLayout;
+    private final Paint borderPaint = new Paint();
     private BoardParams params;
     private OnHorizontalScrollListener onHorizontalScrollListener;
     private List<CalendarRowView> rowViews = new ArrayList<>(24);
-    private EventsDao eventsDao;
+    private EventsComposer eventsComposer;
+    private EventPartBoundsResolver eventPartBoundsResolver;
+    private List<CalendarEvent> events = new LinkedList<>();
+    private final Paint eventPaint = new Paint();
+    private final TextPaint eventTiltePaint = new TextPaint();
 
     public BoardScrollView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         this.linearLayout = new LinearLayout(context, null);
+        this.eventPaint.setStyle(Paint.Style.FILL);
+        this.eventPaint.setColor(Color.LTGRAY);
+        this.borderPaint.setStyle(Paint.Style.STROKE);
+        this.borderPaint.setAntiAlias(true);
+        this.eventTiltePaint.setAntiAlias(true);
     }
 
     public void setOnHorizontalScrollListener(final OnHorizontalScrollListener onHorizontalScrollListener) {
@@ -43,21 +64,62 @@ public class BoardScrollView extends ScrollView {
             createRowViews();
             initLinearLayout();
             addView(this.linearLayout);
-            addEvents();
+            initEventsTools();
+            this.eventTiltePaint
+                    .setTextSize(new CalendarEventElementsComposer().getTextSize(this.params));
 
         } catch (final TimeNotAlignedException e) {
             e.printStackTrace();
         }
     }
 
-    private void addEvents() {
-        final List<CalendarEvent> events = this.eventsDao.getEvents();
+    private void initEventsTools() {
         try {
-            final EventsComposer eventsComposer = new EventsComposer(this.params.firstDateTime);
+            this.eventsComposer = new EventsComposer(this.params.firstDateTime);
+            this.eventPartBoundsResolver = new EventPartBoundsResolver(this.params);
         } catch (final TimeNotAlignedException e) {
             e.printStackTrace();
         }
+    }
 
+    public void fillWithEvents(final List<CalendarEvent> events) {
+        this.events = events;
+        invalidate();
+    }
+
+    @Override
+    protected void onDraw(final Canvas canvas) {
+        super.onDraw(canvas);
+        for (final CalendarEventPartWithWidth composedEvent : this.eventsComposer.compose(
+                this.events)) {
+            drawEventPart(canvas, composedEvent);
+        }
+    }
+
+    private void drawEventPart(final Canvas canvas,
+                               final CalendarEventPartWithWidth composedEvent) {
+        final Rect rect = drawEventRect(canvas, composedEvent);
+        drawEventTitle(canvas, composedEvent, rect);
+    }
+
+    private Rect drawEventRect(final Canvas canvas,
+                               final CalendarEventPartWithWidth composedEvent) {
+        final Rect rect = this.eventPartBoundsResolver.resolveBounds(composedEvent);
+        canvas.drawRect(rect,
+                this.eventPaint);
+        canvas.drawRect(rect, this.borderPaint);
+        return rect;
+    }
+
+    private void drawEventTitle(final Canvas canvas,
+                                final CalendarEventPartWithWidth composedEvent, final Rect rect) {
+        final StaticLayout staticLayout = StaticLayout.Builder.obtain(composedEvent.getTitle(),
+                0, composedEvent.getTitle().length(), this.eventTiltePaint, rect.width())
+                .setAlignment(Layout.Alignment.ALIGN_CENTER).build();
+        canvas.save();
+        canvas.translate(rect.left, rect.top);
+        staticLayout.draw(canvas);
+        canvas.restore();
     }
 
     private void initLinearLayout() {
@@ -101,6 +163,11 @@ public class BoardScrollView extends ScrollView {
         return super.onTouchEvent(ev);
     }
 
+    public void addEvents(final List<CalendarEvent> events) {
+        this.events.addAll(events);
+        invalidate();
+    }
+
     public static class BoardParams {
         private final int numberOfColumns;
         private final LocalDateTime firstDateTime;
@@ -128,7 +195,7 @@ public class BoardScrollView extends ScrollView {
             return this.width;
         }
 
-        LocalDateTime getFirstDateTime() {
+        public LocalDateTime getFirstDateTime() {
             return this.firstDateTime;
         }
     }

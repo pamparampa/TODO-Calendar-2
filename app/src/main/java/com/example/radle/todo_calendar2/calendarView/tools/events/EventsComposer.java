@@ -9,10 +9,10 @@ import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
 import com.example.radle.todo_calendar2.calendarView.tools.events.conflicts.DayEventsArrangement;
 import com.example.radle.todo_calendar2.calendarView.tools.events.conflicts.DayEventsAveraging;
 import com.example.radle.todo_calendar2.calendarView.tools.events.conflicts.DayEventsEnlargement;
-import com.google.common.collect.HashMultimap;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -32,18 +32,18 @@ public class EventsComposer {
         }
     }
 
-    public HashMultimap<Integer, CalendarEventPartWithWidth> compose(final List<CalendarEvent> events) {
-        final HashMultimap<Integer, CalendarEventPartWithWidth>
-                composedEvents = HashMultimap.create();
+    public Set<CalendarEventPartWithWidth> compose(final List<CalendarEvent> events) {
+        final Set<CalendarEventPartWithWidth>
+                composedEvents = new HashSet<>();
         final List<CalendarEventPart> weekEventsParts =
                 this.weekEventsComposer.getEventsParts(events);
         for (int i = 0; i < NUMBER_OF_DAYS; i++) {
-            composedEvents.putAll(i, getCalendarEventsforDay(weekEventsParts, i));
+            composedEvents.addAll(getCalendarEventsForDay(weekEventsParts, i));
         }
         return composedEvents;
     }
 
-    private Set<CalendarEventPartWithWidth> getCalendarEventsforDay(final List<CalendarEventPart> weekEventsParts, final int dayNumber) {
+    private Set<CalendarEventPartWithWidth> getCalendarEventsForDay(final List<CalendarEventPart> weekEventsParts, final int dayNumber) {
         final DayEventsComposer dayEventsComposer = this.dayEventsComposers.get(dayNumber);
         final List<CalendarEventPart> dayEventsParts =
                 dayEventsComposer.getEventsParts(weekEventsParts);

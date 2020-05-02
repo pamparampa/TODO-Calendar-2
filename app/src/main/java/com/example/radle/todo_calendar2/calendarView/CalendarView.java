@@ -3,13 +3,13 @@ package com.example.radle.todo_calendar2.calendarView;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
+import com.example.radle.todo_calendar2.calendarView.dto.CalendarEvent;
 import com.example.radle.todo_calendar2.calendarView.scrolling.ScrollEffectParameters;
 import com.example.radle.todo_calendar2.calendarView.scrolling.ScrollVelocity;
 import com.example.radle.todo_calendar2.calendarView.scrolling.ScrollingHandler;
@@ -18,6 +18,7 @@ import com.example.radle.todo_calendar2.calendarView.tools.WeekBeginningDateTime
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,19 +28,33 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
     private final LinearLayout linearLayout;
     private final WeekBeginningDateTimeProvider weekBeginningDateTimeProvider =
             new WeekBeginningDateTimeProvider();
-    private final Point outSize = new Point();
     private int width;
     private Map<ScrollEffectParameters.Side, Integer> sideToPosition;
+    private onNewWeekListener onNewWeekListener;
+    private final Map<LocalDateTime, SinglePeriodView> periodViews = new HashMap<>();
 
     public CalendarView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
 
         this.linearLayout = prepareLinearLayout(context, attrs);
-        this.linearLayout.addView(newSingleWeekView(previousWeekBeginning()));
-        this.linearLayout.addView(newSingleWeekView(currentWeekBeginning()));
-        this.linearLayout.addView(newSingleWeekView(nextWeekBeginning()));
-
+        addPeriodView(previousWeekBeginning());
+        addPeriodView(currentWeekBeginning());
+        addPeriodView(nextWeekBeginning());
         addView(this.linearLayout);
+    }
+
+    private void addPeriodView(final LocalDateTime firstDateTime) {
+        final SingleWeekView periodView = newSingleWeekView(firstDateTime);
+        this.linearLayout.addView(periodView);
+        this.periodViews.put(firstDateTime, periodView);
+    }
+
+    public void fillWithEvents(final List<CalendarEvent> events) {
+        for (int i = 0; i < this.linearLayout.getChildCount(); i++) {
+            final SinglePeriodView singlePeriodView =
+                    (SinglePeriodView) this.linearLayout.getChildAt(i);
+            singlePeriodView.fillWithEvents(events);
+        }
     }
 
     private LinearLayout prepareLinearLayout(final Context context, final AttributeSet attrs) {
@@ -74,8 +89,7 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
     }
 
     @Override
-    public boolean onTouchEvent(final MotionEvent ev) { // TODO dowiedziec sie o co chodzi w tym
-        // warningu
+    public boolean onTouchEvent(final MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_UP)
             return handleScroll();
         return super.onTouchEvent(ev);
@@ -157,6 +171,15 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         ScrollVelocity.finishMeasurement(getScrollX(), LocalTime.now());
     }
 
+    public void setOnNewWeekListener(final onNewWeekListener onNewWeekListener) {
+        this.onNewWeekListener = onNewWeekListener;
+    }
+
+    public void addEvents(final LocalDateTime periodDateTime, final List<CalendarEvent> events) {
+        if (this.periodViews.containsKey(periodDateTime))
+            this.periodViews.get(periodDateTime).addEvents(events);
+    }
+
     private class AnimationWithPostActionListener implements Animator.AnimatorListener {
 
         private final ScrollEffectParameters parameters;
@@ -194,19 +217,27 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
     private void changeCalendarStateAfterScroll(
             final ScrollEffectParameters.ElementsToChangeAfterScroll elementsToChange,
             final ScrollEffectParameters.Side side) {
-        addNewView(elementsToChange, side);
+        final LocalDateTime newPeriodViewDateTime = addNewPeriodView(elementsToChange, side);
         removeUnnecessaryView(elementsToChange);
         scrollTo(CalendarView.this.width, 0);
+        this.onNewWeekListener.newWeek(newPeriodViewDateTime);
     }
 
-    private void addNewView(final ScrollEffectParameters.ElementsToChangeAfterScroll elementsToChange, final ScrollEffectParameters.Side side) {
-        CalendarView.this.linearLayout.addView(
-                newSingleWeekView(elementsToChange.getNewElementDateTime()),
+    private LocalDateTime addNewPeriodView(final ScrollEffectParameters.ElementsToChangeAfterScroll elementsToChange, final ScrollEffectParameters.Side side) {
+        final LocalDateTime newElementDateTime = elementsToChange.getNewElementDateTime();
+        final SingleWeekView periodView = newSingleWeekView(newElementDateTime);
+        CalendarView.this.linearLayout.addView(periodView,
                 side == ScrollEffectParameters.Side.LEFT ? 0 :
                         CalendarView.this.linearLayout.getChildCount());
+        this.periodViews.put(newElementDateTime, periodView);
+        return newElementDateTime;
     }
 
     private void removeUnnecessaryView(final ScrollEffectParameters.ElementsToChangeAfterScroll elementsToChange) {
+        final SinglePeriodView periodView =
+                (SinglePeriodView) this.linearLayout
+                        .getChildAt(elementsToChange.getElementToRemoveId());
+        this.periodViews.remove(periodView.getDateTime());
         CalendarView.this.linearLayout
                 .removeViewAt(elementsToChange.getElementToRemoveId());
     }

@@ -3,7 +3,6 @@ package com.example.radle.todo_calendar2.calendarView.tools.events;
 import com.example.radle.todo_calendar2.calendarView.TimeNotAlignedException;
 import com.example.radle.todo_calendar2.calendarView.dto.CalendarEvent;
 import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventPartWithWidth;
-import com.google.common.collect.HashMultimap;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,6 +13,8 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 public class EventsComposerTest {
 
@@ -30,7 +31,7 @@ public class EventsComposerTest {
 
     @Test
     public void compose_shouldReturnEmptyMap_whenThereAreNoEvents() {
-        Assert.assertEquals(HashMultimap.create(), this.subject.compose(Collections.emptyList()));
+        Assert.assertEquals(Collections.emptySet(), this.subject.compose(Collections.emptyList()));
     }
 
     @Test
@@ -45,23 +46,23 @@ public class EventsComposerTest {
                 LocalDateTime.of(2020, Month.APRIL, 7, 12, 0, 0),
                 LocalDateTime.of(2020, Month.APRIL, 7, 12, 30, 0));
 
-        final HashMultimap<Integer, CalendarEventPartWithWidth> multimap = HashMultimap.create();
+        final Set<CalendarEventPartWithWidth> expected = new HashSet<>();
 
-        multimap.put(0, new CalendarEventPartWithWidth(event1, "event1",
+        expected.add(new CalendarEventPartWithWidth(event1, "event1",
                 LocalDateTime.of(2020, Month.MARCH, 30, 11, 0, 0),
                 LocalDateTime.of(2020, Month.MARCH, 30, 13, 30, 0),
                 0, 1, 1));
 
-        multimap.put(2, new CalendarEventPartWithWidth(event2, "event2",
+        expected.add(new CalendarEventPartWithWidth(event2, "event2",
                 LocalDateTime.of(2020, Month.APRIL, 1, 23, 0, 0),
                 LocalDateTime.of(2020, Month.APRIL, 2, 0, 0, 0),
                 0, 1, 1));
-        multimap.put(3, new CalendarEventPartWithWidth(event2, "event2",
+        expected.add(new CalendarEventPartWithWidth(event2, "event2",
                 LocalDateTime.of(2020, Month.APRIL, 2, 0, 0, 0),
                 LocalDateTime.of(2020, Month.APRIL, 2, 0, 20, 0),
                 0, 1, 1));
 
-        Assert.assertEquals(multimap, this.subject.compose(Arrays.asList(event1, event2, event3)));
+        Assert.assertEquals(expected, this.subject.compose(Arrays.asList(event1, event2, event3)));
     }
 
     @Test
@@ -82,42 +83,38 @@ public class EventsComposerTest {
                 LocalDateTime.of(2020, Month.MARCH, 31, 15, 0, 0),
                 LocalDateTime.of(2020, Month.MARCH, 31, 16, 0, 0));
 
-        final HashMultimap<Integer, CalendarEventPartWithWidth> multimap = HashMultimap.create();
+        final Set<CalendarEventPartWithWidth> expected = new HashSet<>();
 
-        multimap.put(0, new CalendarEventPartWithWidth(event1, "event1",
+        expected.add(new CalendarEventPartWithWidth(event1, "event1",
                 LocalDateTime.of(2020, Month.MARCH, 30, 23, 0, 0),
                 LocalDateTime.of(2020, Month.MARCH, 31, 0, 0, 0),
                 0, 1, 1));
-        multimap.put(1, new CalendarEventPartWithWidth(event1, "event1",
+        expected.add(new CalendarEventPartWithWidth(event1, "event1",
                 LocalDateTime.of(2020, Month.MARCH, 31, 0, 0, 0),
                 LocalDateTime.of(2020, Month.MARCH, 31, 15, 0, 0),
                 0, 1.5f, 3));
-        multimap.put(1, new CalendarEventPartWithWidth(event2, "event2",
+        expected.add(new CalendarEventPartWithWidth(event2, "event2",
                 LocalDateTime.of(2020, Month.MARCH, 31, 14, 0, 0),
                 LocalDateTime.of(2020, Month.MARCH, 31, 15, 0, 0),
                 1.5f, 3, 3));
-        multimap.put(1, new CalendarEventPartWithWidth(event3, "event3",
+        expected.add(new CalendarEventPartWithWidth(event3, "event3",
                 LocalDateTime.of(2020, Month.MARCH, 31, 15, 0, 0),
                 LocalDateTime.of(2020, Month.MARCH, 31, 16, 0, 0),
                 0, 1, 3));
-        multimap.put(1, new CalendarEventPartWithWidth(event4, "event4",
+        expected.add(new CalendarEventPartWithWidth(event4, "event4",
                 LocalDateTime.of(2020, Month.MARCH, 31, 15, 0, 0),
                 LocalDateTime.of(2020, Month.APRIL, 1, 0, 0, 0),
                 1, 2, 3));
-        multimap.put(2, new CalendarEventPartWithWidth(event4, "event4",
+        expected.add(new CalendarEventPartWithWidth(event4, "event4",
                 LocalDateTime.of(2020, Month.APRIL, 1, 0, 0, 0),
                 LocalDateTime.of(2020, Month.APRIL, 1, 1, 0, 0),
                 0, 1, 1));
-        multimap.put(1, new CalendarEventPartWithWidth(event5, "event5",
+        expected.add(new CalendarEventPartWithWidth(event5, "event5",
                 LocalDateTime.of(2020, Month.MARCH, 31, 15, 0, 0),
                 LocalDateTime.of(2020, Month.MARCH, 31, 16, 0, 0),
                 2, 3, 3));
 
-        final CalendarEventPartWithWidth expected = multimap.values().iterator().next();
-        final CalendarEventPartWithWidth actual = this.subject.compose(Arrays.asList(
-                event1, event2, event3, event4, event5)).values().iterator().next();
-        expected.equals(actual);
-        Assert.assertEquals(multimap, this.subject.compose(Arrays.asList(
+        Assert.assertEquals(expected, this.subject.compose(Arrays.asList(
                 event1, event2, event3, event4, event5)));
     }
 

@@ -73,4 +73,5 @@ public class CalendarRowElementsComposer {
     public float getTextSize(final RowParams params) {
         return params.getHeight() * TEXT_HEIGHT_PROPORTIONS;
     }
+
 }

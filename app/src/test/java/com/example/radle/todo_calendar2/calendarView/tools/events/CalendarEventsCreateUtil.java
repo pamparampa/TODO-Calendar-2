@@ -24,6 +24,13 @@ public class CalendarEventsCreateUtil {
                 new CalendarEventStub());
     }
 
+    public static CalendarEventPart allDayEvent(final String event) {
+        return new CalendarEventPart(event,
+                LocalDateTime.of(2020, Month.JANUARY, 6, 0, 0, 0),
+                LocalDateTime.of(2020, Month.JANUARY, 7, 0, 0, 0),
+                new CalendarEventStub());
+    }
+
     private static class CalendarEventStub extends CalendarEvent {
 
         public CalendarEventStub() {

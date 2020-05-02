@@ -10,9 +10,11 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
+import com.example.radle.todo_calendar2.calendarView.dto.CalendarEvent;
 import com.example.radle.todo_calendar2.calendarView.tools.RowsMeasures;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public abstract class SinglePeriodView extends LinearLayout {
 
@@ -46,6 +48,12 @@ public abstract class SinglePeriodView extends LinearLayout {
         this.onHorizontalScrollListener = listener;
         if (this.boardListView != null)
             this.boardListView.setOnHorizontalScrollListener(this.onHorizontalScrollListener);
+    }
+
+    public void fillWithEvents(final List<CalendarEvent> events) {
+        if (this.boardListView != null) {
+            this.boardListView.fillWithEvents(events);
+        }
     }
 
     private void compose() {
@@ -98,6 +106,12 @@ public abstract class SinglePeriodView extends LinearLayout {
 
     public void scrollTo(final int position) {
         this.boardListView.scrollTo(0, position);
+    }
+
+    public void addEvents(final List<CalendarEvent> events) {
+        if (this.boardListView != null) {
+            this.boardListView.addEvents(events);
+        }
     }
 
     public static class PeriodParams {

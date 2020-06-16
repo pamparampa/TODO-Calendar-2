@@ -20,6 +20,10 @@
         <activity android:name=".activity.CalendarRowViewActivity" />
         <activity android:name=".activity.BoardScrollViewActivity" />
         <activity android:name=".activity.SingleWeekViewActivity" />
+
+        <service
+            android:name=".dao.GetEventsService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

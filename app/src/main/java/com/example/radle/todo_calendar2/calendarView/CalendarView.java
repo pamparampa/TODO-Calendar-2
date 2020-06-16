@@ -176,8 +176,13 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
     }
 
     public void addEvents(final LocalDateTime periodDateTime, final List<CalendarEvent> events) {
-        if (this.periodViews.containsKey(periodDateTime))
-            this.periodViews.get(periodDateTime).addEvents(events);
+        if (this.periodViews.containsKey(periodDateTime)) {
+            final SinglePeriodView singlePeriodView = this.periodViews.get(periodDateTime);
+            if (singlePeriodView != null) {
+                singlePeriodView.addEvents(events);
+                singlePeriodView.invalidate();
+            }
+        }
     }
 
     private class AnimationWithPostActionListener implements Animator.AnimatorListener {

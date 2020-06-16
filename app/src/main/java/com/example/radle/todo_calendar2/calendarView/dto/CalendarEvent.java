@@ -1,9 +1,12 @@
 package com.example.radle.todo_calendar2.calendarView.dto;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class CalendarEvent {
+public class CalendarEvent implements Parcelable {
     private final String title;
     final LocalDateTime startTime;
     final LocalDateTime endTime;
@@ -15,6 +18,24 @@ public class CalendarEvent {
         this.startTime = startTime;
         this.endTime = endTime;
     }
+
+    protected CalendarEvent(final Parcel in) {
+        this.title = in.readString();
+        this.startTime = LocalDateTime.parse(in.readString());
+        this.endTime = LocalDateTime.parse(in.readString());
+    }
+
+    public static final Creator<CalendarEvent> CREATOR = new Creator<CalendarEvent>() {
+        @Override
+        public CalendarEvent createFromParcel(final Parcel in) {
+            return new CalendarEvent(in);
+        }
+
+        @Override
+        public CalendarEvent[] newArray(final int size) {
+            return new CalendarEvent[size];
+        }
+    };
 
     @Override
     public boolean equals(final Object o) {
@@ -54,5 +75,17 @@ public class CalendarEvent {
 
     public CalendarEvent getCalendarEvent() {
         return this;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(final Parcel parcel, final int i) {
+        parcel.writeString(this.title);
+        parcel.writeString(this.startTime.toString());
+        parcel.writeString(this.endTime.toString());
     }
 }

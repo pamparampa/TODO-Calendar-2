@@ -92,7 +92,7 @@ public class DayEventsComposerTest {
     }
 
     @Test
-    public void getEventParts_shouldReturnOnlyPartsBelongingToDay_whenDifferentsExist() {
+    public void getEventParts_shouldReturnOnlyPartsBelongingToDay_whenDifferentEventsExist() {
         final List<CalendarEvent> calendarEvents = Arrays.asList(
                 new CalendarEvent("event ending on current day beginning",
                         LocalDateTime.of(2019, Month.SEPTEMBER, 10, 22, 0),

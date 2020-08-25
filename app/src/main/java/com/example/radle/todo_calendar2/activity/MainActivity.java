@@ -33,6 +33,13 @@ public class MainActivity extends Activity implements onNewWeekListener {
         ButterKnife.bind(this);
         manageToggle();
         this.calendarView.setOnNewWeekListener(this);
+        final LocalDateTime currentlyVisibleDateTime =
+                this.calendarView.getCurrentlyVisibleDateTime();
+        addEvents(currentlyVisibleDateTime.minusWeeks(1));
+        addEvents(currentlyVisibleDateTime);
+        addEvents(currentlyVisibleDateTime.plusWeeks(1));
+        // TODO MainActivity chyba nie powinien znac takich szczegolow, powinien raz wypelnic
+        //  ewentami kalendarz
     }
 
     private void manageToggle() {
@@ -49,6 +56,10 @@ public class MainActivity extends Activity implements onNewWeekListener {
 
     @Override
     public void newWeek(final LocalDateTime firstDateTime) {
+        addEvents(firstDateTime);
+    }
+
+    private void addEvents(final LocalDateTime firstDateTime) {
         this.calendarEventsDao.getEventsForWeek(firstDateTime,
                 calendarEvents -> this.calendarView.addEvents(firstDateTime, calendarEvents));
     }

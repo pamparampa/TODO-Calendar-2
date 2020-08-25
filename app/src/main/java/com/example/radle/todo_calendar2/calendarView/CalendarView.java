@@ -37,24 +37,57 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         super(context, attrs);
 
         this.linearLayout = prepareLinearLayout(context, attrs);
-        addPeriodView(previousWeekBeginning());
-        addPeriodView(currentWeekBeginning());
-        addPeriodView(nextWeekBeginning());
+        final LocalDateTime now = LocalDateTime.now();
+        addPeriodView(previousWeekBeginning(now));
+        addPeriodView(currentWeekBeginning(now));
+        addPeriodView(nextWeekBeginning(now));
         addView(this.linearLayout);
     }
 
-    private void addPeriodView(final LocalDateTime firstDateTime) {
-        final SingleWeekView periodView = newSingleWeekView(firstDateTime);
-        this.linearLayout.addView(periodView);
-        this.periodViews.put(firstDateTime, periodView);
+    public void setOnNewWeekListener(final onNewWeekListener onNewWeekListener) {
+        this.onNewWeekListener = onNewWeekListener;
     }
 
-    public void fillWithEvents(final List<CalendarEvent> events) {
-        for (int i = 0; i < this.linearLayout.getChildCount(); i++) {
-            final SinglePeriodView singlePeriodView =
-                    (SinglePeriodView) this.linearLayout.getChildAt(i);
-            singlePeriodView.fillWithEvents(events);
+
+    public LocalDateTime getCurrentlyVisibleDateTime() {
+        final SingleWeekView currentlyVisibleWeekView =
+                (SingleWeekView) this.linearLayout.getChildAt(
+                        CURRENTLY_VISBLE_VIEW_INDEX);
+        return currentlyVisibleWeekView.getDateTime();
+    }
+
+    public void addEvents(final LocalDateTime periodDateTime, final List<CalendarEvent> events) {
+        if (this.periodViews.containsKey(periodDateTime)) {
+            final SinglePeriodView singlePeriodView = this.periodViews.get(periodDateTime);
+            if (singlePeriodView != null) {
+                singlePeriodView.addEvents(events);
+                singlePeriodView.invalidate();
+            }
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(final MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_UP)
+            return handleScroll();
+        return super.onTouchEvent(ev);
+    }
+
+    @Override
+    public void startScrolling(final float x) {
+        ScrollVelocity.startMeasurement(getScrollX(), LocalTime.now());
+    }
+
+    @Override
+    public void finishScrollingVertically() {
+        ScrollVelocity.finishMeasurement(getScrollX(), LocalTime.now());
+    }
+
+    @Override
+    protected void onLayout(final boolean changed, final int l, final int t, final int r,
+                            final int b) {
+        super.onLayout(changed, l, t, r, b);
+        scrollTo(this.width, 0);
     }
 
     private LinearLayout prepareLinearLayout(final Context context, final AttributeSet attrs) {
@@ -81,47 +114,10 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         }};
     }
 
-    @Override
-    protected void onLayout(final boolean changed, final int l, final int t, final int r,
-                            final int b) {
-        super.onLayout(changed, l, t, r, b);
-        scrollTo(this.width, 0);
-    }
-
-    @Override
-    public boolean onTouchEvent(final MotionEvent ev) {
-        if (ev.getAction() == MotionEvent.ACTION_UP)
-            return handleScroll();
-        return super.onTouchEvent(ev);
-    }
-
-    private boolean handleScroll() {
-        final ScrollVelocity scrollVelocity =
-                ScrollVelocity.finishMeasurement(getScrollX(), LocalTime.now());
-        final ScrollEffectParameters scrollEffectParameters =
-                new ScrollingHandler(this.width).handleScroll(scrollVelocity,
-                        getCurrentlyVisibleDateTime());
-        scroll(scrollEffectParameters);
-        return true;
-    }
-
-    private LocalDateTime getCurrentlyVisibleDateTime() {
-        final SingleWeekView currentlyVisibleWeekView =
-                (SingleWeekView) this.linearLayout.getChildAt(
-                        CURRENTLY_VISBLE_VIEW_INDEX);
-        return currentlyVisibleWeekView.getDateTime();
-    }
-
-    private LocalDateTime nextWeekBeginning() {
-        return this.weekBeginningDateTimeProvider.getNextWeekBeginning(LocalDateTime.now());
-    }
-
-    private LocalDateTime currentWeekBeginning() {
-        return this.weekBeginningDateTimeProvider.getWeekBeginning(LocalDateTime.now());
-    }
-
-    private LocalDateTime previousWeekBeginning() {
-        return this.weekBeginningDateTimeProvider.getPrevWeekBeginning(LocalDateTime.now());
+    private void addPeriodView(final LocalDateTime firstDateTime) {
+        final SingleWeekView periodView = newSingleWeekView(firstDateTime);
+        this.linearLayout.addView(periodView);
+        this.periodViews.put(firstDateTime, periodView);
     }
 
     private SingleWeekView newSingleWeekView(final LocalDateTime localDateTime) {
@@ -133,6 +129,28 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         singleWeekView.setOnHorizontalScrollListener(this);
 
         return singleWeekView;
+    }
+
+    private LocalDateTime previousWeekBeginning(final LocalDateTime now) {
+        return this.weekBeginningDateTimeProvider.getPrevWeekBeginning(now);
+    }
+
+    private LocalDateTime currentWeekBeginning(final LocalDateTime now) {
+        return this.weekBeginningDateTimeProvider.getWeekBeginning(now);
+    }
+
+    private LocalDateTime nextWeekBeginning(final LocalDateTime now) {
+        return this.weekBeginningDateTimeProvider.getNextWeekBeginning(now);
+    }
+
+    private boolean handleScroll() {
+        final ScrollVelocity scrollVelocity =
+                ScrollVelocity.finishMeasurement(getScrollX(), LocalTime.now());
+        final ScrollEffectParameters scrollEffectParameters =
+                new ScrollingHandler(this.width).handleScroll(scrollVelocity,
+                        getCurrentlyVisibleDateTime());
+        scroll(scrollEffectParameters);
+        return true;
     }
 
     private void scroll(final ScrollEffectParameters parameters) {
@@ -161,28 +179,32 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         return currentWeekView.getCurrentVisiblePosition();
     }
 
-    @Override
-    public void startScrolling(final float x) {
-        ScrollVelocity.startMeasurement(getScrollX(), LocalTime.now());
+    private void changeCalendarStateAfterScroll(
+            final ScrollEffectParameters.ElementsToChangeAfterScroll elementsToChange,
+            final ScrollEffectParameters.Side side) {
+        final LocalDateTime newPeriodViewDateTime = addNewPeriodView(elementsToChange, side);
+        removeUnnecessaryView(elementsToChange);
+        scrollTo(CalendarView.this.width, 0);
+        this.onNewWeekListener.newWeek(newPeriodViewDateTime);
     }
 
-    @Override
-    public void finishScrollingVertically() {
-        ScrollVelocity.finishMeasurement(getScrollX(), LocalTime.now());
+    private LocalDateTime addNewPeriodView(final ScrollEffectParameters.ElementsToChangeAfterScroll elementsToChange, final ScrollEffectParameters.Side side) {
+        final LocalDateTime newElementDateTime = elementsToChange.getNewElementDateTime();
+        final SingleWeekView periodView = newSingleWeekView(newElementDateTime);
+        CalendarView.this.linearLayout.addView(periodView,
+                side == ScrollEffectParameters.Side.LEFT ? 0 :
+                        CalendarView.this.linearLayout.getChildCount());
+        this.periodViews.put(newElementDateTime, periodView);
+        return newElementDateTime;
     }
 
-    public void setOnNewWeekListener(final onNewWeekListener onNewWeekListener) {
-        this.onNewWeekListener = onNewWeekListener;
-    }
-
-    public void addEvents(final LocalDateTime periodDateTime, final List<CalendarEvent> events) {
-        if (this.periodViews.containsKey(periodDateTime)) {
-            final SinglePeriodView singlePeriodView = this.periodViews.get(periodDateTime);
-            if (singlePeriodView != null) {
-                singlePeriodView.addEvents(events);
-                singlePeriodView.invalidate();
-            }
-        }
+    private void removeUnnecessaryView(final ScrollEffectParameters.ElementsToChangeAfterScroll elementsToChange) {
+        final SinglePeriodView periodView =
+                (SinglePeriodView) this.linearLayout
+                        .getChildAt(elementsToChange.getElementToRemoveId());
+        this.periodViews.remove(periodView.getDateTime());
+        CalendarView.this.linearLayout
+                .removeViewAt(elementsToChange.getElementToRemoveId());
     }
 
     private class AnimationWithPostActionListener implements Animator.AnimatorListener {
@@ -217,33 +239,5 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         public void onAnimationRepeat(final Animator animator) {
 
         }
-    }
-
-    private void changeCalendarStateAfterScroll(
-            final ScrollEffectParameters.ElementsToChangeAfterScroll elementsToChange,
-            final ScrollEffectParameters.Side side) {
-        final LocalDateTime newPeriodViewDateTime = addNewPeriodView(elementsToChange, side);
-        removeUnnecessaryView(elementsToChange);
-        scrollTo(CalendarView.this.width, 0);
-        this.onNewWeekListener.newWeek(newPeriodViewDateTime);
-    }
-
-    private LocalDateTime addNewPeriodView(final ScrollEffectParameters.ElementsToChangeAfterScroll elementsToChange, final ScrollEffectParameters.Side side) {
-        final LocalDateTime newElementDateTime = elementsToChange.getNewElementDateTime();
-        final SingleWeekView periodView = newSingleWeekView(newElementDateTime);
-        CalendarView.this.linearLayout.addView(periodView,
-                side == ScrollEffectParameters.Side.LEFT ? 0 :
-                        CalendarView.this.linearLayout.getChildCount());
-        this.periodViews.put(newElementDateTime, periodView);
-        return newElementDateTime;
-    }
-
-    private void removeUnnecessaryView(final ScrollEffectParameters.ElementsToChangeAfterScroll elementsToChange) {
-        final SinglePeriodView periodView =
-                (SinglePeriodView) this.linearLayout
-                        .getChildAt(elementsToChange.getElementToRemoveId());
-        this.periodViews.remove(periodView.getDateTime());
-        CalendarView.this.linearLayout
-                .removeViewAt(elementsToChange.getElementToRemoveId());
     }
 }

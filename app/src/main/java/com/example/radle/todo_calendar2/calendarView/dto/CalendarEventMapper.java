@@ -68,8 +68,13 @@ public class CalendarEventMapper {
         final String zoneId = cursor.getString(EVENT_TIMEZONE_INDEX);
         if (zoneId != null && !"0".equals(zoneId))
             return ZoneId.of(zoneId);
-        else
-            return calendarTimeZones.get(cursor.getString(CALENDAR_ID_INDEX));
+        else {
+            final String calendarId = cursor.getString(CALENDAR_ID_INDEX);
+            if (calendarTimeZones.hasDataForId(calendarId))
+                return calendarTimeZones.get(calendarId);
+            else
+                return ZoneId.systemDefault();
+        }
     }
 
     private LocalDateTime toLocalDate(final Long dtstart, final ZoneId zone) {

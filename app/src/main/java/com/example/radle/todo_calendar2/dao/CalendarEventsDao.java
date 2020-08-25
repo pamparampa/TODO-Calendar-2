@@ -19,6 +19,7 @@ public class CalendarEventsDao {
     static final String FIRST_DATE_TIME = "firstDateTime";
     static final String LAST_DATE_TIME = "lastDateTime";
     static final String RECEIVER = "receiver";
+    static final String CALENDAR_IDS = "calendarIds";
 
     private final Context context;
 
@@ -26,31 +27,35 @@ public class CalendarEventsDao {
         this.context = context;
     }
 
-    public void getEventsForWeek(final LocalDateTime firstDateTime,
+    public void getEventsForWeek(final LocalDateTime firstDateTime, final List<String> calendarIds,
                                  final Consumer<List<CalendarEvent>> consumer) {
-        final Intent intent = prepareIntent(firstDateTime, consumer);
+        final Intent intent = prepareIntent(firstDateTime, calendarIds, consumer);
         GetEventsService.enqueueWork(this.context, GetEventsService.class, 1, intent);
     }
 
     public void getEvents(final LocalDateTime from, final LocalDateTime to,
+                          final List<String> calendarIds,
                           final Consumer<List<CalendarEvent>> consumer) {
-        final Intent intent = prepareIntent(from, to, consumer);
+        final Intent intent = prepareIntent(from, to, calendarIds, consumer);
         GetEventsService.enqueueWork(this.context, GetEventsService.class, 1, intent);
     }
 
     private Intent prepareIntent(final LocalDateTime firstDateTime,
                                  final LocalDateTime lastDateTime,
+                                 final List<String> calendarIds,
                                  final Consumer<List<CalendarEvent>> consumer) {
-        final Intent intent = prepareIntent(firstDateTime, consumer);
+        final Intent intent = prepareIntent(firstDateTime, calendarIds, consumer);
         intent.putExtra(LAST_DATE_TIME, lastDateTime.toString());
         return intent;
     }
 
     private Intent prepareIntent(final LocalDateTime firstDateTime,
+                                 final List<String> calendarIds,
                                  final Consumer<List<CalendarEvent>> consumer) {
         final Intent intent = new Intent(this.context, GetEventsService.class);
         intent.putExtra(FIRST_DATE_TIME, firstDateTime.toString());
         intent.putExtra(RECEIVER, new EventsReceiver(new Handler(), consumer));
+        intent.putExtra(CALENDAR_IDS, calendarIds.toArray());
         return intent;
     }
 

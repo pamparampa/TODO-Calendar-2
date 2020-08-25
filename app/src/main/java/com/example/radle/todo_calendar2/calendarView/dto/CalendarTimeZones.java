@@ -40,4 +40,8 @@ public class CalendarTimeZones {
     public ZoneId get(final String index) {
         return this.map.get(index);
     }
+
+    public boolean hasDataForId(final String calendarId) {
+        return this.map.containsKey(calendarId);
+    }
 }

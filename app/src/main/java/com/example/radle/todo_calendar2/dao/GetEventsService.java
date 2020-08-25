@@ -37,7 +37,7 @@ public class GetEventsService extends JobIntentService {
         //writeAllCalendars();
         final Context context = getApplicationContext();
         final EventsQuery eventsQuery = new EventsQuery(context);
-        final List<String> calendarIds = Arrays.asList("12", "8");
+        final List<String> calendarIds = getCalendarIds(intent);
         final Optional<Cursor> cursor = queryForEvents(eventsQuery, intent, calendarIds);
         if (cursor.isPresent()) {
             final CalendarTimeZones calendarsTimeZones = getCalendarTimeZones(context, calendarIds);
@@ -45,6 +45,10 @@ public class GetEventsService extends JobIntentService {
                     this.calendarEventMapper.convertAll(cursor.get(), calendarsTimeZones);
             sendResult(intent, calendarEvents);
         }
+    }
+
+    private List<String> getCalendarIds(@NonNull final Intent intent) {
+        return Arrays.asList(intent.getStringArrayExtra(CalendarEventsDao.CALENDAR_IDS));
     }
 
     private void sendResult(@NonNull final Intent intent,

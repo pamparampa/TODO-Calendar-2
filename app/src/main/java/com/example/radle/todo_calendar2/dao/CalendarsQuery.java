@@ -45,8 +45,10 @@ class CalendarsQuery {
         final CalendarTimeZones calendarTimeZones = new CalendarTimeZones();
         if (cursor == null) return calendarTimeZones;
         while (cursor.moveToNext()) {
-            calendarTimeZones.add(cursor.getString(CalendarEventMapper.CALENDAR_ID_INDEX),
-                    ZoneId.of(cursor.getString(CalendarEventMapper.CALENDAR_ZONE_INDEX)));
+            if (cursor.getString(CalendarEventMapper.CALENDAR_ZONE_INDEX) != null) {
+                calendarTimeZones.add(cursor.getString(CalendarEventMapper.CALENDAR_ID_INDEX),
+                        ZoneId.of(cursor.getString(CalendarEventMapper.CALENDAR_ZONE_INDEX)));
+            }
         }
         return calendarTimeZones;
     }

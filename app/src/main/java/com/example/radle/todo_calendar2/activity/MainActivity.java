@@ -12,6 +12,8 @@ import com.example.radle.todo_calendar2.calendarView.onNewWeekListener;
 import com.example.radle.todo_calendar2.dao.CalendarEventsDao;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,6 +27,7 @@ public class MainActivity extends Activity implements onNewWeekListener {
     CalendarView calendarView;
     private final CalendarEventsDao calendarEventsDao =
             new CalendarEventsDao(this);
+    private final List<String> calendarIds = Arrays.asList("8", "12");
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -54,12 +57,13 @@ public class MainActivity extends Activity implements onNewWeekListener {
     }
 
     private void addEvents(final LocalDateTime firstDateTime) {
-        this.calendarEventsDao.getEventsForWeek(firstDateTime,
+        this.calendarEventsDao.getEventsForWeek(firstDateTime, this.calendarIds,
                 calendarEvents -> this.calendarView.addEvents(firstDateTime, calendarEvents));
     }
 
     private void fillWithEvents(final CalendarView.TimeInterval timeInterval) {
         this.calendarEventsDao.getEvents(timeInterval.getFrom(), timeInterval.getTo(),
+                this.calendarIds,
                 calendarEvents -> this.calendarView.fillWithEvents(calendarEvents));
     }
 }

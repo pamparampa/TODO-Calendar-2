@@ -25,6 +25,8 @@ import java.util.Optional;
 
 public class CalendarView extends HorizontalScrollView implements OnHorizontalScrollListener {
     private static final int CURRENTLY_VISBLE_VIEW_INDEX = 1;
+    private static final int FIRST_VIEW_INDEX = 0;
+    private static final int LAST_VIEW_INDEX = 2;
     private final LinearLayout linearLayout;
     private final WeekBeginningDateTimeProvider weekBeginningDateTimeProvider =
             new WeekBeginningDateTimeProvider();
@@ -48,12 +50,9 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         this.onNewWeekListener = onNewWeekListener;
     }
 
-
-    public LocalDateTime getCurrentlyVisibleDateTime() {
-        final SingleWeekView currentlyVisibleWeekView =
-                (SingleWeekView) this.linearLayout.getChildAt(
-                        CURRENTLY_VISBLE_VIEW_INDEX);
-        return currentlyVisibleWeekView.getDateTime();
+    public TimeInterval getCurrentlyAccessibleTimeInterval() {
+        return new TimeInterval(getFirstDateTimeAtIndex(FIRST_VIEW_INDEX),
+                getFirstDateTimeAtIndex(LAST_VIEW_INDEX).plusWeeks(1));
     }
 
     public void addEvents(final LocalDateTime periodDateTime, final List<CalendarEvent> events) {
@@ -63,6 +62,14 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
                 singlePeriodView.addEvents(events);
                 singlePeriodView.invalidate();
             }
+        }
+    }
+
+    public void fillWithEvents(final List<CalendarEvent> events) {
+        for (int i = 0; i < this.linearLayout.getChildCount(); i++) {
+            final SinglePeriodView singlePeriodView =
+                    (SinglePeriodView) this.linearLayout.getChildAt(i);
+            singlePeriodView.fillWithEvents(events);
         }
     }
 
@@ -153,6 +160,17 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         return true;
     }
 
+    private LocalDateTime getCurrentlyVisibleDateTime() {
+        return getFirstDateTimeAtIndex(CURRENTLY_VISBLE_VIEW_INDEX);
+    }
+
+    private LocalDateTime getFirstDateTimeAtIndex(final int viewIndex) {
+        final SingleWeekView currentlyVisibleWeekView =
+                (SingleWeekView) this.linearLayout.getChildAt(
+                        viewIndex);
+        return currentlyVisibleWeekView.getDateTime();
+    }
+
     private void scroll(final ScrollEffectParameters parameters) {
         final int scrollPosition = this.sideToPosition.get(parameters.getSide());
         final ObjectAnimator animator = ObjectAnimator.ofInt(this, "scrollX", scrollPosition);
@@ -238,6 +256,24 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         @Override
         public void onAnimationRepeat(final Animator animator) {
 
+        }
+    }
+
+    public class TimeInterval {
+        private final LocalDateTime from;
+        private final LocalDateTime to;
+
+        TimeInterval(final LocalDateTime from, final LocalDateTime to) {
+            this.from = from;
+            this.to = to;
+        }
+
+        public LocalDateTime getFrom() {
+            return this.from;
+        }
+
+        public LocalDateTime getTo() {
+            return this.to;
         }
     }
 }

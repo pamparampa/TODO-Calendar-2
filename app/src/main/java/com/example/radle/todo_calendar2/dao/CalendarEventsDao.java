@@ -17,6 +17,7 @@ public class CalendarEventsDao {
     static final int GET_EVENTS = 111;
     static final String EVENTS = "events";
     static final String FIRST_DATE_TIME = "firstDateTime";
+    static final String LAST_DATE_TIME = "lastDateTime";
     static final String RECEIVER = "receiver";
 
     private final Context context;
@@ -29,6 +30,20 @@ public class CalendarEventsDao {
                                  final Consumer<List<CalendarEvent>> consumer) {
         final Intent intent = prepareIntent(firstDateTime, consumer);
         GetEventsService.enqueueWork(this.context, GetEventsService.class, 1, intent);
+    }
+
+    public void getEvents(final LocalDateTime from, final LocalDateTime to,
+                          final Consumer<List<CalendarEvent>> consumer) {
+        final Intent intent = prepareIntent(from, to, consumer);
+        GetEventsService.enqueueWork(this.context, GetEventsService.class, 1, intent);
+    }
+
+    private Intent prepareIntent(final LocalDateTime firstDateTime,
+                                 final LocalDateTime lastDateTime,
+                                 final Consumer<List<CalendarEvent>> consumer) {
+        final Intent intent = prepareIntent(firstDateTime, consumer);
+        intent.putExtra(LAST_DATE_TIME, lastDateTime.toString());
+        return intent;
     }
 
     private Intent prepareIntent(final LocalDateTime firstDateTime,

@@ -55,6 +55,7 @@ public class GetEventsService extends JobIntentService {
 
     private CalendarTimeZones getCalendarTimeZones(final Context context,
                                                    final List<String> calendarIds) {
+        // TODO mozna tu zrobic jakiegos cache'a
         final CalendarsQuery calendarsQuery = new CalendarsQuery(context);
         return calendarsQuery.getCalendarsTimeZones(calendarIds);
     }
@@ -62,12 +63,21 @@ public class GetEventsService extends JobIntentService {
     private Optional<Cursor> queryForEvents(final EventsQuery eventsQuery, final Intent intent,
                                             final List<String> calendarIds) {
         final LocalDateTime firstDateTime = getFirstDateTime(intent);
+        final LocalDateTime lastDateTime = getLastDateTime(intent, firstDateTime);
         return eventsQuery
-                .query(calendarIds, firstDateTime, firstDateTime.plusWeeks(1));
+                .query(calendarIds, firstDateTime, lastDateTime);
     }
 
     private LocalDateTime getFirstDateTime(@NonNull final Intent intent) {
         return LocalDateTime.parse(intent.getStringExtra(CalendarEventsDao.FIRST_DATE_TIME));
+    }
+
+    private LocalDateTime getLastDateTime(final Intent intent, final LocalDateTime firstDateTime) {
+        if (intent.hasExtra(CalendarEventsDao.LAST_DATE_TIME)) {
+            return LocalDateTime.parse(intent.getStringExtra(CalendarEventsDao.LAST_DATE_TIME));
+        } else {
+            return firstDateTime.plusWeeks(1);
+        }
     }
 
     private Bundle prepareBundle(final List<CalendarEvent> calendarEvents) {

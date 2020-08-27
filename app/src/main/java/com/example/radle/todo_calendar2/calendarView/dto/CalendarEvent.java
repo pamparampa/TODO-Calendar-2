@@ -11,7 +11,7 @@ public class CalendarEvent implements Parcelable {
     private final String title;
     final LocalDateTime startTime;
     final LocalDateTime endTime;
-    private final long color;
+    private final int color;
 
 
     public CalendarEvent(final String title, final LocalDateTime startTime,
@@ -20,7 +20,7 @@ public class CalendarEvent implements Parcelable {
     }
 
     public CalendarEvent(final String title, final LocalDateTime startTime,
-                         final LocalDateTime endTime, final long color) {
+                         final LocalDateTime endTime, final int color) {
         this.title = title;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -98,5 +98,9 @@ public class CalendarEvent implements Parcelable {
         parcel.writeString(this.title);
         parcel.writeString(this.startTime.toString());
         parcel.writeString(this.endTime.toString());
+    }
+
+    protected int getColor() {
+        return this.color;
     }
 }

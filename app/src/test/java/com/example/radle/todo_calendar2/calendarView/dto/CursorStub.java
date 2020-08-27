@@ -29,6 +29,11 @@ class CursorStub extends CursorWrapper {
     }
 
     @Override
+    public int getInt(final int columnIndex) {
+        return Integer.valueOf(getString(columnIndex));
+    }
+
+    @Override
     public boolean moveToNext() {
         this.currentPosition++;
         return this.data.size() > this.currentPosition;

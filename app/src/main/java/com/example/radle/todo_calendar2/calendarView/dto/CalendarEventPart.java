@@ -51,4 +51,9 @@ public class CalendarEventPart extends CalendarEvent {
         return (getStartTime().isBefore(calendarEventPart.getEndTime()) && getEndTime()
                 .isAfter(calendarEventPart.getStartTime()));
     }
+
+    @Override
+    public int getColor() {
+        return this.calendarEvent.getColor();
+    }
 }

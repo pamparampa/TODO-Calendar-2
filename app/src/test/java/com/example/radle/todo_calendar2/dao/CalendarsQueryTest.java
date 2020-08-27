@@ -33,7 +33,7 @@ public class CalendarsQueryTest {
     public void init() {
         this.contentResolver = Mockito.mock(ContentResolver.class);
         this.cursor = Mockito.mock(
-                Cursor.class); // TODO mozna przerobic na stuba tak jak w ClandarEventMapperTest
+                Cursor.class); //  TODO mozna przerobic na stuba tak jak w ClandarEventMapperTest
         final Context context = Mockito.mock(Context.class);
         Mockito.when(context.getContentResolver()).thenReturn(this.contentResolver);
         this.subject = new CalendarsQueryWithoutPermissionCheck(context);

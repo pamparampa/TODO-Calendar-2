@@ -51,7 +51,7 @@ public class CalendarEventMapper {
                 cursor.getString(TITLE_INDEX),
                 toLocalDate(dtstart, getStartDateZoneId(cursor, calendarTimeZones)),
                 toLocalDate(dtend, getEndDateZoneId(cursor, calendarTimeZones)),
-                cursor.getLong(DISPLAY_COLOR_INDEX));
+                cursor.getInt(DISPLAY_COLOR_INDEX));
     }
 
     private ZoneId getEndDateZoneId(final Cursor cursor,

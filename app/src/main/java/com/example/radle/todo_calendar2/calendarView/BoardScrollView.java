@@ -2,7 +2,6 @@ package com.example.radle.todo_calendar2.calendarView;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.text.Layout;
@@ -38,14 +37,11 @@ public class BoardScrollView extends ScrollView {
     private EventsComposer eventsComposer;
     private EventPartBoundsResolver eventPartBoundsResolver;
     private List<CalendarEvent> events = new LinkedList<>();
-    private final Paint eventPaint = new Paint();
     private final TextPaint eventTiltePaint = new TextPaint();
 
     public BoardScrollView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         this.linearLayout = new LinearLayout(context, null);
-        this.eventPaint.setStyle(Paint.Style.FILL);
-        this.eventPaint.setColor(Color.LTGRAY);
         this.borderPaint.setStyle(Paint.Style.STROKE);
         this.borderPaint.setAntiAlias(true);
         this.eventTiltePaint.setAntiAlias(true);
@@ -105,10 +101,16 @@ public class BoardScrollView extends ScrollView {
     private Rect drawEventRect(final Canvas canvas,
                                final CalendarEventPartWithWidth composedEvent) {
         final Rect rect = this.eventPartBoundsResolver.resolveBounds(composedEvent);
-        canvas.drawRect(rect,
-                this.eventPaint);
+        canvas.drawRect(rect, getEventPaint(composedEvent.getColor()));
         canvas.drawRect(rect, this.borderPaint);
         return rect;
+    }
+
+    private Paint getEventPaint(final int color) {
+        final Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(color);
+        return paint;
     }
 
     private void drawEventTitle(final Canvas canvas,

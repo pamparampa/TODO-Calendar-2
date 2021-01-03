@@ -25,12 +25,12 @@ public class CalendarEventMapper {
     };
     public static final int CALENDAR_ID_INDEX = 0;
     public static final int CALENDAR_ZONE_INDEX = 1;
-    private static final int TITLE_INDEX = 1;
-    private static final int DTSTART_INDEX = 2;
-    private static final int DTENT_INDEX = 3;
-    private static final int EVENT_TIMEZONE_INDEX = 4;
-    private static final int EVENT_END_TIMEZONE_INDEX = 5;
-    private static final int DISPLAY_COLOR_INDEX = 6;
+    public static final int TITLE_INDEX = 1;
+    public static final int DTSTART_INDEX = 2;
+    public static final int DTEND_INDEX = 3;
+    public static final int EVENT_TIMEZONE_INDEX = 4;
+    public static final int EVENT_END_TIMEZONE_INDEX = 5;
+    public static final int DISPLAY_COLOR_INDEX = 6;
     private static final int MILIS_IN_SECOND = 1000;
     private static final int NANOS_IN_MILI = 1000000;
 
@@ -46,7 +46,7 @@ public class CalendarEventMapper {
     private CalendarEvent createCalendarEvent(final Cursor cursor,
                                               final CalendarTimeZones calendarTimeZones) {
         final Long dtstart = cursor.getLong(DTSTART_INDEX);
-        final Long dtend = cursor.getLong(DTENT_INDEX);
+        final Long dtend = cursor.getLong(DTEND_INDEX);
         return new CalendarEvent(
                 cursor.getString(TITLE_INDEX),
                 toLocalDate(dtstart, getStartDateZoneId(cursor, calendarTimeZones)),
@@ -69,12 +69,17 @@ public class CalendarEventMapper {
         if (zoneId != null && !"0".equals(zoneId))
             return ZoneId.of(zoneId);
         else {
-            final String calendarId = cursor.getString(CALENDAR_ID_INDEX);
-            if (calendarTimeZones.hasDataForId(calendarId))
-                return calendarTimeZones.get(calendarId);
-            else
-                return ZoneId.systemDefault();
+            return getZoneIdFromCalendar(cursor, calendarTimeZones);
         }
+    }
+
+    private ZoneId getZoneIdFromCalendar(final Cursor cursor,
+                                         final CalendarTimeZones calendarTimeZones) {
+        final String calendarId = cursor.getString(CALENDAR_ID_INDEX);
+        if (calendarTimeZones.hasDataForId(calendarId))
+            return calendarTimeZones.get(calendarId);
+        else
+            return ZoneId.systemDefault();
     }
 
     private LocalDateTime toLocalDate(final Long dtstart, final ZoneId zone) {

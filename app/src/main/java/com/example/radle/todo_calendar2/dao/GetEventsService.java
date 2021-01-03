@@ -25,43 +25,41 @@ public class GetEventsService extends JobIntentService {
 
     CalendarEventMapper calendarEventMapper = new CalendarEventMapper();
 
-   /* public static final String[] CALENDAR_PROJECTION = new String[]{
-            CalendarContract.Calendars._ID,                           // 0
-            CalendarContract.Calendars.ACCOUNT_NAME,                  // 1
-            CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,         // 2
-            CalendarContract.Calendars.CALENDAR_TIME_ZONE                  // 3
-    };*/
+    public void enqueue(final Context context, final Intent intent) {
+        enqueueWork(context, GetEventsService.class, 1, intent);
+    }
 
     @Override
     protected void onHandleWork(@NonNull final Intent intent) {
-        //writeAllCalendars();
         final Context context = getApplicationContext();
-        final EventsQuery eventsQuery = new EventsQuery(context);
+        final EventsQuery eventsQuery = getEventsQuery(context);
         final List<String> calendarIds = getCalendarIds(intent);
         final Optional<Cursor> cursor = queryForEvents(eventsQuery, intent, calendarIds);
         if (cursor.isPresent()) {
             final CalendarTimeZones calendarsTimeZones = getCalendarTimeZones(context, calendarIds);
             final List<CalendarEvent> calendarEvents =
                     this.calendarEventMapper.convertAll(cursor.get(), calendarsTimeZones);
-            sendResult(intent, calendarEvents);
+            sendResult(intent.getParcelableExtra(Literals.RECEIVER), calendarEvents);
         }
     }
 
-    private List<String> getCalendarIds(@NonNull final Intent intent) {
-        return Arrays.asList(intent.getStringArrayExtra(CalendarEventsDao.CALENDAR_IDS));
+    EventsQuery getEventsQuery(final Context context) {
+        return new EventsQuery(context);
     }
 
-    private void sendResult(@NonNull final Intent intent,
-                            final List<CalendarEvent> calendarEvents) {
-        final ResultReceiver resultReceiver = intent.getParcelableExtra(CalendarEventsDao.RECEIVER);
-        resultReceiver.send(CalendarEventsDao.GET_EVENTS, prepareBundle(calendarEvents));
+    private List<String> getCalendarIds(@NonNull final Intent intent) {
+        return Arrays.asList(intent.getStringArrayExtra(Literals.CALENDAR_IDS));
+    }
+
+    void sendResult(final ResultReceiver resultReceiver,
+                    final List<CalendarEvent> calendarEvents) {
+        resultReceiver.send(Literals.GET_EVENTS, prepareBundle(calendarEvents));
     }
 
     private CalendarTimeZones getCalendarTimeZones(final Context context,
                                                    final List<String> calendarIds) {
         // TODO mozna tu zrobic jakiegos cache'a
-        final CalendarsQuery calendarsQuery = new CalendarsQuery(context);
-        return calendarsQuery.getCalendarsTimeZones(calendarIds);
+        return getCalendarsQuery(context).getCalendarsTimeZones(calendarIds);
     }
 
     private Optional<Cursor> queryForEvents(final EventsQuery eventsQuery, final Intent intent,
@@ -73,12 +71,12 @@ public class GetEventsService extends JobIntentService {
     }
 
     private LocalDateTime getFirstDateTime(@NonNull final Intent intent) {
-        return LocalDateTime.parse(intent.getStringExtra(CalendarEventsDao.FIRST_DATE_TIME));
+        return LocalDateTime.parse(intent.getStringExtra(Literals.FIRST_DATE_TIME));
     }
 
     private LocalDateTime getLastDateTime(final Intent intent, final LocalDateTime firstDateTime) {
-        if (intent.hasExtra(CalendarEventsDao.LAST_DATE_TIME)) {
-            return LocalDateTime.parse(intent.getStringExtra(CalendarEventsDao.LAST_DATE_TIME));
+        if (intent.hasExtra(Literals.LAST_DATE_TIME)) {
+            return LocalDateTime.parse(intent.getStringExtra(Literals.LAST_DATE_TIME));
         } else {
             return firstDateTime.plusWeeks(1);
         }
@@ -86,8 +84,12 @@ public class GetEventsService extends JobIntentService {
 
     private Bundle prepareBundle(final List<CalendarEvent> calendarEvents) {
         final Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(CalendarEventsDao.EVENTS, new ArrayList<>(calendarEvents));
+        bundle.putParcelableArrayList(Literals.EVENTS, new ArrayList<>(calendarEvents));
         return bundle;
+    }
+
+    CalendarsQuery getCalendarsQuery(final Context context) {
+        return new CalendarsQuery(context);
     }
 
     /*private void writeAllCalendars() {

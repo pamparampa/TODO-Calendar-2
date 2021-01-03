@@ -41,6 +41,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.google.guava:guava:28.2-android'
     testImplementation 'org.assertj:assertj-core:3.11.1'
+    testImplementation 'com.googlecode.cqengine:cqengine:3.5.0'
 
 }
 repositories {

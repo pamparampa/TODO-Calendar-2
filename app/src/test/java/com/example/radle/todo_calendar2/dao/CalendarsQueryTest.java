@@ -70,15 +70,4 @@ public class CalendarsQueryTest {
 
     }
 
-    private class CalendarsQueryWithoutPermissionCheck extends CalendarsQuery {
-
-        CalendarsQueryWithoutPermissionCheck(final Context context) {
-            super(context);
-        }
-
-        @Override
-        void checkPermission() {
-        }
-    }
-
 }

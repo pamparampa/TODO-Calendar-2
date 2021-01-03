@@ -57,9 +57,9 @@ public class EventsQueryTest {
                 this.contentResolver.query(CalendarContract.Events.CONTENT_URI,
                         CalendarEventMapper.EVENT_PROJECTION,
                         CalendarContract.Events.CALENDAR_ID + " IN (?) " +
-                                "AND " + CalendarContract.Events.DTSTART + " >= ? " +
-                                "AND " + CalendarContract.Events.DTEND + " <= ?",
-                        new String[]{"1", this.startDateInEpochMilis, this.endDateInEpochMilis},
+                                "AND " + CalendarContract.Events.DTSTART + " < ? " +
+                                "AND " + CalendarContract.Events.DTEND + " > ?",
+                        new String[]{"1", this.endDateInEpochMilis, this.startDateInEpochMilis},
                         null)
         ).thenReturn(cursor);
 
@@ -74,10 +74,10 @@ public class EventsQueryTest {
                 this.contentResolver.query(CalendarContract.Events.CONTENT_URI,
                         CalendarEventMapper.EVENT_PROJECTION,
                         CalendarContract.Events.CALENDAR_ID + " IN (?,?,?) " +
-                                "AND " + CalendarContract.Events.DTSTART + " >= ? " +
-                                "AND " + CalendarContract.Events.DTEND + " <= ?",
-                        new String[]{"1", "2", "3", this.startDateInEpochMilis,
-                                this.endDateInEpochMilis},
+                                "AND " + CalendarContract.Events.DTSTART + " < ? " +
+                                "AND " + CalendarContract.Events.DTEND + " > ?",
+                        new String[]{"1", "2", "3", this.endDateInEpochMilis,
+                                this.startDateInEpochMilis},
                         null)
         ).thenReturn(cursor);
 

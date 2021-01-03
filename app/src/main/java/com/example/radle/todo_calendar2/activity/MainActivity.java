@@ -1,15 +1,18 @@
 package com.example.radle.todo_calendar2.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+
 import com.example.radle.todo_calendar2.R;
 import com.example.radle.todo_calendar2.calendarView.CalendarView;
 import com.example.radle.todo_calendar2.calendarView.onNewWeekListener;
 import com.example.radle.todo_calendar2.dao.CalendarEventsDao;
+import com.example.radle.todo_calendar2.fragment.CalendarChooseDialog;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -19,7 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends Activity implements onNewWeekListener {
+public class MainActivity extends FragmentActivity implements onNewWeekListener {
 
     @BindView(R.id.guiTestsButton)
     Button guiTestButton;
@@ -37,6 +40,13 @@ public class MainActivity extends Activity implements onNewWeekListener {
         manageToggle();
         this.calendarView.setOnNewWeekListener(this);
         fillWithEvents(this.calendarView.getCurrentlyAccessibleTimeInterval());
+
+        showCalendarChooseDialog();
+    }
+
+    private void showCalendarChooseDialog() {
+        final FragmentManager fragmentManager = getSupportFragmentManager();
+        new CalendarChooseDialog().show(fragmentManager, "alert");
     }
 
     private void manageToggle() {
@@ -66,4 +76,6 @@ public class MainActivity extends Activity implements onNewWeekListener {
                 this.calendarIds,
                 calendarEvents -> this.calendarView.fillWithEvents(calendarEvents));
     }
+
+
 }

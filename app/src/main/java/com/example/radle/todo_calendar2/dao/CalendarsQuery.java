@@ -1,7 +1,6 @@
 package com.example.radle.todo_calendar2.dao;
 
 import android.Manifest;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,12 +16,14 @@ import java.util.List;
 
 class CalendarsQuery {
 
-    private final ContentResolver contentResolver;
     private final Context context;
 
     CalendarsQuery(final Context context) {
         this.context = context;
-        this.contentResolver = context.getContentResolver();
+    }
+
+    ContentResolverProxy getContentResolver(final Context context) {
+        return new ContentResolverProxy(context.getContentResolver());
     }
 
     CalendarTimeZones getCalendarsTimeZones(final List<String> calendarIds) {
@@ -32,7 +33,7 @@ class CalendarsQuery {
         checkPermission();
         final String selection = CalendarContract.Calendars._ID + " IN " +
                 new QueryBracketsHelper().buildBracketsWithPlaceholders(calendarIds);
-        try (final Cursor cursor = this.contentResolver.query( //
+        try (final Cursor cursor = getContentResolver(this.context).query( //
                 CalendarContract.Calendars.CONTENT_URI, CalendarEventMapper.CALENDAR_PROJECTION,
                 selection, //
                 calendarIds.toArray(new String[0]), //

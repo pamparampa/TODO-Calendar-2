@@ -1,6 +1,6 @@
 package com.example.radle.todo_calendar2.calendarView.tools.events.conflicts;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventPartWithWidth;
+import com.example.radle.todo_calendar2.dto.CalendarEventPartWithWidth;
 
 import java.util.List;
 import java.util.Objects;

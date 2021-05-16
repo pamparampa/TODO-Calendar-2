@@ -13,14 +13,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEvent;
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventPartWithWidth;
-import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
 import com.example.radle.todo_calendar2.calendarView.tools.CalendarEventElementsComposer;
 import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
 import com.example.radle.todo_calendar2.calendarView.tools.ParamsBuilder;
 import com.example.radle.todo_calendar2.calendarView.tools.events.EventPartBoundsResolver;
 import com.example.radle.todo_calendar2.calendarView.tools.events.EventsComposer;
+import com.example.radle.todo_calendar2.dto.CalendarEvent;
+import com.example.radle.todo_calendar2.dto.CalendarEventPartWithWidth;
+import com.example.radle.todo_calendar2.dto.IdWithDataTime;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -159,8 +159,9 @@ public class BoardScrollView extends ScrollView {
         if (this.onHorizontalScrollListener != null) {
             if (ev.getAction() == MotionEvent.ACTION_DOWN)
                 this.onHorizontalScrollListener.startScrolling(ev.getX());
-            else if (ev.getAction() == MotionEvent.ACTION_UP)
-                this.onHorizontalScrollListener.finishScrollingVertically();
+            else if (ev.getAction() == MotionEvent.ACTION_UP) {
+                this.onHorizontalScrollListener.finishScrolling(ev.getX(), ev.getY());
+            }
         }
         return super.onTouchEvent(ev);
     }
@@ -168,6 +169,10 @@ public class BoardScrollView extends ScrollView {
     public void addEvents(final List<CalendarEvent> events) {
         this.events.addAll(events);
         invalidate();
+    }
+
+    public void handleClick(ClickPoint endPoint) {
+
     }
 
     public static class BoardParams {

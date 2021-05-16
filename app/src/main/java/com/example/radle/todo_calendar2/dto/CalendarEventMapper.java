@@ -1,4 +1,4 @@
-package com.example.radle.todo_calendar2.calendarView.dto;
+package com.example.radle.todo_calendar2.dto;
 
 import android.database.Cursor;
 import android.provider.CalendarContract;
@@ -19,12 +19,7 @@ public class CalendarEventMapper {
             CalendarContract.Events.EVENT_END_TIMEZONE,
             CalendarContract.Events.DISPLAY_COLOR
     };
-    public static final String[] CALENDAR_PROJECTION = new String[]{
-            CalendarContract.Calendars._ID,
-            CalendarContract.Calendars.CALENDAR_TIME_ZONE
-    };
     public static final int CALENDAR_ID_INDEX = 0;
-    public static final int CALENDAR_ZONE_INDEX = 1;
     public static final int TITLE_INDEX = 1;
     public static final int DTSTART_INDEX = 2;
     public static final int DTEND_INDEX = 3;

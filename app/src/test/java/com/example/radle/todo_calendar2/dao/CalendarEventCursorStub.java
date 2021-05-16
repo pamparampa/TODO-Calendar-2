@@ -1,6 +1,6 @@
 package com.example.radle.todo_calendar2.dao;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventMapper;
+import com.example.radle.todo_calendar2.dto.CalendarEventMapper;
 
 
 public class CalendarEventCursorStub extends CursorStub<DbCalendarEvent> {

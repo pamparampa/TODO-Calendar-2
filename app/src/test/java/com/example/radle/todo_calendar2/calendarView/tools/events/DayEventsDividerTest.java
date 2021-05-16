@@ -1,7 +1,7 @@
 package com.example.radle.todo_calendar2.calendarView.tools.events;
 
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventPartWithWidth;
+import com.example.radle.todo_calendar2.dto.CalendarEventPartWithWidth;
 import com.google.common.collect.HashMultimap;
 
 import org.junit.Assert;

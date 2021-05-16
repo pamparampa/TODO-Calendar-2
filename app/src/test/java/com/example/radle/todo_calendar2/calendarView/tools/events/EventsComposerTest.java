@@ -1,8 +1,8 @@
 package com.example.radle.todo_calendar2.calendarView.tools.events;
 
 import com.example.radle.todo_calendar2.calendarView.TimeNotAlignedException;
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEvent;
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventPartWithWidth;
+import com.example.radle.todo_calendar2.dto.CalendarEvent;
+import com.example.radle.todo_calendar2.dto.CalendarEventPartWithWidth;
 
 import org.junit.Assert;
 import org.junit.Before;

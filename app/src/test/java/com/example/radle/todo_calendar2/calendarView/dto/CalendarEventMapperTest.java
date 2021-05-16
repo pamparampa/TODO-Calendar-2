@@ -2,6 +2,10 @@ package com.example.radle.todo_calendar2.calendarView.dto;
 
 import android.database.Cursor;
 
+import com.example.radle.todo_calendar2.dto.CalendarEvent;
+import com.example.radle.todo_calendar2.dto.CalendarEventMapper;
+import com.example.radle.todo_calendar2.dto.CalendarTimeZones;
+
 import org.junit.Test;
 
 import java.time.LocalDateTime;
@@ -66,10 +70,10 @@ public class CalendarEventMapperTest {
     public void convertAll_shouldReturnFewCalendarEvents_whenFewRecordsInCursor() {
         final Cursor cursor = new CursorStub(Arrays.asList(
                 Arrays.asList("1", "event1", this.earlierDateInEpochMilis,
-                        String.valueOf(Long.valueOf(this.earlierDateInEpochMilis) + 100),
+                        String.valueOf(Long.parseLong(this.earlierDateInEpochMilis) + 100),
                         "0", "0", String.valueOf(this.colorCode)),
                 Arrays.asList("2", "event2", this.laterDateInEpochMilis,
-                        String.valueOf(Long.valueOf(this.laterDateInEpochMilis) + 100),
+                        String.valueOf(Long.parseLong(this.laterDateInEpochMilis) + 100),
                         "0", "0", String.valueOf(this.colorCode))));
         final CalendarTimeZones calendarTimeZones = new CalendarTimeZones();
         calendarTimeZones.add("1", ZoneId.of("Europe/Warsaw"));

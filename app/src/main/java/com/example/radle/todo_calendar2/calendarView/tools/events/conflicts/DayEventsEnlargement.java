@@ -1,6 +1,6 @@
 package com.example.radle.todo_calendar2.calendarView.tools.events.conflicts;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventPart;
+import com.example.radle.todo_calendar2.dto.CalendarEventPart;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +17,7 @@ public class DayEventsEnlargement {
                 eventsSplitIntoColumns.size()).createChains();
     }
 
-    private class Helper {
+    private static class Helper {
 
         private final List<List<CalendarEventPart>> eventsSplitIntoColumns;
         private final Map<CalendarEventPart, ChainedCalendarEventPart> processedEventParts;
@@ -134,7 +134,7 @@ public class DayEventsEnlargement {
 
     }
 
-    private class ChainedCalendarEventPartProcessingParameters {
+    private static class ChainedCalendarEventPartProcessingParameters {
 
 
         private final List<List<CalendarEventPart>> eventsFromRightColumns;

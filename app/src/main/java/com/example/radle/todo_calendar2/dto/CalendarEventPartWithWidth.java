@@ -1,4 +1,4 @@
-package com.example.radle.todo_calendar2.calendarView.dto;
+package com.example.radle.todo_calendar2.dto;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;

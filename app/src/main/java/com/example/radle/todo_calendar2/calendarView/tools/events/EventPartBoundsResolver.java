@@ -3,7 +3,7 @@ package com.example.radle.todo_calendar2.calendarView.tools.events;
 import android.graphics.Rect;
 
 import com.example.radle.todo_calendar2.calendarView.BoardScrollView;
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventPartWithWidth;
+import com.example.radle.todo_calendar2.dto.CalendarEventPartWithWidth;
 
 import java.time.LocalTime;
 import java.time.Period;

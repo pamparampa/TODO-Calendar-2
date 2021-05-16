@@ -7,9 +7,9 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarField;
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarLabel;
-import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
+import com.example.radle.todo_calendar2.dto.CalendarField;
+import com.example.radle.todo_calendar2.dto.CalendarLabel;
+import com.example.radle.todo_calendar2.dto.IdWithDataTime;
 import com.example.radle.todo_calendar2.calendarView.tools.CalendarRowElementsComposer;
 import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
 import com.example.radle.todo_calendar2.calendarView.tools.HourTextFormatter;
@@ -96,10 +96,6 @@ public class CalendarRowView extends View {
                 idWithDataTime.getDateTime());
     }
 
-    public void setPosition(final int position) {
-        this.params.setId(position);
-    }
-
     public static class RowParams extends com.example.radle.todo_calendar2.calendarView.RowParams {
         private int id;
 
@@ -162,10 +158,17 @@ public class CalendarRowView extends View {
 
     @Override
     public boolean onTouchEvent(final MotionEvent event) {
-        if (event
-                .getAction() == MotionEvent.ACTION_DOWN && this.onHorizontalScrollListener != null) {
-            this.onHorizontalScrollListener.startScrolling(event.getX());
+        if (this.onHorizontalScrollListener != null) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                this.onHorizontalScrollListener.startScrolling(event.getX());
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                this.onHorizontalScrollListener.finishScrolling(event.getX(), event.getY() + rowVerticalShift());
+            }
         }
         return true;
+    }
+
+    private float rowVerticalShift() {
+        return this.params.id * this.params.height;
     }
 }

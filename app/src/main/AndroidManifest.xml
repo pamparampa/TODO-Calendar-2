@@ -28,6 +28,9 @@
         <service
             android:name=".dao.GetEventsService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".dao.GetCalendarsService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 

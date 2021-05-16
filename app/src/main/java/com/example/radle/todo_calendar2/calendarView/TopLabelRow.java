@@ -12,8 +12,8 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarLabel;
-import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
+import com.example.radle.todo_calendar2.dto.CalendarLabel;
+import com.example.radle.todo_calendar2.dto.IdWithDataTime;
 import com.example.radle.todo_calendar2.calendarView.tools.CalendarRowElementsComposer;
 import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
 

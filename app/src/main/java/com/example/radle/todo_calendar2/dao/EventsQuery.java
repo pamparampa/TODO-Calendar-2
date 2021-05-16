@@ -9,7 +9,7 @@ import android.provider.CalendarContract;
 
 import androidx.core.app.ActivityCompat;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventMapper;
+import com.example.radle.todo_calendar2.dto.CalendarEventMapper;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ class EventsQuery {
 
         final Cursor cursor = getContentResolver(this.context)
                 .query(this.uri, CalendarEventMapper.EVENT_PROJECTION, selection, args, null);
-        return cursor != null ? Optional.of(cursor) : Optional.empty();
+        return Optional.ofNullable(cursor);
     }
 
     void checkPermission() {

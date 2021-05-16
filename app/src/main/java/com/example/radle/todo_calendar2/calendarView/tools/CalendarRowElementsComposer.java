@@ -7,9 +7,9 @@ import androidx.annotation.NonNull;
 import com.example.radle.todo_calendar2.calendarView.CalendarRowView;
 import com.example.radle.todo_calendar2.calendarView.RowParams;
 import com.example.radle.todo_calendar2.calendarView.TopLabelRow;
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarField;
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarLabel;
-import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
+import com.example.radle.todo_calendar2.dto.CalendarField;
+import com.example.radle.todo_calendar2.dto.CalendarLabel;
+import com.example.radle.todo_calendar2.dto.IdWithDataTime;
 
 import java.time.LocalDateTime;
 

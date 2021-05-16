@@ -1,7 +1,7 @@
 package com.example.radle.todo_calendar2.calendarView.tools.events.conflicts;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventPart;
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventPartWithWidth;
+import com.example.radle.todo_calendar2.dto.CalendarEventPart;
+import com.example.radle.todo_calendar2.dto.CalendarEventPartWithWidth;
 
 import org.junit.Assert;
 import org.junit.Test;

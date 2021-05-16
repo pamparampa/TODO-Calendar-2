@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEvent;
+import com.example.radle.todo_calendar2.dto.CalendarEvent;
 import com.example.radle.todo_calendar2.calendarView.tools.RowsMeasures;
 
 import java.time.LocalDateTime;
@@ -112,6 +112,10 @@ public abstract class SinglePeriodView extends LinearLayout {
         if (this.boardListView != null) {
             this.boardListView.addEvents(events);
         }
+    }
+
+    public void handleClick(ClickPoint endPoint) {
+        this.boardListView.handleClick(endPoint);
     }
 
     public static class PeriodParams {

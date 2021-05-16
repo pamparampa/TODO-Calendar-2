@@ -1,4 +1,4 @@
-package com.example.radle.todo_calendar2.calendarView.dto;
+package com.example.radle.todo_calendar2.dto;
 
 import android.graphics.Rect;
 

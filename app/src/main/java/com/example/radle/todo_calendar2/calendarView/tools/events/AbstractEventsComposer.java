@@ -1,7 +1,7 @@
 package com.example.radle.todo_calendar2.calendarView.tools.events;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEvent;
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventPart;
+import com.example.radle.todo_calendar2.dto.CalendarEvent;
+import com.example.radle.todo_calendar2.dto.CalendarEventPart;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -2,7 +2,7 @@ package com.example.radle.todo_calendar2.calendarView.tools;
 
 import com.example.radle.todo_calendar2.calendarView.BoardScrollView;
 import com.example.radle.todo_calendar2.calendarView.CalendarRowView;
-import com.example.radle.todo_calendar2.calendarView.dto.IdWithDataTime;
+import com.example.radle.todo_calendar2.dto.IdWithDataTime;
 
 import org.jetbrains.annotations.NotNull;
 

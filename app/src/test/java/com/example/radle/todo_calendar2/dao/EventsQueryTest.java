@@ -5,8 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.CalendarContract;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventMapper;
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarTimeZones;
+import com.example.radle.todo_calendar2.dto.CalendarEventMapper;
+import com.example.radle.todo_calendar2.dto.CalendarTimeZones;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -52,7 +52,7 @@ public class EventsQueryTest {
 
     @Test
     public void query_shouldMakeQueryWithThreeParameters_whenOneCalendarPassed() {
-        final Cursor cursor = new CursorStub();
+        final Cursor cursor = new CursorStub<>();
         Mockito.when(
                 this.contentResolver.query(CalendarContract.Events.CONTENT_URI,
                         CalendarEventMapper.EVENT_PROJECTION,
@@ -69,7 +69,7 @@ public class EventsQueryTest {
 
     @Test
     public void query_shouldMakeQueryWithFiveParameters_WhenThreeCalendarsPassed() {
-        final Cursor cursor = new CursorStub();
+        final Cursor cursor = new CursorStub<>();
         Mockito.when(
                 this.contentResolver.query(CalendarContract.Events.CONTENT_URI,
                         CalendarEventMapper.EVENT_PROJECTION,
@@ -86,7 +86,7 @@ public class EventsQueryTest {
     }
 
 
-    private class EventsQueryWithoutPermissionCheck extends EventsQuery {
+    private static class EventsQueryWithoutPermissionCheck extends EventsQuery {
         EventsQueryWithoutPermissionCheck(final Context context) {
             super(context);
         }

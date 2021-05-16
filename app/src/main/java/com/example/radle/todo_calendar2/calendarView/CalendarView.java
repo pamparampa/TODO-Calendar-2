@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEvent;
+import com.example.radle.todo_calendar2.dto.CalendarEvent;
 import com.example.radle.todo_calendar2.calendarView.scrolling.ScrollEffectParameters;
 import com.example.radle.todo_calendar2.calendarView.scrolling.ScrollVelocity;
 import com.example.radle.todo_calendar2.calendarView.scrolling.ScrollingHandler;
@@ -34,6 +34,7 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
     private Map<ScrollEffectParameters.Side, Integer> sideToPosition;
     private onNewWeekListener onNewWeekListener;
     private final Map<LocalDateTime, SinglePeriodView> periodViews = new HashMap<>();
+    private final SinglePeriodView currentlyVisiblePeriodView;
 
     public CalendarView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -41,7 +42,7 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         this.linearLayout = prepareLinearLayout(context, attrs);
         final LocalDateTime now = LocalDateTime.now();
         addPeriodView(previousWeekBeginning(now));
-        addPeriodView(currentWeekBeginning(now));
+        this.currentlyVisiblePeriodView = addPeriodView(currentWeekBeginning(now));
         addPeriodView(nextWeekBeginning(now));
         addView(this.linearLayout);
     }
@@ -86,8 +87,9 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
     }
 
     @Override
-    public void finishScrollingVertically() {
+    public void finishScrolling(final float x, final float y) {
         ScrollVelocity.finishMeasurement(getScrollX(), LocalTime.now());
+        this.currentlyVisiblePeriodView.handleClick(new ClickPoint(x, y));
     }
 
     @Override
@@ -121,10 +123,11 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         }};
     }
 
-    private void addPeriodView(final LocalDateTime firstDateTime) {
+    private SingleWeekView addPeriodView(final LocalDateTime firstDateTime) {
         final SingleWeekView periodView = newSingleWeekView(firstDateTime);
         this.linearLayout.addView(periodView);
         this.periodViews.put(firstDateTime, periodView);
+        return periodView;
     }
 
     private SingleWeekView newSingleWeekView(final LocalDateTime localDateTime) {
@@ -259,7 +262,7 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         }
     }
 
-    public class TimeInterval {
+    public static class TimeInterval {
         private final LocalDateTime from;
         private final LocalDateTime to;
 

@@ -4,20 +4,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.ResultReceiver;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEvent;
+import com.example.radle.todo_calendar2.dto.CalendarEvent;
 
 import java.util.List;
 
 public class GetEventsServiceStub extends GetEventsService {
 
     private final Context context;
-    private final ContentResolverStub eventsContentResolverStub;
-    private final ContentResolverStub calendarsContentResolverStub;
+    private final ContentResolverStub<DbCalendarEvent> eventsContentResolverStub;
+    private final ContentResolverStub<DbCalendar> calendarsContentResolverStub;
     private List<CalendarEvent> finalResult;
 
     public GetEventsServiceStub(final Context context,
-                                final ContentResolverStub eventsContentResolverStub,
-                                final ContentResolverStub calendarsContentResolverStub) {
+                                final ContentResolverStub<DbCalendarEvent> eventsContentResolverStub,
+                                final ContentResolverStub<DbCalendar> calendarsContentResolverStub) {
         this.context = context;
         this.eventsContentResolverStub = eventsContentResolverStub;
         this.calendarsContentResolverStub = calendarsContentResolverStub;

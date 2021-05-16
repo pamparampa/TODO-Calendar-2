@@ -1,6 +1,6 @@
 package com.example.radle.todo_calendar2.calendarView.tools.events.conflicts;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventPart;
+import com.example.radle.todo_calendar2.dto.CalendarEventPart;
 
 import java.util.ArrayList;
 import java.util.Iterator;

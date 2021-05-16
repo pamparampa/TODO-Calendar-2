@@ -3,7 +3,7 @@ package com.example.radle.todo_calendar2.dao;
 import android.content.Context;
 import android.content.Intent;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEvent;
+import com.example.radle.todo_calendar2.dto.CalendarEvent;
 import com.google.common.collect.ImmutableList;
 
 import org.junit.Before;
@@ -26,8 +26,8 @@ public class CalendarEventsDaoModuleTest {
     private final LocalDateTime weekEndDate =
             LocalDateTime.of(1970, Month.JANUARY, 12, 0, 0);
     private CalendarEventsDao calendarEventsDao;
-    private ContentResolverStub eventsContentResolverStub;
-    private ContentResolverStub calendarsContentResolverStub;
+    private ContentResolverStub<DbCalendarEvent> eventsContentResolverStub;
+    private ContentResolverStub<DbCalendar> calendarsContentResolverStub;
     private GetEventsServiceStub
             getEventsServiceStub;
 

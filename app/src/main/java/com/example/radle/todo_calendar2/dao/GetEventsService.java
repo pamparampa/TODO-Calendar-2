@@ -9,9 +9,9 @@ import android.os.ResultReceiver;
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEvent;
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventMapper;
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarTimeZones;
+import com.example.radle.todo_calendar2.dto.CalendarEvent;
+import com.example.radle.todo_calendar2.dto.CalendarEventMapper;
+import com.example.radle.todo_calendar2.dto.CalendarTimeZones;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class GetEventsService extends JobIntentService {
     }
 
     @Override
-    protected void onHandleWork(@NonNull final Intent intent) {
+    protected void onHandleWork(@NonNull final Intent intent) { // TODO mozna by to jakos podzielic
         final Context context = getApplicationContext();
         final EventsQuery eventsQuery = getEventsQuery(context);
         final List<String> calendarIds = getCalendarIds(intent);
@@ -53,7 +53,7 @@ public class GetEventsService extends JobIntentService {
 
     void sendResult(final ResultReceiver resultReceiver,
                     final List<CalendarEvent> calendarEvents) {
-        resultReceiver.send(Literals.GET_EVENTS, prepareBundle(calendarEvents));
+        resultReceiver.send(Literals.GET_EVENTS_CODE, prepareBundle(calendarEvents));
     }
 
     private CalendarTimeZones getCalendarTimeZones(final Context context,
@@ -91,23 +91,4 @@ public class GetEventsService extends JobIntentService {
     CalendarsQuery getCalendarsQuery(final Context context) {
         return new CalendarsQuery(context);
     }
-
-    /*private void writeAllCalendars() {
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED) {
-            throw new SecurityException();
-        }
-        final Cursor cursor = this.getApplicationContext().getContentResolver()
-                .query(this.uri, CALENDAR_PROJECTION, null, null, null);
-
-        if (cursor != null) {
-            while (cursor.moveToNext()) {
-                System.out.println(cursor.getLong(PROJECTION_ID_INDEX)
-                        + " " + cursor.getString(PROJECTION_DISPLAY_NAME_INDEX)
-                        + " " + cursor.getString(PROJECTION_ACCOUNT_NAME_INDEX)
-                        + " " + cursor.getString(PROJECTION_OWNER_ACCOUNT_INDEX));
-            }
-            cursor.close();
-        }
-    }*/
 }

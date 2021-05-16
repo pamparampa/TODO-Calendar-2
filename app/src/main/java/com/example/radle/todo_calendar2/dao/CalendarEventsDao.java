@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEvent;
+import com.example.radle.todo_calendar2.dto.CalendarEvent;
 
 import java.time.LocalDateTime;
 import java.util.List;

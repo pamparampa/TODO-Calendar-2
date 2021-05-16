@@ -5,8 +5,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.CalendarContract;
 
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarEventMapper;
-import com.example.radle.todo_calendar2.calendarView.dto.CalendarTimeZones;
+import com.example.radle.todo_calendar2.dto.CalendarMapper;
+import com.example.radle.todo_calendar2.dto.CalendarTimeZones;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,15 +50,15 @@ public class CalendarsQueryTest {
     @Test
     public void getCalendarsTimeZones_shouldReturnSomeTimeZones_whenSomeCalendarsPassed() {
         Mockito.when(this.contentResolver.query(CalendarContract.Calendars.CONTENT_URI,
-                CalendarEventMapper.CALENDAR_PROJECTION,
+                CalendarMapper.CALENDAR_PROJECTION,
                 CalendarContract.Calendars._ID + " IN (?,?)",
                 new String[]{"1", "2"},
                 null)
         ).thenReturn(this.cursor);
         Mockito.when(this.cursor.moveToNext()).thenReturn(true, true, false);
-        Mockito.when(this.cursor.getString(CalendarEventMapper.CALENDAR_ID_INDEX))
+        Mockito.when(this.cursor.getString(CalendarMapper.CALENDAR_ID_INDEX))
                 .thenReturn("1", "2");
-        Mockito.when(this.cursor.getString(CalendarEventMapper.CALENDAR_ZONE_INDEX))
+        Mockito.when(this.cursor.getString(CalendarMapper.CALENDAR_ZONE_INDEX))
                 .thenReturn(ZONE_ID, ZONE_ID);
 
         final CalendarTimeZones expectedCalendarTimeZones = new CalendarTimeZones();

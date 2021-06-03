@@ -2,6 +2,7 @@ package com.example.radle.todo_calendar2.calendarView;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.text.Layout;
@@ -14,12 +15,14 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.example.radle.todo_calendar2.calendarView.tools.CalendarEventElementsComposer;
+import com.example.radle.todo_calendar2.calendarView.tools.CalendarPositionsHandler;
 import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
 import com.example.radle.todo_calendar2.calendarView.tools.ParamsBuilder;
 import com.example.radle.todo_calendar2.calendarView.tools.events.EventPartBoundsResolver;
 import com.example.radle.todo_calendar2.calendarView.tools.events.EventsComposer;
 import com.example.radle.todo_calendar2.dto.CalendarEvent;
 import com.example.radle.todo_calendar2.dto.CalendarEventPartWithWidth;
+import com.example.radle.todo_calendar2.dto.CalendarSelection;
 import com.example.radle.todo_calendar2.dto.IdWithDataTime;
 
 import java.time.LocalDateTime;
@@ -38,6 +41,8 @@ public class BoardScrollView extends ScrollView {
     private EventPartBoundsResolver eventPartBoundsResolver;
     private List<CalendarEvent> events = new LinkedList<>();
     private final TextPaint eventTiltePaint = new TextPaint();
+    private CalendarPositionsHandler calendarPositionsHandler;
+    private CalendarSelection currentSelection;
 
     public BoardScrollView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -63,6 +68,7 @@ public class BoardScrollView extends ScrollView {
             initEventsTools();
             this.eventTiltePaint
                     .setTextSize(new CalendarEventElementsComposer().getTextSize(this.params));
+            this.calendarPositionsHandler = new CalendarPositionsHandler(params);
 
         } catch (final TimeNotAlignedException e) {
             e.printStackTrace();
@@ -90,6 +96,9 @@ public class BoardScrollView extends ScrollView {
                 this.events)) {
             drawEventPart(canvas, composedEvent);
         }
+        if (this.currentSelection != null) {
+            drawSelection(canvas);
+        }
     }
 
     private void drawEventPart(final Canvas canvas,
@@ -106,10 +115,17 @@ public class BoardScrollView extends ScrollView {
         return rect;
     }
 
-    private Paint getEventPaint(final int color) {
+    private Paint getEventPaint(final int color) {  // TODO przeniesc do jakiejs wspolnej klasy z paintami
         final Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(color);
+        return paint;
+    }
+
+    private Paint getSelectionPaint() {
+        final Paint paint = new Paint();
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.BLUE);
         return paint;
     }
 
@@ -122,6 +138,15 @@ public class BoardScrollView extends ScrollView {
         canvas.translate(rect.left, rect.top);
         staticLayout.draw(canvas);
         canvas.restore();
+    }
+
+    private void drawSelection(Canvas canvas) {
+        canvas.drawRect(
+                this.currentSelection.getLeft(),
+                this.currentSelection.getTop(),
+                this.currentSelection.getRight(),
+                this.currentSelection.getBottom(),
+                getSelectionPaint());
     }
 
     private void initLinearLayout() {
@@ -171,11 +196,14 @@ public class BoardScrollView extends ScrollView {
         invalidate();
     }
 
-    public void handleClick(ClickPoint endPoint) {
-
+    public void handleClick(float x, float y) {
+        if (this.calendarPositionsHandler != null) {
+            this.currentSelection = this.calendarPositionsHandler.determineSelection(x, y);
+            invalidate();
+        }
     }
-
     public static class BoardParams {
+
         private final int numberOfColumns;
         private final LocalDateTime firstDateTime;
         private final int rowHeight;

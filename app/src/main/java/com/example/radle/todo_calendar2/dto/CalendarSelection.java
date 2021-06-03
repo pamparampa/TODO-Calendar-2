@@ -4,15 +4,15 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class CalendarSelection {
-    private final int left;
-    private final int top;
-    private final int right;
-    private final int bottom;
+    private final float left;
+    private final float top;
+    private final float right;
+    private final float bottom;
     private final LocalDateTime startTime;
     private final LocalDateTime endTime;
 
     public
-    CalendarSelection(int left, int top, int right, int bottom,
+    CalendarSelection(float left, float top, float right, float bottom,
                       LocalDateTime startTime, LocalDateTime endTime) {
 
         this.left = left;
@@ -39,5 +39,29 @@ public class CalendarSelection {
                 bottom == that.bottom &&
                 Objects.equals(startTime, that.startTime) &&
                 Objects.equals(endTime, that.endTime);
+    }
+
+    public float getLeft() {
+        return left;
+    }
+
+    public float getTop() {
+        return top;
+    }
+
+    public float getRight() {
+        return right;
+    }
+
+    public float getBottom() {
+        return bottom;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 }

@@ -34,7 +34,7 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
     private Map<ScrollEffectParameters.Side, Integer> sideToPosition;
     private onNewWeekListener onNewWeekListener;
     private final Map<LocalDateTime, SinglePeriodView> periodViews = new HashMap<>();
-    private final SinglePeriodView currentlyVisiblePeriodView;
+    private SinglePeriodView currentlyVisiblePeriodView;
 
     public CalendarView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -89,7 +89,7 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
     @Override
     public void finishScrolling(final float x, final float y) {
         ScrollVelocity.finishMeasurement(getScrollX(), LocalTime.now());
-        this.currentlyVisiblePeriodView.handleClick(new ClickPoint(x, y));
+        this.currentlyVisiblePeriodView.handleClick(x, y);
     }
 
     @Override
@@ -207,6 +207,8 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         removeUnnecessaryView(elementsToChange);
         scrollTo(CalendarView.this.width, 0);
         this.onNewWeekListener.newWeek(newPeriodViewDateTime);
+        this.currentlyVisiblePeriodView = (SinglePeriodView) this.linearLayout.getChildAt(1);
+
     }
 
     private LocalDateTime addNewPeriodView(final ScrollEffectParameters.ElementsToChangeAfterScroll elementsToChange, final ScrollEffectParameters.Side side) {

@@ -114,8 +114,8 @@ public abstract class SinglePeriodView extends LinearLayout {
         }
     }
 
-    public void handleClick(ClickPoint endPoint) {
-        this.boardListView.handleClick(endPoint);
+    public void handleClick(float x, float y) {
+        this.boardListView.handleClick(x, y);
     }
 
     public static class PeriodParams {

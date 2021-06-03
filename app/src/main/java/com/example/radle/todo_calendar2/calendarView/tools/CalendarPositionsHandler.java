@@ -11,43 +11,57 @@ public class CalendarPositionsHandler {
 
     public static final Duration MIN_TIME_AMOUNT = Duration.of(30, ChronoUnit.MINUTES);
     public static final int MIN_NUMBER_OF_MINUTES = 30;
+    private static final int ADDITIONAL_LABEL_COLUMN = 1;
     private final BoardScrollView.BoardParams boardParams;
 
     public CalendarPositionsHandler(BoardScrollView.BoardParams boardParams) {
         this.boardParams = boardParams;
     }
 
-    public CalendarSelection determineSelection(int x, int y) {
+    public CalendarSelection determineSelection(float x, float y) {
         LocalDateTime startTime = determineStartTime(x, y);
+        if (itIsLabelColumn(startTime)) {
+            return null;
+        }
         LocalDateTime roundedStartTime = roundTime(startTime);
         int roundedX = roundX(x);
         int roundedY = roundY(y);
         return new CalendarSelection(roundedX, roundedY,
-                roundedX + (boardParams.getWidth() / boardParams.getNumberOfColumns()),
-                roundedY + (boardParams.getRowHeight() / 2),
+                roundedX + getColumnWidth(),
+                roundedY + ((float) boardParams.getRowHeight() / 2),
                 roundedStartTime,
                 roundedStartTime.plus(MIN_TIME_AMOUNT));
     }
 
-    private int roundX(int x) {
-        int columnWidth = boardParams.getWidth() / boardParams.getNumberOfColumns();
-        int numberOfRow = x / columnWidth;
+    private boolean itIsLabelColumn(LocalDateTime startTime) {
+        return startTime.isBefore(boardParams.getFirstDateTime());
+    }
+
+    private int roundX(float x) {
+        int columnWidth = getColumnWidth();
+        int numberOfRow = (int) x / columnWidth;
         return numberOfRow * columnWidth;
     }
 
-    private LocalDateTime determineStartTime(int x, int y) {
-        int numberOfRow = x / (boardParams.getWidth() / boardParams.getNumberOfColumns());
-        return boardParams.getFirstDateTime().plusDays(numberOfRow).plusMinutes(calculateMinutes(y));
+    private int getColumnWidth() {
+        return boardParams.getWidth() /
+                (boardParams.getNumberOfColumns() + ADDITIONAL_LABEL_COLUMN);
+    }
+
+    private LocalDateTime determineStartTime(float x, float y) {
+        int numberOfColumn = (int) x / (boardParams.getWidth() /
+                (boardParams.getNumberOfColumns() + ADDITIONAL_LABEL_COLUMN));
+        return boardParams.getFirstDateTime().plusDays(numberOfColumn - 1).plusMinutes(calculateMinutes(y));
     }
 
 
-    private int calculateMinutes(int y) {
-        return y * 60 / boardParams.getRowHeight();
+    private int calculateMinutes(float y) {
+        return (int) y * 60 / boardParams.getRowHeight();
     }
 
-    private int roundY(int y) {
+    private int roundY(float y) {
         int minSize = boardParams.getRowHeight() / 2;
-        int selectionNumber = y / minSize;
+        int selectionNumber = (int) y / minSize;
         return selectionNumber * minSize;
     }
 

@@ -20,17 +20,25 @@ public class CalendarPositionsHandlerTest {
 
     @Test
     public void determineSelection_shouldReturnValidRoundedSelection_whenSomeInaccurateTimeSelected() {
-        CalendarSelection expectedSelection = new CalendarSelection(10, 15, 20, 20,
-                LocalDateTime.of(2021, Month.MAY, 10, 1, 30),
-                LocalDateTime.of(2021, Month.MAY, 10, 2, 0));
+        CalendarSelection expectedSelection = new CalendarSelection.Builder()
+                .withX(10)
+                .withSelectedTime(LocalDateTime.of(2021, Month.MAY, 10, 1, 42))
+                .withLeft(10).withTop(15).withRight(20).withBottom(20)
+                .withStartTime(LocalDateTime.of(2021, Month.MAY, 10, 1, 30))
+                .withEndTime(LocalDateTime.of(2021, Month.MAY, 10, 2, 0))
+                .build();
         Assertions.assertThat(handler.determineSelection(10, 17)).isEqualTo(expectedSelection);
     }
 
     @Test
     public void determineSelection_shouldReturnValidSelection_whenPositionForSomeDayAndSomeTimeSelected() {
-        CalendarSelection expectedSelection = new CalendarSelection(60, 20, 70, 25,
-                LocalDateTime.of(2021, Month.MAY, 15, 2, 0),
-                LocalDateTime.of(2021, Month.MAY, 15, 2, 30));
+        CalendarSelection expectedSelection = new CalendarSelection.Builder()
+                .withX(68)
+                .withSelectedTime(LocalDateTime.of(2021, Month.MAY, 15, 2, 0))
+                .withLeft(60).withTop(20).withRight(70).withBottom(25)
+                .withStartTime(LocalDateTime.of(2021, Month.MAY, 15, 2, 0))
+                .withEndTime(LocalDateTime.of(2021, Month.MAY, 15, 2, 30))
+                .build();
         Assertions.assertThat(handler.determineSelection(68, 20)).isEqualTo(expectedSelection);
     }
 }

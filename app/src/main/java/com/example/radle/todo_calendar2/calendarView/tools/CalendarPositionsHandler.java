@@ -19,18 +19,24 @@ public class CalendarPositionsHandler {
     }
 
     public CalendarSelection determineSelection(float x, float y) {
-        LocalDateTime startTime = determineStartTime(x, y);
-        if (itIsLabelColumn(startTime)) {
+        LocalDateTime selectedTime = determineStartTime(x, y);
+        if (itIsLabelColumn(selectedTime)) {
             return null;
         }
-        LocalDateTime roundedStartTime = roundTime(startTime);
+        LocalDateTime roundedStartTime = roundTime(selectedTime);
         int roundedX = roundX(x);
         int roundedY = roundY(y);
-        return new CalendarSelection(roundedX, roundedY,
-                roundedX + getColumnWidth(),
-                roundedY + ((float) boardParams.getRowHeight() / 2),
-                roundedStartTime,
-                roundedStartTime.plus(MIN_TIME_AMOUNT));
+        return new CalendarSelection.Builder()
+                .withX(x)
+                .withY(y)
+                .withSelectedTime(selectedTime)
+                .withLeft(roundedX)
+                .withTop(roundedY)
+                .withRight(roundedX + getColumnWidth())
+                .withBottom(roundedY + ((float) boardParams.getRowHeight() / 2))
+                .withStartTime(roundedStartTime)
+                .withEndTime(roundedStartTime.plus(MIN_TIME_AMOUNT))
+                .build();
     }
 
     private boolean itIsLabelColumn(LocalDateTime startTime) {

@@ -1,5 +1,9 @@
 package com.example.radle.todo_calendar2.dto;
 
+import android.graphics.Rect;
+
+import com.example.radle.todo_calendar2.calendarView.CalendarEventPartWithBounds;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -86,5 +90,12 @@ public class CalendarEventPartWithWidth extends CalendarEventPart {
                 this.startTime.toLocalDate().atTime(startTime),
                 this.endTime.toLocalDate().atTime(endTime),
                 this.left, this.right, this.divider);
+    }
+
+    public CalendarEventPartWithBounds withBounds(Rect rect) {
+        return new CalendarEventPartWithBounds(getTitle(), this.startTime,
+                this.endTime,
+                getCalendarEvent(),
+                rect);
     }
 }

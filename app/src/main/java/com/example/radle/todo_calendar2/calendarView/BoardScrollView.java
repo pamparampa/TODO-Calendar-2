@@ -19,6 +19,7 @@ import com.example.radle.todo_calendar2.calendarView.tools.CalendarPositionsHand
 import com.example.radle.todo_calendar2.calendarView.tools.DateTimesCollector;
 import com.example.radle.todo_calendar2.calendarView.tools.ParamsBuilder;
 import com.example.radle.todo_calendar2.calendarView.tools.events.EventPartBoundsResolver;
+import com.example.radle.todo_calendar2.calendarView.tools.events.CalendarEventSearcher;
 import com.example.radle.todo_calendar2.calendarView.tools.events.EventsComposer;
 import com.example.radle.todo_calendar2.dto.CalendarEvent;
 import com.example.radle.todo_calendar2.dto.CalendarEventPartWithWidth;
@@ -27,8 +28,11 @@ import com.example.radle.todo_calendar2.dto.IdWithDataTime;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 public class BoardScrollView extends ScrollView {
 
@@ -43,6 +47,7 @@ public class BoardScrollView extends ScrollView {
     private final TextPaint eventTiltePaint = new TextPaint();
     private CalendarPositionsHandler calendarPositionsHandler;
     private CalendarSelection currentSelection;
+    private final CalendarEventSearcher eventSearcher = new CalendarEventSearcher();
 
     public BoardScrollView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -90,29 +95,32 @@ public class BoardScrollView extends ScrollView {
     }
 
     @Override
-    protected void onDraw(final Canvas canvas) {
+    protected void onDraw(final Canvas canvas) { //TODO byc moze trzeba cala logike gdzies przeniesc i zostawic tylko malowanie prostokatow
         super.onDraw(canvas);
+        Set<CalendarEventPartWithBounds> eventsWithBounds = new HashSet<>();
         for (final CalendarEventPartWithWidth composedEvent : this.eventsComposer.compose(
                 this.events)) {
-            drawEventPart(canvas, composedEvent);
+            final Rect rect = this.eventPartBoundsResolver.resolveBounds(composedEvent);
+            CalendarEventPartWithBounds eventWithBounds = composedEvent.withBounds(rect);
+            eventsWithBounds.add(eventWithBounds);
+            drawEventPart(canvas, eventWithBounds);
         }
+        this.eventSearcher.putEvents(eventsWithBounds);
         if (this.currentSelection != null) {
             drawSelection(canvas);
         }
     }
 
     private void drawEventPart(final Canvas canvas,
-                               final CalendarEventPartWithWidth composedEvent) {
-        final Rect rect = drawEventRect(canvas, composedEvent);
-        drawEventTitle(canvas, composedEvent, rect);
+                               final CalendarEventPartWithBounds event) {
+        drawEventRect(canvas, event);
+        drawEventTitle(canvas, event);
     }
 
-    private Rect drawEventRect(final Canvas canvas,
-                               final CalendarEventPartWithWidth composedEvent) {
-        final Rect rect = this.eventPartBoundsResolver.resolveBounds(composedEvent);
-        canvas.drawRect(rect, getEventPaint(composedEvent.getColor()));
-        canvas.drawRect(rect, this.borderPaint);
-        return rect;
+    private void drawEventRect(final Canvas canvas,
+                               final CalendarEventPartWithBounds event) {
+        canvas.drawRect(event.getRect(), getEventPaint(event.getColor()));
+        canvas.drawRect(event.getRect(), this.borderPaint);
     }
 
     private Paint getEventPaint(final int color) {  // TODO przeniesc do jakiejs wspolnej klasy z paintami
@@ -130,9 +138,10 @@ public class BoardScrollView extends ScrollView {
     }
 
     private void drawEventTitle(final Canvas canvas,
-                                final CalendarEventPartWithWidth composedEvent, final Rect rect) {
-        final StaticLayout staticLayout = StaticLayout.Builder.obtain(composedEvent.getTitle(),
-                0, composedEvent.getTitle().length(), this.eventTiltePaint, rect.width())
+                                final CalendarEventPartWithBounds event) {
+        Rect rect = event.getRect();
+        final StaticLayout staticLayout = StaticLayout.Builder.obtain(event.getTitle(),
+                0, event.getTitle().length(), this.eventTiltePaint, rect.width())
                 .setAlignment(Layout.Alignment.ALIGN_CENTER).build();
         canvas.save();
         canvas.translate(rect.left, rect.top);
@@ -199,6 +208,8 @@ public class BoardScrollView extends ScrollView {
     public void handleClick(float x, float y) {
         if (this.calendarPositionsHandler != null) {
             this.currentSelection = this.calendarPositionsHandler.determineSelection(x, y);
+            Optional<CalendarEvent> calendarEvent = this.eventSearcher.getEvent(currentSelection);
+            calendarEvent.ifPresent(event -> System.out.println(event.getTitle()));
             invalidate();
         }
     }

@@ -12,9 +12,11 @@ import androidx.annotation.Nullable;
 
 import com.example.radle.todo_calendar2.dto.CalendarEvent;
 import com.example.radle.todo_calendar2.calendarView.tools.RowsMeasures;
+import com.example.radle.todo_calendar2.dto.CalendarSelection;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class SinglePeriodView extends LinearLayout {
 
@@ -114,8 +116,12 @@ public abstract class SinglePeriodView extends LinearLayout {
         }
     }
 
-    public void handleClick(float x, float y) {
-        this.boardListView.handleClick(x, y);
+    public void handleClick(float x, float y, Consumer<CalendarEvent> postAction) {
+        this.boardListView.handleClick(x, y, postAction);
+    }
+
+    public CalendarSelection getCurrentSelection() {
+        return this.boardListView.getCurrentSelection();
     }
 
     public static class PeriodParams {

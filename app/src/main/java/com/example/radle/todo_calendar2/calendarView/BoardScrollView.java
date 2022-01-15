@@ -24,6 +24,7 @@ import com.example.radle.todo_calendar2.calendarView.tools.events.EventsComposer
 import com.example.radle.todo_calendar2.dto.CalendarEvent;
 import com.example.radle.todo_calendar2.dto.CalendarEventPartWithWidth;
 import com.example.radle.todo_calendar2.dto.CalendarSelection;
+import com.example.radle.todo_calendar2.dto.VisibleCalendarSelection;
 import com.example.radle.todo_calendar2.dto.IdWithDataTime;
 
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class BoardScrollView extends ScrollView {
 
@@ -46,7 +48,7 @@ public class BoardScrollView extends ScrollView {
     private List<CalendarEvent> events = new LinkedList<>();
     private final TextPaint eventTiltePaint = new TextPaint();
     private CalendarPositionsHandler calendarPositionsHandler;
-    private CalendarSelection currentSelection;
+    private VisibleCalendarSelection currentSelection;
     private final CalendarEventSearcher eventSearcher = new CalendarEventSearcher();
 
     public BoardScrollView(final Context context, final AttributeSet attrs) {
@@ -80,18 +82,18 @@ public class BoardScrollView extends ScrollView {
         }
     }
 
-    private void initEventsTools() {
-        try {
-            this.eventsComposer = new EventsComposer(this.params.firstDateTime);
-            this.eventPartBoundsResolver = new EventPartBoundsResolver(this.params);
-        } catch (final TimeNotAlignedException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void fillWithEvents(final List<CalendarEvent> events) {
         this.events = events;
         invalidate();
+    }
+
+    public CalendarSelection getCurrentSelection() {
+        if (this.currentSelection != null) {
+            return this.currentSelection;
+        }
+        else {
+            return CalendarSelection.halfHourLater();
+        }
     }
 
     @Override
@@ -108,6 +110,15 @@ public class BoardScrollView extends ScrollView {
         this.eventSearcher.putEvents(eventsWithBounds);
         if (this.currentSelection != null) {
             drawSelection(canvas);
+        }
+    }
+
+    private void initEventsTools() {
+        try {
+            this.eventsComposer = new EventsComposer(this.params.firstDateTime);
+            this.eventPartBoundsResolver = new EventPartBoundsResolver(this.params);
+        } catch (final TimeNotAlignedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -205,14 +216,20 @@ public class BoardScrollView extends ScrollView {
         invalidate();
     }
 
-    public void handleClick(float x, float y) {
+    public void handleClick(float x, float y, Consumer<CalendarEvent> postAction) {
         if (this.calendarPositionsHandler != null) {
-            this.currentSelection = this.calendarPositionsHandler.determineSelection(x, y);
-            Optional<CalendarEvent> calendarEvent = this.eventSearcher.getEvent(currentSelection);
-            calendarEvent.ifPresent(event -> System.out.println(event.getTitle()));
-            invalidate();
+            Optional<VisibleCalendarSelection> selectedSelection = this.calendarPositionsHandler.determineSelection(x, y);
+            selectedSelection.ifPresent(selection -> handleClickWithSelection(selection, postAction));
         }
     }
+
+    private void handleClickWithSelection(VisibleCalendarSelection selectedSelection, Consumer<CalendarEvent> postAction) {
+        this.currentSelection = selectedSelection;
+        Optional<CalendarEvent> calendarEvent = this.eventSearcher.getEvent(this.currentSelection);
+        calendarEvent.ifPresent(postAction);
+        invalidate();
+    }
+
     public static class BoardParams {
 
         private final int numberOfColumns;

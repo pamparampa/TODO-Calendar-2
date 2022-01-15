@@ -1,7 +1,8 @@
 package com.example.radle.todo_calendar2.dao;
 
 public class DbCalendarEvent {
-    private String calendar_Id;
+    private String calendar_id;
+    private String event_id;
     private long dtStart;
     private long dtEnd;
     private String title;
@@ -9,14 +10,19 @@ public class DbCalendarEvent {
     private String endTimeZone;
     private int displayColor;
 
-    public DbCalendarEvent(final String calendar_Id, final int startTime, final int endTime) {
-        this.calendar_Id = calendar_Id;
+    public DbCalendarEvent(final String calendar_id, final String event_id, final int startTime, final int endTime) {
+        this.calendar_id = calendar_id;
+        this.event_id = event_id;
         this.dtStart = startTime;
         this.dtEnd = endTime;
     }
 
     public String calendar_id() {
-        return this.calendar_Id;
+        return this.calendar_id;
+    }
+
+    public String event_id() {
+        return this.event_id;
     }
 
     public long dtstart() {
@@ -46,7 +52,7 @@ public class DbCalendarEvent {
     @Override
     public String toString() {
         return "DbCalendarEvent{" +
-                "calendar_Id='" + this.calendar_Id + '\'' +
+                "calendar_Id='" + this.calendar_id + '\'' +
                 ", dtStart=" + this.dtStart +
                 ", dtEnd=" + this.dtEnd +
                 ", title='" + this.title + '\'' +
@@ -56,10 +62,15 @@ public class DbCalendarEvent {
     }
 
     static class Builder {
-        DbCalendarEvent dbCalendarEvent = new DbCalendarEvent(null, 1, 1);
+        DbCalendarEvent dbCalendarEvent = new DbCalendarEvent("1", "1", 1, 1);
+
+        Builder withEventId(final String eventId) {
+            this.dbCalendarEvent.event_id = eventId;
+            return this;
+        }
 
         Builder withCalendarId(final String calendarId) {
-            this.dbCalendarEvent.calendar_Id = calendarId;
+            this.dbCalendarEvent.calendar_id = calendarId;
             return this;
         }
 

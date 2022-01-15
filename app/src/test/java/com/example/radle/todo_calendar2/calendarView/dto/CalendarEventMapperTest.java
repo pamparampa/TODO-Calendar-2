@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 public class CalendarEventMapperTest {
 
+    public static final String EVENT_ID = "1";
     private final int colorCode = 100;
     private final CalendarEventMapper subject = new CalendarEventMapper();
     private final LocalDateTime earlierDate =
@@ -38,7 +39,7 @@ public class CalendarEventMapperTest {
     @Test
     public void convertAll_shouldReturnCalendarEventWithItsOwnTimezone_whenEventTimeZoneIsNotZero() {
         final Cursor cursor = new CursorStub(Collections.singletonList(
-                Arrays.asList("1", "event", this.earlierDateInEpochMilis,
+                Arrays.asList("1", EVENT_ID, "event", this.earlierDateInEpochMilis,
                         this.laterDateInEpochMilis, "Europe/Warsaw", "Asia/Tokyo",
                         String.valueOf(this.colorCode))
         ));
@@ -46,14 +47,14 @@ public class CalendarEventMapperTest {
         final List<CalendarEvent> calendarEvents =
                 this.subject.convertAll(cursor, new CalendarTimeZones());
 
-        assertThat(calendarEvents).containsOnly(new CalendarEvent("event", this.earlierDate,
+        assertThat(calendarEvents).containsOnly(new CalendarEvent(EVENT_ID, "event", this.earlierDate,
                 this.laterDate.withHour(7), this.colorCode));
     }
 
     @Test
     public void convertAll_shouldReturnCalendarEventWithTimeZoneFromCalendar_whenEventTimeZoneIsZero() {
         final Cursor cursor = new CursorStub(Collections.singletonList(
-                Arrays.asList("1", "event", this.earlierDateInEpochMilis,
+                Arrays.asList("1", EVENT_ID, "event", this.earlierDateInEpochMilis,
                         this.laterDateInEpochMilis,
                         "0", "0", String.valueOf(this.colorCode))));
 
@@ -62,17 +63,17 @@ public class CalendarEventMapperTest {
         final List<CalendarEvent> calendarEvents =
                 this.subject.convertAll(cursor, calendarTimeZones);
 
-        assertThat(calendarEvents).containsOnly(new CalendarEvent("event", this.earlierDate,
+        assertThat(calendarEvents).containsOnly(new CalendarEvent(EVENT_ID, "event", this.earlierDate,
                 this.laterDate, this.colorCode));
     }
 
     @Test
     public void convertAll_shouldReturnFewCalendarEvents_whenFewRecordsInCursor() {
         final Cursor cursor = new CursorStub(Arrays.asList(
-                Arrays.asList("1", "event1", this.earlierDateInEpochMilis,
+                Arrays.asList("1", "0", "event1", this.earlierDateInEpochMilis,
                         String.valueOf(Long.parseLong(this.earlierDateInEpochMilis) + 100),
                         "0", "0", String.valueOf(this.colorCode)),
-                Arrays.asList("2", "event2", this.laterDateInEpochMilis,
+                Arrays.asList("2", "1", "event2", this.laterDateInEpochMilis,
                         String.valueOf(Long.parseLong(this.laterDateInEpochMilis) + 100),
                         "0", "0", String.valueOf(this.colorCode))));
         final CalendarTimeZones calendarTimeZones = new CalendarTimeZones();
@@ -82,9 +83,9 @@ public class CalendarEventMapperTest {
                 this.subject.convertAll(cursor, calendarTimeZones);
 
         assertThat(calendarEvents).containsExactly(
-                new CalendarEvent("event1", this.earlierDate, this.earlierDate.withNano(100000000),
+                new CalendarEvent("0", "event1", this.earlierDate, this.earlierDate.withNano(100000000),
                         this.colorCode),
-                new CalendarEvent("event2", this.laterDate.withHour(7),
+                new CalendarEvent("1", "event2", this.laterDate.withHour(7),
                         this.laterDate.withHour(7).withNano(100000000),
                         this.colorCode));
     }

@@ -8,7 +8,7 @@ public class CalendarEventPart extends CalendarEvent {
 
     public CalendarEventPart(final String title, final LocalDateTime startTime,
                              final LocalDateTime endTime, final CalendarEvent calendarEvent) {
-        super(title, startTime, endTime);
+        super(calendarEvent.getId(), title, startTime, endTime);
         this.calendarEvent = calendarEvent;
     }
 

@@ -14,6 +14,8 @@ public class CalendarEventCursorStub extends CursorStub<DbCalendarEvent> {
         switch (columnIndex) {
             case CalendarEventMapper.CALENDAR_ID_INDEX:
                 return this.current.calendar_id();
+                case CalendarEventMapper.EVENT_ID_INDEX:
+                    return this.current.event_id();
             case CalendarEventMapper.TITLE_INDEX:
                 return this.current.title();
             case CalendarEventMapper.EVENT_TIMEZONE_INDEX:

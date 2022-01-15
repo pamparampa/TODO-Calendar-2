@@ -56,6 +56,7 @@ public class CalendarEventsDaoModuleTest {
     private ImmutableList<DbCalendarEvent> prepareEventsData() {
         final DbCalendarEvent eventEndingInPrevWeek = new DbCalendarEvent.Builder()
                 .withCalendarId("1")
+                .withEventId("1")
                 .withTitle("event1")
                 .withDtStart(Utils.getDatabaseFormatOfDate(
                         this.weekStartDate.minusDays(1), ZoneId.of(LOCAL_ZONE)))
@@ -67,6 +68,7 @@ public class CalendarEventsDaoModuleTest {
 
         final DbCalendarEvent eventStartingInNextWeek = new DbCalendarEvent.Builder()
                 .withCalendarId("2")
+                .withEventId("2")
                 .withTitle("event2")
                 .withDtStart(Utils.getDatabaseFormatOfDate(
                         this.weekEndDate.plusHours(5), ZoneId.of(LOCAL_ZONE)))
@@ -78,6 +80,7 @@ public class CalendarEventsDaoModuleTest {
 
         final DbCalendarEvent eventInWeek = new DbCalendarEvent.Builder()
                 .withCalendarId("1")
+                .withEventId("3")
                 .withTitle("event3")
                 .withDtStart(Utils.getDatabaseFormatOfDate(
                         this.weekStartDate, ZoneId.of(LOCAL_ZONE)))
@@ -89,6 +92,7 @@ public class CalendarEventsDaoModuleTest {
 
         final DbCalendarEvent eventInWeekAndOtherCalendarId = new DbCalendarEvent.Builder()
                 .withCalendarId("3")
+                .withEventId("4")
                 .withTitle("event4")
                 .withDtStart(Utils.getDatabaseFormatOfDate(
                         this.weekStartDate, ZoneId.of(LOCAL_ZONE)))
@@ -100,6 +104,7 @@ public class CalendarEventsDaoModuleTest {
 
         final DbCalendarEvent eventLastingAllSunday = new DbCalendarEvent.Builder()
                 .withCalendarId("1")
+                .withEventId("5")
                 .withTitle("event5")
                 .withDtStart(Utils.getDatabaseFormatOfDate(
                         this.weekEndDate.minusDays(1), ZoneId.of(LOCAL_ZONE)))
@@ -111,6 +116,7 @@ public class CalendarEventsDaoModuleTest {
 
         final DbCalendarEvent eventStartingInPrevWeek = new DbCalendarEvent.Builder()
                 .withCalendarId("1")
+                .withEventId("6")
                 .withTitle("event6")
                 .withDtStart(Utils.getDatabaseFormatOfDate(
                         this.weekStartDate.minusHours(1), ZoneId.of(LOCAL_ZONE)))
@@ -122,6 +128,7 @@ public class CalendarEventsDaoModuleTest {
 
         final DbCalendarEvent eventEndingInNextWeek = new DbCalendarEvent.Builder()
                 .withCalendarId("1")
+                .withEventId("7")
                 .withTitle("event7")
                 .withDtStart(Utils.getDatabaseFormatOfDate(
                         this.weekEndDate.minusHours(1), ZoneId.of(LOCAL_ZONE)))
@@ -143,16 +150,16 @@ public class CalendarEventsDaoModuleTest {
 
     private ImmutableList<CalendarEvent> prepareExpectedResults() {
         final CalendarEvent eventInWeek = new CalendarEvent(
-                "event3", this.weekStartDate, this.weekStartDate.plusHours(5), 1);
+                "3", "event3", this.weekStartDate, this.weekStartDate.plusHours(5), 1);
 
         final CalendarEvent eventLastingAllSunday = new CalendarEvent(
-                "event5", this.weekEndDate.minusDays(1), this.weekEndDate, 1);
+                "5", "event5", this.weekEndDate.minusDays(1), this.weekEndDate, 1);
 
         final CalendarEvent eventStartingInPrevWeek = new CalendarEvent(
-                "event6", this.weekStartDate.minusHours(1), this.weekStartDate.plusHours(1), 1);
+                "6", "event6", this.weekStartDate.minusHours(1), this.weekStartDate.plusHours(1), 1);
 
         final CalendarEvent eventEndingInNextWeek = new CalendarEvent(
-                "event7", this.weekEndDate.minusHours(1), this.weekEndDate.plusHours(1), 1);
+                "7", "event7", this.weekEndDate.minusHours(1), this.weekEndDate.plusHours(1), 1);
 
         return ImmutableList.of(
                 eventInWeek,

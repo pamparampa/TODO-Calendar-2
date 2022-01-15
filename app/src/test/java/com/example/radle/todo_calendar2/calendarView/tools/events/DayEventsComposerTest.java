@@ -27,10 +27,10 @@ public class DayEventsComposerTest {
     @Test
     public void getEnventParts_shouldReturnTwoWholePartsOfEvents_whenThereAreTwoEventsFitInDay() {
         final List<CalendarEvent> calendarEvents = Arrays.asList(
-                new CalendarEvent("event1",
+                new CalendarEvent("1", "event1",
                         LocalDateTime.of(2019, Month.SEPTEMBER, 11, 12, 0),
                         LocalDateTime.of(2019, Month.SEPTEMBER, 11, 12, 30)),
-                new CalendarEvent("event2",
+                new CalendarEvent("2", "event2",
                         LocalDateTime.of(2019, Month.SEPTEMBER, 11, 20, 0),
                         LocalDateTime.of(2019, Month.SEPTEMBER, 11, 23, 0)));
 
@@ -50,10 +50,10 @@ public class DayEventsComposerTest {
     @Test
     public void getEventParts_shouldReturnEmptyList_whenEventsAreBeyondDay() {
         final List<CalendarEvent> calendarEvents = Arrays.asList(
-                new CalendarEvent("event1",
+                new CalendarEvent("1", "event1",
                         LocalDateTime.of(2019, Month.SEPTEMBER, 10, 10, 0),
                         LocalDateTime.of(2019, Month.SEPTEMBER, 10, 11, 0)),
-                new CalendarEvent("event2",
+                new CalendarEvent("2", "event2",
                         LocalDateTime.of(2019, Month.SEPTEMBER, 12, 14, 0),
                         LocalDateTime.of(2019, Month.SEPTEMBER, 12, 15, 0)));
 
@@ -63,7 +63,7 @@ public class DayEventsComposerTest {
 
     @Test
     public void getEventParts_shouldReturnPartOfEvent_whenEventStartsInPreviousDayButEndsInThisDay() {
-        final CalendarEvent calendarEvent = new CalendarEvent("event",
+        final CalendarEvent calendarEvent = new CalendarEvent("1", "event",
                 LocalDateTime.of(2019, Month.SEPTEMBER, 10, 23, 0),
                 LocalDateTime.of(2019, Month.SEPTEMBER, 11, 1, 0));
 
@@ -78,7 +78,7 @@ public class DayEventsComposerTest {
 
     @Test
     public void getEventParts_shouldReturnPartOfEvent_whenEventStartsInThisDayButEndsInNextDay() {
-        final CalendarEvent calendarEvent = new CalendarEvent("event",
+        final CalendarEvent calendarEvent = new CalendarEvent("1", "event",
                 LocalDateTime.of(2019, Month.SEPTEMBER, 11, 23, 0),
                 LocalDateTime.of(2019, Month.SEPTEMBER, 12, 1, 30));
 
@@ -94,16 +94,16 @@ public class DayEventsComposerTest {
     @Test
     public void getEventParts_shouldReturnOnlyPartsBelongingToDay_whenDifferentEventsExist() {
         final List<CalendarEvent> calendarEvents = Arrays.asList(
-                new CalendarEvent("event ending on current day beginning",
+                new CalendarEvent("1", "event ending on current day beginning",
                         LocalDateTime.of(2019, Month.SEPTEMBER, 10, 22, 0),
                         LocalDateTime.of(2019, Month.SEPTEMBER, 11, 0, 0)),
-                new CalendarEvent("event starting on beginning of next day",
+                new CalendarEvent("2", "event starting on beginning of next day",
                         LocalDateTime.of(2019, Month.SEPTEMBER, 12, 0, 0),
                         LocalDateTime.of(2019, Month.SEPTEMBER, 12, 1, 50)),
-                new CalendarEvent("event filling whole day",
+                new CalendarEvent("3", "event filling whole day",
                         LocalDateTime.of(2019, Month.SEPTEMBER, 11, 0, 0),
                         LocalDateTime.of(2019, Month.SEPTEMBER, 12, 0, 0)),
-                new CalendarEvent("event starting in previous day and ending in next day",
+                new CalendarEvent("4", "event starting in previous day and ending in next day",
                         LocalDateTime.of(2019, Month.SEPTEMBER, 10, 23, 0),
                         LocalDateTime.of(2019, Month.SEPTEMBER, 12, 2, 0)));
 

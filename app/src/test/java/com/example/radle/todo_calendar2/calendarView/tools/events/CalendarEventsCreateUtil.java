@@ -34,7 +34,7 @@ public class CalendarEventsCreateUtil {
     private static class CalendarEventStub extends CalendarEvent {
 
         public CalendarEventStub() {
-            super("event", LocalDateTime.now(), LocalDateTime.now());
+            super("1", "event", LocalDateTime.now(), LocalDateTime.now());
         }
     }
 }

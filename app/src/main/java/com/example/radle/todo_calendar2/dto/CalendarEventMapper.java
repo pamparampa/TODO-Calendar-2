@@ -12,6 +12,7 @@ import java.util.List;
 public class CalendarEventMapper {
     public static final String[] EVENT_PROJECTION = new String[]{
             CalendarContract.Events.CALENDAR_ID,
+            CalendarContract.Events._ID,
             CalendarContract.Events.TITLE,
             CalendarContract.Events.DTSTART,
             CalendarContract.Events.DTEND,
@@ -20,12 +21,13 @@ public class CalendarEventMapper {
             CalendarContract.Events.DISPLAY_COLOR
     };
     public static final int CALENDAR_ID_INDEX = 0;
-    public static final int TITLE_INDEX = 1;
-    public static final int DTSTART_INDEX = 2;
-    public static final int DTEND_INDEX = 3;
-    public static final int EVENT_TIMEZONE_INDEX = 4;
-    public static final int EVENT_END_TIMEZONE_INDEX = 5;
-    public static final int DISPLAY_COLOR_INDEX = 6;
+    public static final int EVENT_ID_INDEX = 1;
+    public static final int TITLE_INDEX = 2;
+    public static final int DTSTART_INDEX = 3;
+    public static final int DTEND_INDEX = 4;
+    public static final int EVENT_TIMEZONE_INDEX = 5;
+    public static final int EVENT_END_TIMEZONE_INDEX = 6;
+    public static final int DISPLAY_COLOR_INDEX = 7;
     private static final int MILIS_IN_SECOND = 1000;
     private static final int NANOS_IN_MILI = 1000000;
 
@@ -43,6 +45,7 @@ public class CalendarEventMapper {
         final Long dtstart = cursor.getLong(DTSTART_INDEX);
         final Long dtend = cursor.getLong(DTEND_INDEX);
         return new CalendarEvent(
+                cursor.getString(EVENT_ID_INDEX),
                 cursor.getString(TITLE_INDEX),
                 toLocalDate(dtstart, getStartDateZoneId(cursor, calendarTimeZones)),
                 toLocalDate(dtend, getEndDateZoneId(cursor, calendarTimeZones)),

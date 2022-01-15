@@ -1,11 +1,12 @@
 package com.example.radle.todo_calendar2.calendarView.tools;
 
 import com.example.radle.todo_calendar2.calendarView.BoardScrollView;
-import com.example.radle.todo_calendar2.dto.CalendarSelection;
+import com.example.radle.todo_calendar2.dto.VisibleCalendarSelection;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 
 public class CalendarPositionsHandler {
 
@@ -18,15 +19,15 @@ public class CalendarPositionsHandler {
         this.boardParams = boardParams;
     }
 
-    public CalendarSelection determineSelection(float x, float y) {
+    public Optional<VisibleCalendarSelection> determineSelection(float x, float y) {
         LocalDateTime selectedTime = determineStartTime(x, y);
         if (itIsLabelColumn(selectedTime)) {
-            return null;
+            return Optional.empty();
         }
         LocalDateTime roundedStartTime = roundTime(selectedTime);
         int roundedX = roundX(x);
         int roundedY = roundY(y);
-        return new CalendarSelection.Builder()
+        return Optional.of(new VisibleCalendarSelection.Builder()
                 .withX(x)
                 .withY(y)
                 .withSelectedTime(selectedTime)
@@ -36,7 +37,7 @@ public class CalendarPositionsHandler {
                 .withBottom(roundedY + ((float) boardParams.getRowHeight() / 2))
                 .withStartTime(roundedStartTime)
                 .withEndTime(roundedStartTime.plus(MIN_TIME_AMOUNT))
-                .build();
+                .build());
     }
 
     private boolean itIsLabelColumn(LocalDateTime startTime) {

@@ -36,13 +36,13 @@ public class EventsComposerTest {
 
     @Test
     public void compose_shouldReturnTwoEventsMap_whenThereAreThreeEventsWithoutConflictsButOneOfThemIsFromAnotherWeek() {
-        final CalendarEvent event1 = new CalendarEvent("event1",
+        final CalendarEvent event1 = new CalendarEvent("1", "event1",
                 LocalDateTime.of(2020, Month.MARCH, 30, 11, 0, 0),
                 LocalDateTime.of(2020, Month.MARCH, 30, 13, 30, 0));
-        final CalendarEvent event2 = new CalendarEvent("event2",
+        final CalendarEvent event2 = new CalendarEvent("2", "event2",
                 LocalDateTime.of(2020, Month.APRIL, 1, 23, 0, 0),
                 LocalDateTime.of(2020, Month.APRIL, 2, 0, 20, 0));
-        final CalendarEvent event3 = new CalendarEvent("event3",
+        final CalendarEvent event3 = new CalendarEvent("3", "event3",
                 LocalDateTime.of(2020, Month.APRIL, 7, 12, 0, 0),
                 LocalDateTime.of(2020, Month.APRIL, 7, 12, 30, 0));
 
@@ -67,19 +67,19 @@ public class EventsComposerTest {
 
     @Test
     public void compose_shouldReturnMapOfEventsWithResolvedConflicts_whenConflictBetweenEventsExist() {
-        final CalendarEvent event1 = new CalendarEvent("event1",
+        final CalendarEvent event1 = new CalendarEvent("1", "event1",
                 LocalDateTime.of(2020, Month.MARCH, 30, 23, 0, 0),
                 LocalDateTime.of(2020, Month.MARCH, 31, 15, 0, 0));
-        final CalendarEvent event2 = new CalendarEvent("event2",
+        final CalendarEvent event2 = new CalendarEvent("2", "event2",
                 LocalDateTime.of(2020, Month.MARCH, 31, 14, 0, 0),
                 LocalDateTime.of(2020, Month.MARCH, 31, 15, 0, 0));
-        final CalendarEvent event3 = new CalendarEvent("event3",
+        final CalendarEvent event3 = new CalendarEvent("3", "event3",
                 LocalDateTime.of(2020, Month.MARCH, 31, 15, 0, 0),
                 LocalDateTime.of(2020, Month.MARCH, 31, 16, 0, 0));
-        final CalendarEvent event4 = new CalendarEvent("event4",
+        final CalendarEvent event4 = new CalendarEvent("4", "event4",
                 LocalDateTime.of(2020, Month.MARCH, 31, 15, 0, 0),
                 LocalDateTime.of(2020, Month.APRIL, 1, 1, 0, 0));
-        final CalendarEvent event5 = new CalendarEvent("event5",
+        final CalendarEvent event5 = new CalendarEvent("5", "event5",
                 LocalDateTime.of(2020, Month.MARCH, 31, 15, 0, 0),
                 LocalDateTime.of(2020, Month.MARCH, 31, 16, 0, 0));
 

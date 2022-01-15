@@ -1,0 +1,34 @@
+Dzisiaj                 // zawsze po 24:00 - "tego i tego dnia planowałeś zrobić następujące rzeczy: czy zamierzasz je zrobić dzisiaj? dzisiaj/kiedyś/usuń."
+                        // Przy tworzeniu można zaznaczyć opcję dzisiaj albo nigdy.
+                        // Zadania zapamiętują się w powtarzające się jeśli wiele razy wpiszemy to samo.
+                        // przy wpisywaniu zadania wyskakują propozycje autouzupełniania
+Jutro                   // zawsze po 24:00 zadania przesuwają się automatycznie na dzisiaj
+w tym tygodniu          // zawsze w piątek mogłoby wyskakiwać przypomnienie "masz jeszcze do zrobienia następujące zadania w tym tygodniu: w tym tyg./kiedyś/usuń"
+                        // zawsze w sobotę - "W tym tygodniu planowałeś zrobić następujące rzeczy: czy zamierzasz je zrobić jutro? jutro/w nast. tyg./kiedyś/usuń"
+                        // zawsze w niedzielę - "W tym tygodniu planowałeś zrobić następujące rzeczy: czy zamierzasz je zrobić dzisiaj? dzisiaj/w nast. tyg./kiedyś/usuń"
+                        // zawsze w nast. tyg - "W poprzednim tygodniu planowałeś zrobić następujące rzeczy: czy zamierzasz je zrobić w tym tygodniu? w tym tyg./kiedyś/usuń"
+w następnym tygodniu    // zawsze w poniedziałek zadania przesuwają się automatycznie na w tym tygodniu
+w tym miesiącu          // zawsze tydzień przed zakończeniem miesiąca: "masz jeszcze do zrobienia następujące zadania w tym miesiącu:"
+                        // zakładając, że miesiąc ma 31 dni to może być:
+                        // 25/po (wtm/wnm/wtt/k/u) 25/wt (wtm/wnm/wtt/wnt/k/u) 25/śr (wtm/wnm/wtt/wnt/k/u) 25/cz (wtm/wnm/wtt/wnt/k/u) 25/pt (wtm/wnm/wtt/wnt/k/u) 25/so (wtm/wnm/wtt/wnt/k/u) 25/nd (wtm/wnm/d/wnt/k/u)
+                        // 25|26|27|28|29|30|31
+                        // 26/po (wtm/wnm/wtt/k/u) 26/wt (wtm/wnm/wtt/k/u) 26/śr (wtm/wnm/wtt/wnt/k/u) 26/cz (wtm/wnm/wtt/wnt/k/u) 26/pt (wtm/wnm/wtt/wnt/k/u) 26/so (wtm/wnm/wtt/wnt/k/u) 26/nd (wtm/wnm/d/wnt/k/u)
+                        //                      25|26|27|28|29|30|31
+                        // 27/po (wtm/wnm/wtt/k/u) 27/wt (wtm/wnm/wtt/k/u) 27/śr (wtm/wnm/wtt/k/u) 27/cz (wtm/wnm/wtt/wnt/k/u) 27/pt (wtm/wnm/wtt/wnt/k/u) 27/so (wtm/wnm/wtt/wnt/k/u) 27/nd (wtm/wnm/d/wnt/k/u)
+                        //                                           25|26|27|28|29|30|31
+                        // 28/po (wtm/wnm/wtt/k/u) 28/wt (wtm/wnm/wtt/k/u) 28/śr (wtm/wnm/wtt/k/u) 28/cz (wtm/wnm/wtt/k/u) 28/pt (wtm/wnm/wtt/wnt/k/u) 28/so (wtm/wnm/wtt/wnt/k/u) 28/nd (wtm/wnm/d/wnt/k/u)
+                        //                                                                25|26|27|28|29|30|31
+                        // 29/po (wtm/wnm/wtt/k/u) 29/wt (wtm/wnm/wtt/k/u) 29/śr (wtm/wnm/wtt/k/u) 29/cz (wtm/wnm/wtt/k/u) 29/pt (wtm/wnm/wtt/k/u) 29/so (wtm/wnm/wtt/wnt/k/u) 29/nd (wtm/wnm/d/wnt/k/u)
+                        //                                                                                     25|26|27|28|29|30|31
+                        // 30/po (wtm/wnm/wtt/j/k/u) 30/wt (wtm/wnm/wtt/j/k/u) 30/śr (wtm/wnm/wtt/j/k/u) 30/cz (wtm/wnm/wtt/j/k/u) 30/pt (wtm/wnm/wtt/j/k/u) 30/so (wtm/wnm/wtt/j/k/u) 30/nd (wtm/wnm/d/j/wnt/k/u)
+                        //                                                                                                          25|26|27|28|29|30|31
+                        // 31/po (wtm/wnm/wtt/d/k/u) 31/wt (wtm/wnm/wtt/d/k/u) 31/śr (wtm/wnm/wtt/d/k/u) 31/cz (wtm/wnm/wtt/d/k/u) 31/pt (wtm/wnm/wtt/d/k/u) 31/so (wtm/wnm/wtt/d/k/u) 31/nd (wtm/wnm/d/k/u)
+                        //
+                        // wtm - w tym miesiącu, wnm - w nast. miesiącu, wtt - w tym tygodniu, wnt - w następnym tygodniu, d - dzisiaj, j - jutro, k - kiedyś, u - usuń
+jeszcze tej zimy
+jeszcze tej wiosny
+jeszcze tego lata
+jeszcze tej jesieni
+w tym roku
+w następnym roku
+kiedyś

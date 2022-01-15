@@ -14,6 +14,7 @@ import com.example.radle.todo_calendar2.calendarView.scrolling.ScrollEffectParam
 import com.example.radle.todo_calendar2.calendarView.scrolling.ScrollVelocity;
 import com.example.radle.todo_calendar2.calendarView.scrolling.ScrollingHandler;
 import com.example.radle.todo_calendar2.calendarView.tools.WeekBeginningDateTimeProvider;
+import com.example.radle.todo_calendar2.dto.CalendarSelection;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -32,9 +33,10 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
             new WeekBeginningDateTimeProvider();
     private int width;
     private Map<ScrollEffectParameters.Side, Integer> sideToPosition;
-    private onNewWeekListener onNewWeekListener;
+    private OnNewWeekListener onNewWeekListener;
     private final Map<LocalDateTime, SinglePeriodView> periodViews = new HashMap<>();
     private SinglePeriodView currentlyVisiblePeriodView;
+    private OnEventClickListener onEventClickListener;
 
     public CalendarView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -47,8 +49,12 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
         addView(this.linearLayout);
     }
 
-    public void setOnNewWeekListener(final onNewWeekListener onNewWeekListener) {
+    public void setOnNewWeekListener(final OnNewWeekListener onNewWeekListener) {
         this.onNewWeekListener = onNewWeekListener;
+    }
+
+    public void setOnEventClickListener(final OnEventClickListener onEventClickListener) {
+        this.onEventClickListener = onEventClickListener;
     }
 
     public TimeInterval getCurrentlyAccessibleTimeInterval() {
@@ -89,7 +95,15 @@ public class CalendarView extends HorizontalScrollView implements OnHorizontalSc
     @Override
     public void finishScrolling(final float x, final float y) {
         ScrollVelocity.finishMeasurement(getScrollX(), LocalTime.now());
-        this.currentlyVisiblePeriodView.handleClick(x, y);
+        this.currentlyVisiblePeriodView.handleClick(x, y, this::showEvent);
+    }
+
+    private void showEvent(CalendarEvent calendarEvent) {
+        this.onEventClickListener.showEvent(calendarEvent);
+    }
+
+    public CalendarSelection getCurrentSelection() {
+        return this.currentlyVisiblePeriodView.getCurrentSelection();
     }
 
     @Override

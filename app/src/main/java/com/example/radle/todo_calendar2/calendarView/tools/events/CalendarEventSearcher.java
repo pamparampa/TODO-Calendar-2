@@ -4,7 +4,7 @@ import android.graphics.Rect;
 
 import com.example.radle.todo_calendar2.calendarView.CalendarEventPartWithBounds;
 import com.example.radle.todo_calendar2.dto.CalendarEvent;
-import com.example.radle.todo_calendar2.dto.CalendarSelection;
+import com.example.radle.todo_calendar2.dto.VisibleCalendarSelection;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -13,7 +13,7 @@ import java.util.Set;
 public class CalendarEventSearcher {
     private Set<CalendarEventPartWithBounds> eventParts = new HashSet<>();
 
-    public Optional<CalendarEvent> getEvent(CalendarSelection currentSelection) {
+    public Optional<CalendarEvent> getEvent(VisibleCalendarSelection currentSelection) {
         for (CalendarEventPartWithBounds eventPart : eventParts) {
             if (isSelected(eventPart, currentSelection)) {
                 return Optional.of(eventPart);
@@ -22,7 +22,7 @@ public class CalendarEventSearcher {
         return Optional.empty();
     }
 
-    private boolean isSelected(CalendarEventPartWithBounds event, CalendarSelection currentSelection) {
+    private boolean isSelected(CalendarEventPartWithBounds event, VisibleCalendarSelection currentSelection) {
         Rect rect = event.getRect();
         return rect.left <= currentSelection.getX()
                 && rect.top <= currentSelection.getY()

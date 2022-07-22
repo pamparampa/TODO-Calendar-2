@@ -20,9 +20,9 @@ public class GuiTestsListActivity extends Activity {
 
     @BindView(R.id.guiTestsList)
     ListView guiTestsList;
-    final String[] guiTestNames = {"CalendarRowVIew", "BoardScrollView", "SingleWeekView"};
+    final String[] guiTestNames = {"CalendarRowVIew", "BoardScrollView", "SingleWeekView", "ToDoListView"};
     final Class[] guiTestClasses = {CalendarRowViewActivity.class, BoardScrollViewActivity.class,
-            SingleWeekViewActivity.class};
+            SingleWeekViewActivity.class, ToDoListViewActivity.class};
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {

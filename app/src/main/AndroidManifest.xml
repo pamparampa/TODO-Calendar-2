@@ -24,12 +24,16 @@
         <activity android:name=".activity.CalendarRowViewActivity" />
         <activity android:name=".activity.BoardScrollViewActivity" />
         <activity android:name=".activity.SingleWeekViewActivity" />
+        <activity android:name=".activity.ToDoListViewActivity"/>
 
         <service
             android:name=".dao.GetEventsService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
         <service
             android:name=".dao.GetCalendarsService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".todoList.TaskService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 

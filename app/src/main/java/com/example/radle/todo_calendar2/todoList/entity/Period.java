@@ -1,6 +1,8 @@
 package com.example.radle.todo_calendar2.todoList.entity;
 
 
+import java.util.Arrays;
+
 public enum Period {
     TODAY,
     YESTERDAY,
@@ -14,5 +16,9 @@ public enum Period {
     THIS_AUTUMN,
     THIS_YER,
     NEXT_YEAR,
-    SOMETIME
+    SOMETIME;
+
+    public static String[] getNames() {
+        return Arrays.stream(values()).map(Enum::name).toArray(String[]::new);
+    }
 }

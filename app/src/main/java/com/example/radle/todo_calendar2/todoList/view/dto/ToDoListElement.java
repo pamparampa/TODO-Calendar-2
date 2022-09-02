@@ -1,4 +1,4 @@
-package com.example.radle.todo_calendar2.todoList.view;
+package com.example.radle.todo_calendar2.todoList.view.dto;
 
 public interface ToDoListElement {
     int HEADER_VIEW_TYPE = 0;

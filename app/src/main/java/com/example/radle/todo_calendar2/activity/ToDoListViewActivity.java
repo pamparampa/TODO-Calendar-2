@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.radle.todo_calendar2.R;
-import com.example.radle.todo_calendar2.todoList.view.HeaderElement;
+import com.example.radle.todo_calendar2.todoList.view.dto.HeaderElement;
 import com.example.radle.todo_calendar2.todoList.view.ToDoListAdapter;
-import com.example.radle.todo_calendar2.todoList.view.VisibleItemElement;
+import com.example.radle.todo_calendar2.todoList.view.dto.VisibleItemElement;
 
 import java.util.Arrays;
 

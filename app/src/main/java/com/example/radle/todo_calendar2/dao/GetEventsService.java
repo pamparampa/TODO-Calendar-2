@@ -9,6 +9,7 @@ import android.os.ResultReceiver;
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
 
+import com.example.radle.todo_calendar2.constant.RequestCodes;
 import com.example.radle.todo_calendar2.dto.CalendarEvent;
 import com.example.radle.todo_calendar2.dto.CalendarEventMapper;
 import com.example.radle.todo_calendar2.dto.CalendarTimeZones;
@@ -53,7 +54,7 @@ public class GetEventsService extends JobIntentService {
 
     void sendResult(final ResultReceiver resultReceiver,
                     final List<CalendarEvent> calendarEvents) {
-        resultReceiver.send(Literals.GET_EVENTS_CODE, prepareBundle(calendarEvents));
+        resultReceiver.send(RequestCodes.GET_EVENTS, prepareBundle(calendarEvents));
     }
 
     private CalendarTimeZones getCalendarTimeZones(final Context context,

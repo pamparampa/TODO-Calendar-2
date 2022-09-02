@@ -24,8 +24,8 @@ final class Utils {
 
     static LocalDateTime toLocalDate(final Long dtstart, final ZoneId zone) {
         return LocalDateTime.ofEpochSecond(
-                Math.floorDiv(dtstart, MILIS_IN_SECOND),
-                (int) Math.floorMod(dtstart, MILIS_IN_SECOND) * NANOS_IN_MILI,
+                (long) Math.floor((double) dtstart / MILIS_IN_SECOND),
+                (int) (dtstart % MILIS_IN_SECOND) * NANOS_IN_MILI,
                 zone.getRules().getOffset(Instant.ofEpochMilli(dtstart)));
     }
 }

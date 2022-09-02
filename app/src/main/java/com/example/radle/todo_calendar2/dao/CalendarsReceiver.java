@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 
+import com.example.radle.todo_calendar2.constant.RequestCodes;
 import com.example.radle.todo_calendar2.dto.Calendar;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class CalendarsReceiver extends ResultReceiver {
 
     @Override
     protected void onReceiveResult(final int resultCode, final Bundle resultData) {
-        if (resultCode == Literals.GET_CALENDARS_CODE) {
+        if (resultCode == RequestCodes.GET_CALENDARS_CODE) {
             final ArrayList<Calendar> calendars =
                     resultData.getParcelableArrayList(Literals.CALENDARS);
             this.consumer.accept(calendars);

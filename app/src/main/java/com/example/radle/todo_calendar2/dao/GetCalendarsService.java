@@ -9,6 +9,7 @@ import android.os.ResultReceiver;
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
 
+import com.example.radle.todo_calendar2.constant.RequestCodes;
 import com.example.radle.todo_calendar2.dto.Calendar;
 import com.example.radle.todo_calendar2.dto.CalendarMapper;
 
@@ -39,7 +40,7 @@ public class GetCalendarsService extends JobIntentService {
     }
 
     private void sendResult(ResultReceiver resultReceiver, List<Calendar> calendars) {
-        resultReceiver.send(Literals.GET_CALENDARS_CODE, prepareBundle(calendars));
+        resultReceiver.send(RequestCodes.GET_CALENDARS_CODE, prepareBundle(calendars));
     }
 
     private Bundle prepareBundle(List<Calendar> calendars) {

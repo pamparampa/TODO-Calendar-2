@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.radle.todo_calendar2.R;
 import com.example.radle.todo_calendar2.todoList.view.OnItemClickListener;
-import com.example.radle.todo_calendar2.todoList.view.dto.VisibleItemElement;
+import com.example.radle.todo_calendar2.todoList.view.dto.TaskItemElement;
 
 public class VisibleItemViewHolder extends RecyclerView.ViewHolder {
 
@@ -22,7 +22,7 @@ public class VisibleItemViewHolder extends RecyclerView.ViewHolder {
         this.checkBox = itemView.findViewById(R.id.checkBox);
     }
 
-    public void bindWith(VisibleItemElement visibleItemElement) {
+    public void bindWith(TaskItemElement visibleItemElement) {
         this.taskNameView.setText(visibleItemElement.getTaskTitle());
         this.checkBox.setChecked(visibleItemElement.isDone());
     }

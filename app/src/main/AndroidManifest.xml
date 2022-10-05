@@ -23,7 +23,7 @@
         <activity android:name=".activity.BoardScrollViewActivity" />
         <activity android:name=".activity.SingleWeekViewActivity" />
         <activity android:name=".activity.ToDoListViewActivity"/>
-        <activity android:name=".activity.EditTaskMessageActivity" />
+        <activity android:name=".activity.EditTaskActivity" />
 
         <service
             android:name=".dao.GetEventsService"

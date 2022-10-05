@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.radle.todo_calendar2.R;
+import com.example.radle.todo_calendar2.todoList.entity.Period;
 import com.example.radle.todo_calendar2.todoList.view.dto.HeaderElement;
 import com.example.radle.todo_calendar2.todoList.view.ToDoListAdapter;
-import com.example.radle.todo_calendar2.todoList.view.dto.VisibleItemElement;
+import com.example.radle.todo_calendar2.todoList.view.dto.TaskItemElement;
+import com.example.radle.todo_calendar2.todoList.view.dto.ToDoListElement;
 
 import java.util.Arrays;
 
@@ -30,8 +32,11 @@ public class ToDoListViewActivity extends Activity {
         this.todoRecyclerView.setAdapter(new ToDoListAdapter(this,
                 Arrays.asList(
                         new HeaderElement("DZISIAJ"),
-                        new VisibleItemElement("zrób to", false),
-                        new VisibleItemElement("oraz tamto", false),
-                        new HeaderElement("JUTRO"))));
+                        new TaskItemElement("zrób to", Period.TODAY, false,
+                                ToDoListElement.VISIBLE_ITEM_VIEW_TYPE),
+                        new TaskItemElement("oraz tamto", Period.TODAY, false,
+                                ToDoListElement.VISIBLE_ITEM_VIEW_TYPE),
+                        new HeaderElement("JUTRO")),
+                ToDoListAdapter.Mode.AT_MOST_ONE_ITEM_IS_IN_EDIT_MODE));
     }
 }

@@ -13,9 +13,9 @@ public class EditableItemsHolder {
         this.editableItems.put(position, editableItem);
     }
 
-    public void editName(int itemPosition) {
+    public void startToEditTitle(int itemPosition) {
         if(editableItems.containsKey(itemPosition)) {
-            Objects.requireNonNull(this.editableItems.get(itemPosition)).forceToEditName();
+            Objects.requireNonNull(this.editableItems.get(itemPosition)).forceToEditTitle();
             this.editedItemPosition = itemPosition;
         }
     }

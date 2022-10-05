@@ -9,21 +9,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.radle.todo_calendar2.R;
 import com.example.radle.todo_calendar2.constant.RequestCodes;
-import com.example.radle.todo_calendar2.todoList.entity.Period;
-import com.example.radle.todo_calendar2.todoList.view.dto.EditableItemElement;
-import com.example.radle.todo_calendar2.todoList.view.dto.HeaderElement;
 import com.example.radle.todo_calendar2.todoList.view.ToDoListAdapter;
-
-import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class EditTaskMessageActivity extends FragmentActivity {
+public class EditTaskActivity extends FragmentActivity {
     @BindView(R.id.todoRecyclerView)
     RecyclerView todoRecyclerView;
     private ToDoListAdapter toDoListAdapter;
-
+    private boolean actionPerformedFirstTime = true;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -36,6 +31,8 @@ public class EditTaskMessageActivity extends FragmentActivity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
+        intent.putExtra(Literals.EDITED_ITEM_INDEX, this.toDoListAdapter.getCurrentlyEditedItem());
+        intent.putExtra(Literals.ALL_TODO_ELEMENTS, this.toDoListAdapter.getAllElements());
         setResult(RequestCodes.EDIT_TASK_MESSAGE, intent);
         finish();
     }
@@ -44,14 +41,21 @@ public class EditTaskMessageActivity extends FragmentActivity {
         this.todoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         this.toDoListAdapter = new ToDoListAdapter(this,
-                Arrays.asList(
-                        new HeaderElement("DZISIAJ"),
-                        new EditableItemElement("zrób to", Period.TODAY),
-                        new EditableItemElement("oraz tamto", Period.TODAY),
-                        new HeaderElement("JUTRO")));
+                getIntent().getParcelableArrayListExtra(Literals.ALL_TODO_ELEMENTS),
+                ToDoListAdapter.Mode.EVERY_ITEMS_ARE_IN_EDIT_MODE);
         this.todoRecyclerView.setAdapter(toDoListAdapter);
         todoRecyclerView.addOnLayoutChangeListener(
-                (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) ->
-                        EditTaskMessageActivity.this.toDoListAdapter.startToEditItemMessage(1));
+                (v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> startEditingItemOnTheBeginning());
+    }
+
+    private void startEditingItemOnTheBeginning() {
+        if (actionPerformedFirstTime) {
+            EditTaskActivity.this.toDoListAdapter.startToEditItemTitle(getFirstEditedItemIndex());
+            actionPerformedFirstTime = false;
+        }
+    }
+
+    private int getFirstEditedItemIndex() {
+        return getIntent().getIntExtra(Literals.EDITED_ITEM_INDEX, 1);
     }
 }

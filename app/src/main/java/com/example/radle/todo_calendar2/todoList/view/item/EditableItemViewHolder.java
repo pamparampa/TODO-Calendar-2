@@ -13,31 +13,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.radle.todo_calendar2.R;
 import com.example.radle.todo_calendar2.todoList.entity.Period;
 import com.example.radle.todo_calendar2.todoList.view.OnItemTextEditListener;
-import com.example.radle.todo_calendar2.todoList.view.dto.EditableItemElement;
+import com.example.radle.todo_calendar2.todoList.view.dto.TaskItemElement;
 
 public class EditableItemViewHolder extends RecyclerView.ViewHolder {
-    private final EditText taskNameEditText;
-    private final Spinner spinner;
-    private EditableItemElement editableItemElement;
+    private final EditText taskTitleEditText;
+    private TaskItemElement taskItemElement;
 
-    public EditableItemViewHolder(Context context, View itemView, OnItemTextEditListener onItemTextEditListener) {
+    public EditableItemViewHolder(Context context, View itemView,
+                                  OnItemTextEditListener onItemTextEditListener) {
         super(itemView);
-        this.taskNameEditText = itemView.findViewById(R.id.taskNameEditText);
-        this.taskNameEditText.addTextChangedListener(createTextChangedListener());
-        this.taskNameEditText.setOnFocusChangeListener((view, isFocusOn) -> {
-            onItemTextEditListener.onChangeState(isFocusOn);
-        });
-        this.spinner = itemView.findViewById(R.id.spinner);
-        this.spinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, Period.getNames()));
+        this.taskTitleEditText = itemView.findViewById(R.id.taskTitleEditText);
+        this.taskTitleEditText.addTextChangedListener(createTextChangedListener());
+        this.taskTitleEditText.setOnFocusChangeListener((view, isFocusOn) ->
+                onItemTextEditListener.onChangeState(getAdapterPosition(), isFocusOn));
+
+        Spinner spinner = itemView.findViewById(R.id.spinner);
+        spinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, Period.getNames()));
     }
 
-    public void bindWith(EditableItemElement editableItemElement) {
-        this.editableItemElement = editableItemElement;
-        this.taskNameEditText.setText(editableItemElement.getTaskTitle());
+    public void bindWith(TaskItemElement taskItemElement) {
+        this.taskItemElement = taskItemElement;
+        this.taskTitleEditText.setText(taskItemElement.getTaskTitle());
     }
 
-    public void forceToEditName() {
-        this.taskNameEditText.requestFocus(View.FOCUS_LEFT);
+    public void forceToEditTitle() {
+        this.taskTitleEditText.requestFocus(View.FOCUS_LEFT);
     }
 
     private TextWatcher createTextChangedListener() {
@@ -48,7 +48,7 @@ public class EditableItemViewHolder extends RecyclerView.ViewHolder {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                EditableItemViewHolder.this.editableItemElement.setTaskTitle(charSequence);
+                EditableItemViewHolder.this.taskItemElement.setTaskTitle(charSequence);
             }
 
             @Override

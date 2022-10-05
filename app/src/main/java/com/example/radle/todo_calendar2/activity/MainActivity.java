@@ -27,10 +27,12 @@ import com.example.radle.todo_calendar2.dto.CalendarEvent;
 import com.example.radle.todo_calendar2.fragment.CalendarChooseDialog;
 import com.example.radle.todo_calendar2.todoList.TaskService;
 import com.example.radle.todo_calendar2.todoList.ToDoDatabase;
+import com.example.radle.todo_calendar2.todoList.entity.Period;
 import com.example.radle.todo_calendar2.todoList.entity.Task;
 import com.example.radle.todo_calendar2.todoList.view.dto.HeaderElement;
 import com.example.radle.todo_calendar2.todoList.view.ToDoListAdapter;
-import com.example.radle.todo_calendar2.todoList.view.dto.VisibleItemElement;
+import com.example.radle.todo_calendar2.todoList.view.dto.TaskItemElement;
+import com.example.radle.todo_calendar2.todoList.view.dto.ToDoListElement;
 import com.example.radle.todo_calendar2.utils.DateUtils;
 
 import java.time.LocalDateTime;
@@ -81,18 +83,26 @@ public class MainActivity extends FragmentActivity implements OnNewWeekListener,
         this.toDoListAdapter = new ToDoListAdapter(this,
                 Arrays.asList(
                         new HeaderElement("DZISIAJ"),
-                        new VisibleItemElement("zrób to", false),
-                        new VisibleItemElement("oraz tamto", false),
-                        new HeaderElement("JUTRO")));
+                        new TaskItemElement("zrób to", Period.TODAY, false,
+                                ToDoListElement.VISIBLE_ITEM_VIEW_TYPE),
+                        new TaskItemElement("oraz tamto", Period.TODAY, false,
+                                ToDoListElement.VISIBLE_ITEM_VIEW_TYPE),
+                        new HeaderElement("JUTRO")),
+                ToDoListAdapter.Mode.AT_MOST_ONE_ITEM_IS_IN_EDIT_MODE);
         registerActivityForEditingTaskMessage();
         this.todoRecyclerView.setAdapter(toDoListAdapter);
     }
 
     private void registerActivityForEditingTaskMessage() {
-        toDoListAdapter.setOnItemTextEditListener(isInEditMode -> {
+        toDoListAdapter.setOnItemTextEditListener((position, isInEditMode) -> {
             if (isInEditMode) {
-                final Intent intent = new Intent(getApplicationContext(), EditTaskMessageActivity.class);
-                startActivity(intent);
+                if (position == -1) {
+                    throw new IllegalStateException("position of eidted item must not be -1");
+                }
+                final Intent intent = new Intent(this, EditTaskActivity.class);
+                intent.putExtra(Literals.EDITED_ITEM_INDEX, position);
+                intent.putParcelableArrayListExtra(Literals.ALL_TODO_ELEMENTS, this.toDoListAdapter.getAllElements());
+                startActivityForResult(intent, RequestCodes.EDIT_TASK_MESSAGE);
             }
         });
     }
@@ -100,7 +110,8 @@ public class MainActivity extends FragmentActivity implements OnNewWeekListener,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        this.toDoListAdapter.finishEditing();
+        this.toDoListAdapter.updateElements(data.getParcelableArrayListExtra(Literals.ALL_TODO_ELEMENTS));
+        this.toDoListAdapter.startToEditElement(data.getIntExtra(Literals.EDITED_ITEM_INDEX, 1));
     }
 
     private void testDatabase() {
@@ -110,7 +121,7 @@ public class MainActivity extends FragmentActivity implements OnNewWeekListener,
 
     private Intent prepareTasksIntent(Consumer<List<Task>> consumer) {
         Intent intent = new Intent(this, TaskService.class);
-        intent.putExtra("receiver", new TasksReceiver(new Handler(), consumer));
+        intent.putExtra(Literals.RECEIVER, new TasksReceiver(new Handler(), consumer));
         return intent;
     }
 

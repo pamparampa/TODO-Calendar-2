@@ -1,6 +1,7 @@
 package com.example.radle.todo_calendar2.todoList.view;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,49 +10,66 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.radle.todo_calendar2.R;
-import com.example.radle.todo_calendar2.todoList.entity.Period;
-import com.example.radle.todo_calendar2.todoList.view.dto.EditableItemElement;
+import com.example.radle.todo_calendar2.todoList.view.dto.TaskItemElement;
 import com.example.radle.todo_calendar2.todoList.view.dto.HeaderElement;
 import com.example.radle.todo_calendar2.todoList.view.dto.ToDoListElement;
-import com.example.radle.todo_calendar2.todoList.view.dto.VisibleItemElement;
 import com.example.radle.todo_calendar2.todoList.view.item.EditableItemViewHolder;
 import com.example.radle.todo_calendar2.todoList.view.item.HeaderViewHolder;
 import com.example.radle.todo_calendar2.todoList.view.item.VisibleItemViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ToDoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final Context context;
     //@Bind
-    private final List<ToDoListElement> toDoListElements;
+    private List<ToDoListElement> toDoListElements;
+    private final Mode mode;
 
     private int currentlyEditedPosition = -1;
-    private OnItemTextEditListener onItemTextEditListener = isInEditMode -> {};
+    private OnItemTextEditListener onItemTextEditListener = (position, isInEditMode) -> {
+        if (isInEditMode) {
+            changeCurrentlyEditedElementToThis(position);
+        }
+    };
+
     private final EditableItemsHolder editableItemsHolder = new EditableItemsHolder();
 
-    public ToDoListAdapter(Context context, List<ToDoListElement> toDoListElements) {
+    public ToDoListAdapter(Context context, List<ToDoListElement> toDoListElements, Mode mode) {
         this.context = context;
         this.toDoListElements = toDoListElements;
+        this.mode = mode;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView;
         switch (viewType) {
             case ToDoListElement.HEADER_VIEW_TYPE : {
-                itemView = LayoutInflater.from(context).inflate(R.layout.text_list_row, parent, false);
-                return new HeaderViewHolder(itemView, this::selectTask);
+                return getHeaderViewHolder(parent);
             }
             case ToDoListElement.VISIBLE_ITEM_VIEW_TYPE: {
-                itemView = LayoutInflater.from(context).inflate(R.layout.visible_item_view, parent, false);
-                return new VisibleItemViewHolder(itemView, this::selectTask);
+                return getVisibleItemViewHolder(parent);
             }
             case ToDoListElement.EDITABLE_ITEM_VIEW_TYPE: {
-                itemView = LayoutInflater.from(context).inflate(R.layout.editable_item_view, parent, false);
-                return new EditableItemViewHolder(context, itemView, this.onItemTextEditListener);
+                return getEditableItemViewHolder(parent);
             }
         } throw new RuntimeException("Item of To-do list is in unknown type: " + viewType);
+    }
+
+    private RecyclerView.ViewHolder getEditableItemViewHolder(@NonNull ViewGroup parent) {
+        View itemView = LayoutInflater.from(context).inflate(R.layout.editable_item_view, parent, false);
+        return new EditableItemViewHolder(context, itemView, this::onEditItemText);
+    }
+
+    private RecyclerView.ViewHolder getHeaderViewHolder(@NonNull ViewGroup parent) {
+        View itemView = LayoutInflater.from(context).inflate(R.layout.text_list_row, parent, false);
+        return new HeaderViewHolder(itemView, this::selectTask);
+    }
+
+    private RecyclerView.ViewHolder getVisibleItemViewHolder(@NonNull ViewGroup parent) {
+        View itemView = LayoutInflater.from(context).inflate(R.layout.visible_item_view, parent, false);
+        return new VisibleItemViewHolder(itemView, this::selectTask);
     }
 
     @Override
@@ -62,28 +80,27 @@ public class ToDoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 break;
             }
             case ToDoListElement.VISIBLE_ITEM_VIEW_TYPE : {
-                ((VisibleItemViewHolder) holder).bindWith(getVisibleItemElement(position));
+                ((VisibleItemViewHolder) holder).bindWith(getTaskItemElement(position));
                 break;
             }
             case ToDoListElement.EDITABLE_ITEM_VIEW_TYPE: {
-                EditableItemViewHolder editableItem = (EditableItemViewHolder) holder;
-                editableItem.bindWith(getEditableItemElement(position));
-                this.editableItemsHolder.set(position, editableItem);
+                onBindEditableViewHolder((EditableItemViewHolder) holder, position);
                 break;
             }
         }
     }
 
-    private VisibleItemElement getVisibleItemElement(int position) {
-        return (VisibleItemElement) toDoListElements.get(position);
+    private void onBindEditableViewHolder(@NonNull EditableItemViewHolder holder, int position) {
+        holder.bindWith(getTaskItemElement(position));
+        this.editableItemsHolder.set(position, holder);
     }
 
     private HeaderElement getHeaderElement(int position) {
         return (HeaderElement) toDoListElements.get(position);
     }
 
-    private EditableItemElement getEditableItemElement(int position) {
-        return (EditableItemElement) toDoListElements.get(position);
+    private TaskItemElement getTaskItemElement(int position) {
+        return (TaskItemElement) toDoListElements.get(position);
     }
 
     @Override
@@ -96,40 +113,85 @@ public class ToDoListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return this.toDoListElements.get(position).getViewType();
     }
 
+    private void onEditItemText(int position, boolean isInEditedState) {
+        onItemTextEditListener.onChangeState(position, isInEditedState);
+    }
+
     private void selectTask(int position) {
-        if(currentlyEditedPosition != -1) {
+        if(currentElementShouldNotBeEditedAnyMore()) {
             stopToEditCurrentElement();
         }
-        if (this.toDoListElements.get(position).getViewType() == ToDoListElement.VISIBLE_ITEM_VIEW_TYPE) {
+        int viewType = this.toDoListElements.get(position).getViewType();
+
+        if (viewType == ToDoListElement.VISIBLE_ITEM_VIEW_TYPE) {
             startToEditSelectedElement(position);
-            this.currentlyEditedPosition = position;
-        } else {
-            this.currentlyEditedPosition = -1;
-            this.onItemTextEditListener.onChangeState(false);
+        } else if (viewType == ToDoListElement.EDITABLE_ITEM_VIEW_TYPE) {
+            changeCurrentlyEditedElementToThis(position);
+        } else if (viewType == ToDoListElement.HEADER_VIEW_TYPE &&
+                mode == Mode.AT_MOST_ONE_ITEM_IS_IN_EDIT_MODE){
+            changeCurrentlyEditedElementToNone();
         }
         notifyDataSetChanged();
     }
 
-    public void finishEditing() {
-        stopToEditCurrentElement();
+    private void changeCurrentlyEditedElementToNone() {
+        this.currentlyEditedPosition = -1;
+    }
+
+    private void changeCurrentlyEditedElementToThis(int position) {
+        this.currentlyEditedPosition = position;
+    }
+
+    public void startToEditElement(int position) {
+        if (currentlyEditedPosition != position) {
+            if (currentElementShouldNotBeEditedAnyMore()) {
+                stopToEditCurrentElement();
+            }
+            startToEditSelectedElement(position);
+        }
         notifyDataSetChanged();
+    }
+
+    private boolean currentElementShouldNotBeEditedAnyMore() {
+        return this.mode == Mode.AT_MOST_ONE_ITEM_IS_IN_EDIT_MODE && currentlyEditedPosition != -1;
     }
 
     private void startToEditSelectedElement(int position) {
-        this.toDoListElements.set(position,
-                new EditableItemElement(getVisibleItemElement(position).getTaskTitle(), Period.SOMETIME));
+        changeCurrentlyEditedElementToThis(position);
+        ToDoListElement elementToEdit = toDoListElements.get(position);
+        if (elementToEdit.getViewType() == ToDoListElement.VISIBLE_ITEM_VIEW_TYPE) {
+            getTaskItemElement(position).setViewType(ToDoListElement.EDITABLE_ITEM_VIEW_TYPE);
+        }
     }
 
     private void stopToEditCurrentElement() {
-        this.toDoListElements.set(currentlyEditedPosition,
-                new VisibleItemElement(getEditableItemElement(currentlyEditedPosition).getTaskTitle(), false));
+        getTaskItemElement(currentlyEditedPosition).setViewType(ToDoListElement.VISIBLE_ITEM_VIEW_TYPE);
     }
 
     public void setOnItemTextEditListener(OnItemTextEditListener listener) {
         this.onItemTextEditListener = listener;
     }
 
-    public void startToEditItemMessage(int itemPosition) {
-        this.editableItemsHolder.editName(itemPosition);
+    public void startToEditItemTitle(int itemPosition) {
+        changeCurrentlyEditedElementToThis(itemPosition);
+        this.editableItemsHolder.startToEditTitle(itemPosition);
+    }
+
+    public int getCurrentlyEditedItem() {
+        return this.currentlyEditedPosition;
+    }
+
+    public ArrayList<? extends Parcelable> getAllElements() {
+        return new ArrayList<>(this.toDoListElements);
+    }
+
+    public void updateElements(ArrayList<? extends ToDoListElement> newElements) {
+        this.toDoListElements = new ArrayList<>(newElements);
+        notifyDataSetChanged();
+    }
+
+    public enum Mode {
+        AT_MOST_ONE_ITEM_IS_IN_EDIT_MODE,
+        EVERY_ITEMS_ARE_IN_EDIT_MODE
     }
 }

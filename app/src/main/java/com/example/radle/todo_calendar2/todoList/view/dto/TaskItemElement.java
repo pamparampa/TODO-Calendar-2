@@ -3,11 +3,14 @@ package com.example.radle.todo_calendar2.todoList.view.dto;
 import android.os.Parcel;
 
 import com.example.radle.todo_calendar2.todoList.entity.Period;
+import com.example.radle.todo_calendar2.todoList.entity.Task;
+
+import java.util.Objects;
 
 public class TaskItemElement implements ToDoListElement {
     private String taskTitle;
-    private Period period;
-    private boolean isDone;
+    private final Period period;
+    private final boolean isDone;
     private int viewType;
 
     public static final Creator<TaskItemElement> CREATOR = new Creator<TaskItemElement>() {
@@ -21,6 +24,10 @@ public class TaskItemElement implements ToDoListElement {
             return new TaskItemElement[size];
         }
     };
+
+    public TaskItemElement(Task task) {
+        this(task.title, task.period, task.isDone, ToDoListElement.VISIBLE_ITEM_VIEW_TYPE);
+    }
 
     public TaskItemElement(String taskTitle, Period period, boolean isDone, int viewType) {
         this.taskTitle = taskTitle;
@@ -69,5 +76,31 @@ public class TaskItemElement implements ToDoListElement {
 
     public void setViewType(int viewType) {
         this.viewType = viewType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskItemElement that = (TaskItemElement) o;
+        return isDone == that.isDone &&
+                viewType == that.viewType &&
+                taskTitle.equals(that.taskTitle) &&
+                period == that.period;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(taskTitle, period, isDone, viewType);
+    }
+
+    @Override
+    public String toString() {
+        return "TaskItemElement{" +
+                "taskTitle='" + taskTitle + '\'' +
+                ", period=" + period +
+                ", isDone=" + isDone +
+                ", viewType=" + viewType +
+                '}';
     }
 }

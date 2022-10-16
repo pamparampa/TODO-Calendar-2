@@ -5,16 +5,11 @@ import android.os.Parcelable;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity
-public class Task implements Parcelable {
-
-    public Task(String title, boolean isDone, Period period) {
-        this.title = title;
-        this.isDone = isDone;
-        this.period = period;
-    }
+public class Task implements Parcelable, Comparable<Task> {
 
     @PrimaryKey(autoGenerate = true)
     public int id;
@@ -27,6 +22,20 @@ public class Task implements Parcelable {
 
     @ColumnInfo(name = "period")
     public Period period;
+
+    public Task(String title, boolean isDone, Period period) {
+        this.title = title;
+        this.isDone = isDone;
+        this.period = period;
+    }
+
+    @Ignore
+    public Task(int id, String title, boolean isDone, Period period) {
+        this.id = id;
+        this.title = title;
+        this.isDone = isDone;
+        this.period = period;
+    }
 
     protected Task(Parcel in) {
         id = in.readInt();
@@ -67,5 +76,10 @@ public class Task implements Parcelable {
         parcel.writeString(this.title);
         parcel.writeBoolean(this.isDone);
         parcel.writeString(this.period.name());
+    }
+
+    @Override
+    public int compareTo(Task o) {
+        return Integer.compare(this.id, o.id);
     }
 }

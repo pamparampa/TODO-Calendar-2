@@ -17,7 +17,7 @@ public class AvailablePeriodsUtilsTest {
                 .containsExactly(
                         Period.TODAY, Period.TOMORROW, Period.THIS_WEEK, Period.NEXT_WEEK,
                         Period.THIS_MONTH, Period.NEXT_MONTH, Period.THIS_WINTER, Period.THIS_SPRING,
-                        Period.THIS_SUMMER, Period.THIS_AUTUMN, Period.NEXT_YEAR, Period.SOMETIME);
+                        Period.THIS_SUMMER, Period.THIS_AUTUMN, Period.NEXT_WINTER, Period.NEXT_YEAR, Period.SOMETIME);
     }
 
     @Test
@@ -27,7 +27,8 @@ public class AvailablePeriodsUtilsTest {
                 .containsExactly(
                         Period.TODAY, Period.TOMORROW, Period.THIS_WEEK, Period.NEXT_WEEK,
                         Period.THIS_MONTH, Period.NEXT_MONTH, Period.THIS_SPRING, Period.THIS_SUMMER,
-                        Period.THIS_AUTUMN, Period.THIS_WINTER2, Period.NEXT_YEAR, Period.SOMETIME);
+                        Period.THIS_AUTUMN, Period.THIS_WINTER2, Period.THIS_YEAR, Period.NEXT_SPRING,
+                        Period.NEXT_YEAR, Period.SOMETIME);
     }
 
     @Test
@@ -37,7 +38,8 @@ public class AvailablePeriodsUtilsTest {
                 .containsExactly(
                         Period.TODAY, Period.TOMORROW, Period.THIS_WEEK, Period.NEXT_WEEK,
                         Period.THIS_MONTH, Period.NEXT_MONTH, Period.THIS_SUMMER, Period.THIS_AUTUMN,
-                        Period.THIS_WINTER2, Period.NEXT_YEAR, Period.NEXT_SPRING, Period.SOMETIME);
+                        Period.THIS_WINTER2, Period.THIS_YEAR, Period.NEXT_SPRING, Period.NEXT_SUMMER,
+                        Period.NEXT_YEAR, Period.SOMETIME);
     }
 
     @Test
@@ -47,7 +49,8 @@ public class AvailablePeriodsUtilsTest {
                 .containsExactly(
                         Period.TODAY, Period.TOMORROW, Period.THIS_WEEK, Period.NEXT_WEEK,
                         Period.THIS_MONTH, Period.NEXT_MONTH, Period.THIS_AUTUMN, Period.THIS_WINTER2,
-                        Period.NEXT_YEAR, Period.NEXT_SPRING, Period.NEXT_SUMMER, Period.SOMETIME);
+                        Period.THIS_YEAR, Period.NEXT_SPRING, Period.NEXT_SUMMER, Period.NEXT_AUTUMN,
+                        Period.NEXT_YEAR, Period.SOMETIME);
     }
 
     @Test

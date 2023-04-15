@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.radle.todo_calendar2.R;
 import com.example.radle.todo_calendar2.todoList.view.OnItemClickListener;
+import com.example.radle.todo_calendar2.todoList.view.OnItemTextEditListener;
 import com.example.radle.todo_calendar2.todoList.view.dto.TaskItemElement;
 
 public class VisibleItemViewHolder extends RecyclerView.ViewHolder {

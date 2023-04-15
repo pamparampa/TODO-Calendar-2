@@ -31,12 +31,12 @@ public class ToDoListViewActivity extends Activity {
         this.todoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         this.todoRecyclerView.setAdapter(new ToDoListAdapter(this,
                 Arrays.asList(
-                        new HeaderElement("DZISIAJ"),
-                        new TaskItemElement("zrób to", Period.TODAY, false,
+                        new HeaderElement("DZISIAJ", Period.TODAY),
+                        new TaskItemElement(0, "zrób to", Period.TODAY, false,
                                 ToDoListElement.VISIBLE_ITEM_VIEW_TYPE),
-                        new TaskItemElement("oraz tamto", Period.TODAY, false,
+                        new TaskItemElement(1, "oraz tamto", Period.TODAY, false,
                                 ToDoListElement.VISIBLE_ITEM_VIEW_TYPE),
-                        new HeaderElement("JUTRO")),
+                        new HeaderElement("JUTRO", Period.TOMORROW)),
                 ToDoListAdapter.Mode.AT_MOST_ONE_ITEM_IS_IN_EDIT_MODE));
     }
 }

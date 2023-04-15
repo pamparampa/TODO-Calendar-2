@@ -29,6 +29,8 @@ import com.example.radle.todo_calendar2.todoList.TaskService;
 import com.example.radle.todo_calendar2.todoList.ToDoDatabase;
 import com.example.radle.todo_calendar2.todoList.entity.Period;
 import com.example.radle.todo_calendar2.todoList.entity.Task;
+import com.example.radle.todo_calendar2.todoList.view.OnItemTextEditListener;
+import com.example.radle.todo_calendar2.todoList.view.dto.EncourageElement;
 import com.example.radle.todo_calendar2.todoList.view.dto.HeaderElement;
 import com.example.radle.todo_calendar2.todoList.view.ToDoListAdapter;
 import com.example.radle.todo_calendar2.todoList.view.dto.TaskItemElement;
@@ -36,7 +38,9 @@ import com.example.radle.todo_calendar2.todoList.view.dto.ToDoListElement;
 import com.example.radle.todo_calendar2.utils.DateUtils;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -56,7 +60,8 @@ public class MainActivity extends FragmentActivity implements OnNewWeekListener,
     private final CalendarsDao calendarsDao = new CalendarsDao(this);
     private final List<String> calendarIds = Arrays.asList("8", "12");
     private TaskService taskService;
-    private ToDoListAdapter toDoListAdapter;
+    private ToDoListAdapter toDoListAdapter = new ToDoListAdapter(this,
+            ToDoListAdapter.Mode.AT_MOST_ONE_ITEM_IS_IN_EDIT_MODE);
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -77,31 +82,32 @@ public class MainActivity extends FragmentActivity implements OnNewWeekListener,
         this.calendarsDao.getAllCalendars(this::showCalendarChooseDialog);
     }
 
-    private void initToDoList() {
+    protected void initToDoList() {
         this.todoRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        this.toDoListAdapter = new ToDoListAdapter(this,
-                Arrays.asList(
-                        new HeaderElement("DZISIAJ"),
-                        new TaskItemElement("zrób to", Period.TODAY, false,
-                                ToDoListElement.VISIBLE_ITEM_VIEW_TYPE),
-                        new TaskItemElement("oraz tamto", Period.TODAY, false,
-                                ToDoListElement.VISIBLE_ITEM_VIEW_TYPE),
-                        new HeaderElement("JUTRO")),
-                ToDoListAdapter.Mode.AT_MOST_ONE_ITEM_IS_IN_EDIT_MODE);
+        this.toDoListAdapter.setTasks(Collections.emptyList());
         registerActivityForEditingTaskMessage();
         this.todoRecyclerView.setAdapter(toDoListAdapter);
     }
 
     private void registerActivityForEditingTaskMessage() {
-        toDoListAdapter.setOnItemTextEditListener((position, isInEditMode) -> {
-            if (isInEditMode) {
+        toDoListAdapter.setOnItemTextEditListener((position, mode, period) -> {
+            if (mode == OnItemTextEditListener.CREATE_NEW_TASK) {
+                this.toDoListAdapter.insertElement(position, new TaskItemElement(-1, "", period,
+                        false, ToDoListElement.EDITABLE_ITEM_VIEW_TYPE));
+            } else if (mode == OnItemTextEditListener.CREATE_FIRST_TASK) {
+                position = this.toDoListAdapter.updateElement(position, new TaskItemElement(-1, "", period,
+                        false, ToDoListElement.EDITABLE_ITEM_VIEW_TYPE));
+                //TODO: coś trzeba zrobić z tymi idkami
+            }
+            if (mode != OnItemTextEditListener.DO_NOTHING) {
                 if (position == -1) {
                     throw new IllegalStateException("position of eidted item must not be -1");
                 }
                 final Intent intent = new Intent(this, EditTaskActivity.class);
                 intent.putExtra(Literals.EDITED_ITEM_INDEX, position);
-                intent.putParcelableArrayListExtra(Literals.ALL_TODO_ELEMENTS, this.toDoListAdapter.getAllElements());
+                intent.putParcelableArrayListExtra(Literals.ALL_TODO_ELEMENTS,
+                        new ArrayList<>(this.toDoListAdapter.getAllElements()));
                 startActivityForResult(intent, RequestCodes.EDIT_TASK_MESSAGE);
             }
         });
